@@ -131,7 +131,7 @@ function eecalc(root_el){
 	}
 	
 	function calculate(){
-	    var text = get_value();
+	    var text = ee_parse(get_value());
 	    try{
 		var result = math.eval(text, scope);
 	    } catch (e){
@@ -178,6 +178,19 @@ function eecalc(root_el){
 	
 	button.onclick = calculate;
     }
+}
+
+// Replace electrical engineering notation
+function ee_parse(str){
+    str = str.replace(/([0-9]+) *G/g,  "$1*10^9");
+    str = str.replace(/([0-9]+) *M/g,  "$1*10^6");
+    str = str.replace(/([0-9]+) *meg/g,"$1*10^6");
+    str = str.replace(/([0-9]+) *K/g,  "$1*10^3");
+    str = str.replace(/([0-9]+) *k/g,  "$1*10^3");
+    str = str.replace(/([0-9]+) *m/g,  "$1*10^-3");
+    str = str.replace(/([0-9]+) *u/g,  "$1*10^-6");
+    str = str.replace(/([0-9]+) *n/g,  "$1*10^-9");
+    return str;
 }
 
 eecalc(qsa("eecalc")[0]);
