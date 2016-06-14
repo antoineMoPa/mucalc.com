@@ -6,10 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <h1>eecalc</h1>
-    <p class="eecalc-mode">math.js mode | syntax documentation:
-      <a href="http://mathjs.org/docs/expressions/syntax.html">mathjs docs</a>
+    <h1 class="inline-block">eecalc</h1>
+    <p class="inline-block eecalc-mode">math.js mode | syntax documentation:
+      <a href="http://mathjs.org/docs/expressions/syntax.html" target="_blank">
+	mathjs docs
+      </a>
     </p>
+    <p>Bonus functions: LL(a,b,...) gives value of resistances in parallel.</p>
     <eecalc></eecalc>
 
     <template name="eecalc">
@@ -33,6 +36,12 @@
 	</pre>
       </div>
     </template>
+
+    <p class="text-right">Licence:
+      <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"  target="_blank">
+	GPLv3
+      </a>
+    </p>
 
     <script src="lib/math.min.js"></script>
     <script src="main.js"></script>

@@ -29,7 +29,26 @@ function new_el(html){
     return node.children[0];
 }
 
+/*
+  Add some useful stuff for electrical engineering
+ */
+function eeify_mathjs(){
+    math.import({
+	/* Parallel resistors */
+	LL: function(a,b){
+	    var num = 0;
+	    for(i in arguments){
+		var arg = arguments[i];
+		num += 1/arg;
+	    }	
+	    return 1 / num;
+	}
+    });
+}
+
 function eecalc(root_el){
+    eeify_mathjs();
+    
     var scope = {};
     root_el.innerHTML = load_template("eecalc");
     var cells = subqsa(root_el,".eecalc-cells")[0];
