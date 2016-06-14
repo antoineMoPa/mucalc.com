@@ -30,36 +30,56 @@ function new_el(html){
 }
 
 function eecalc(root_el){
+    var scope = {};
     root_el.innerHTML = load_template("eecalc");
     var cells = subqsa(root_el,".eecalc-cells")[0];
+    var cell_count = 0;
+
     new_eecalc_cell(cells);
-}
 
-function new_eecalc_cell(cells){
-    var cell = new_el(load_template("eecalc-cell"));
-    cells.appendChild(cell);
-    
-    var input = subqsa(cell,".eecalc-input")[0];
-    var button = subqsa(cell,".eecalc-go-button")[0];
-    var output = subqsa(cell,".eecalc-output")[0];
+    function new_eecalc_cell(cells){
+	var index = cell_count;
+	cell_count++;
+	var cell = new_el(load_template("eecalc-cell"));
+	cells.appendChild(cell);
+	
+	var input = subqsa(cell,".eecalc-input")[0];
+	var button = subqsa(cell,".eecalc-go-button")[0];
+	var output = subqsa(cell,".eecalc-output")[0];
+	
+	input.focus();
+	
+	function calculate(){
+	    var text = input.value;
+	    var result = math.eval(text, scope);
 
-    input.focus();
-    
-    function calculate(){
-	var text = input.value;
-	var result = math.eval(text)
-	output.innerHTML = result;
-
-	new_eecalc_cell(cells);
-    }
-    
-    input.onkeydown = function(e){
-	if(e.key == "Enter"){
-	    calculate();
+	    if(text == ""){
+		return;
+	    } else if(result != undefined){
+		output.innerHTML = result;
+	    } else {
+		output.innerHTML = result;
+		return;
+	    }
+	    
+	    // If last cell, add new cell
+	    if(index == cell_count - 1){
+		new_eecalc_cell(cells);
+	    }
+	    // Or move focus to next cell
+	    else {
+		subqsa(cells,".eecalc-input")[index + 1].focus();
+	    }
 	}
-    };
-    
-    button.onclick = calculate;
+	
+	input.onkeydown = function(e){
+	    if(e.key == "Enter"){
+		calculate();
+	    }
+	};
+	
+	button.onclick = calculate;
+    }
 }
 
 eecalc(qsa("eecalc")[0]);
