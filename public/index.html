@@ -2,9 +2,29 @@
 <html>
   <head>
     <title>eecalc</title>
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    TEST
-    
+    <h1>eecalc</h1>
+    <eecalc></eecalc>
+
+    <template name="eecalc">
+      <div class="eecalc">
+	<fieldset>
+	  <label>Math:</label>
+	  <br>
+	  <input type="text" class="eecalc-input">
+	  <br>
+	  <button class="eecalc-go-button">
+	    Go
+	  </button>
+	</fieldset>
+	<pre class="eecalc-output">
+	</pre>
+      </div>
+    </template>
+
+    <script src="lib/math.min.js"></script>
+    <script src="main.js"></script>
   </body>
 </html>

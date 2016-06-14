@@ -1,0 +1,38 @@
+/* page-related stuff */
+body{
+    background:#f8f8f8;
+    font-family: sans-serif;
+}
+
+h1{
+    font-size:20px;
+    font-weight:300;
+}
+
+/* eecalc stuff */
+
+.eecalc{
+    background:#eee;
+    box-shadow:0 0 2px #bbb;
+    padding-bottom:5px;
+}
+
+.eecalc fieldset{
+    border:none;
+}
+
+.eecalc .eecalc-output{
+    margin-top:5px;
+    min-height:40px;
+    background:#fff;
+    font-size:40px;
+    padding:5px;
+    padding-left:20px;
+}
+
+.eecalc input{
+    width: 100%;
+    width: calc(100% - 20px);
+    margin-top:5px;
+    margin-bottom:5px;
+}
