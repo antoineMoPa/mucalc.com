@@ -29,10 +29,15 @@ header{
     padding:5px;
     margin:-10px;
     box-shadow:0 0 3 px #000;
+    margin-bottom:10px;
 }
 
 header a{
     color:#fff;
+}
+
+template{
+    display:none;
 }
 
 /* eecalc stuff */

@@ -132,8 +132,13 @@ function eecalc(root_el){
 	
 	function calculate(){
 	    var text = get_value();
-	    var result = math.eval(text, scope);
-
+	    try{
+		var result = math.eval(text, scope);
+	    } catch (e){
+		output.innerHTML = e;
+		return;
+	    }
+	    
 	    if(text == ""){
 		return;
 	    } else if(result != undefined){
