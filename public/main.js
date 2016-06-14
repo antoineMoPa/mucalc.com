@@ -149,8 +149,6 @@ function eecalc(root_el){
 	    }
 	    // Or move focus to next cell
 	    else {
-		console.log(get_index());
-		console.log(get_index() + 1);
 		subqsa(cells,".eecalc-input")[get_index() + 1].focus();
 	    }
 	}

@@ -11,6 +11,8 @@
 body{
     background:#f8f8f8;
     font-family: sans-serif;
+    padding:0;
+    margin:10px;
 }
 
 h1{
@@ -18,6 +20,19 @@ h1{
     font-weight:300;
     margin-right:40px;
     line-height:15px;
+}
+
+header{
+    background:#55f;
+    color:#fff;
+    margin:0;
+    padding:5px;
+    margin:-10px;
+    box-shadow:0 0 3 px #000;
+}
+
+header a{
+    color:#fff;
 }
 
 /* eecalc stuff */
@@ -48,7 +63,7 @@ h1{
     font-size:20px;
     margin-bottom:5px;
     border-radius:0;
-    border:1px solid #aaa;
+    border:none;
     padding:5px;
     background:#fff;
 }
@@ -66,12 +81,12 @@ h1{
 }
 
 .eecalc-go-button{
-    height:30px;
+    height:32px;
     margin:0;
     margin-left:10px;
     width:100px;
     border-radius:0;
-    border:1px solid #aaa;
+    border:none;
     padding:5px;
     background:#fff;
 }
