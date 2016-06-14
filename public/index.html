@@ -3,6 +3,7 @@
   <head>
     <title>eecalc</title>
     <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
     <h1>eecalc</h1>
@@ -10,14 +11,20 @@
 
     <template name="eecalc">
       <div class="eecalc">
+	<div class="eecalc-cells">
+	</div>
+      </div>
+    </template>
+    
+    <template name="eecalc-cell">
+      <div class="eecalc-cell">
 	<fieldset>
-	  <label>Math:</label>
-	  <br>
-	  <input type="text" class="eecalc-input">
-	  <br>
-	  <button class="eecalc-go-button">
-	    Go
-	  </button>
+	  <div class="inline-blocks">
+	    <input type="text" class="inline-block eecalc-input">
+	    <button class="inline-block eecalc-go-button">
+	      Go
+	    </button>
+	  </div>
 	</fieldset>
 	<pre class="eecalc-output">
 	</pre>
