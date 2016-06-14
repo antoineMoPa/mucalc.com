@@ -46,8 +46,11 @@ function eeify_mathjs(){
     });
 }
 
+/*
+  Make something appear "smoothly"
+ */
 function appear(el,step){
-    max = 5;
+    max = 6;
     if(step == undefined){
 	step = max;
 	el.style.position = "relative"
@@ -62,30 +65,59 @@ function appear(el,step){
     el.style.opacity = 1.0 - ratio;
 
     el.style.left = -100 * ratio + "px";
-    console.log(ratio);
+
     setTimeout(
 	function(){
 	    appear(el, step - 1);
 	},
-	33
+	20
     );
 }
 
 function eecalc(root_el){
     eeify_mathjs();
-    
+
     var scope = {};
     root_el.innerHTML = load_template("eecalc");
     var cells = subqsa(root_el,".eecalc-cells")[0];
-    var cell_count = 0;
+    var cell_count;
 
     new_eecalc_cell(cells);
 
+    function delete_cell(index){
+	if(index != 0){
+	    var cell = find_cell(index);
+	    cells.removeChild(cell);
+	    focus(index-1);
+	}
+	update_indices();
+    }
+
+    function focus(index){
+	var cell = find_cell(index);
+	var input = subqsa(cell,".eecalc-input")[0];
+	input.focus();
+    }
+    
+    function find_cell(index){
+	return cells.children[index];
+    }
+
+    function update_indices(){
+	var i = 0;
+	for(i = 0; i < cells.children.length; i++){
+	    var cell = cells.children[i];
+	    cell.setAttribute("data-index", i);
+	    subqsa(cell,".eecalc-input")[0]
+		.setAttribute("tabindex", i + 1);
+	}
+	cell_count = i;
+    }
+    
     function new_eecalc_cell(cells){
-	var index = cell_count;
-	cell_count++;
 	var cell = new_el(load_template("eecalc-cell"));
 	cells.appendChild(cell);
+	update_indices();
 	
 	var input = subqsa(cell,".eecalc-input")[0];
 	var button = subqsa(cell,".eecalc-go-button")[0];
@@ -93,9 +125,13 @@ function eecalc(root_el){
 
 	appear(cell);
 	input.focus();
+
+	function get_index(){
+	    return parseInt(cell.getAttribute("data-index"));
+	}
 	
 	function calculate(){
-	    var text = input.value;
+	    var text = get_value();
 	    var result = math.eval(text, scope);
 
 	    if(text == ""){
@@ -106,18 +142,32 @@ function eecalc(root_el){
 		output.innerHTML = result;
 		return;
 	    }
-	    
+
 	    // If last cell, add new cell
-	    if(index == cell_count - 1){
+	    if(get_index() == cell_count - 1){
 		new_eecalc_cell(cells);
 	    }
 	    // Or move focus to next cell
 	    else {
-		subqsa(cells,".eecalc-input")[index + 1].focus();
+		console.log(get_index());
+		console.log(get_index() + 1);
+		subqsa(cells,".eecalc-input")[get_index() + 1].focus();
 	    }
 	}
-	
+
+	function get_value(){
+	    return input.value;
+	}
+
 	input.onkeydown = function(e){
+	    if(e.key == "Backspace"){
+		// Delete cell
+		if(get_value() == ""){
+		    delete_cell(get_index());
+		}
+	    }
+	}
+	input.onkeyup = function(e){
 	    if(e.key == "Enter"){
 		calculate();
 	    }
