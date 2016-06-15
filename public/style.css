@@ -55,6 +55,22 @@ template{
     display:none;
 }
 
+button{
+    height:32px;
+    margin-bottom:20px;
+    margin-left:5px;
+    margin-right:5px;
+    margin-top:5px;
+    border-radius:0;
+    border:none;
+    padding:5px;
+    background:#55f;
+    color:#fff;
+}
+button:first-child{
+    margin-left:0;
+}
+
 /* eecalc stuff */
 
 .inline-block{
@@ -109,4 +125,5 @@ template{
     border:none;
     padding:5px;
     background:#fff;
+    color:#333;
 }

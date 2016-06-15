@@ -14,9 +14,20 @@ function subqsa(el,sel){
 
 /*
   Load a template
+  
+  returns the HTML
  */
 function load_template(name){
     var content = qsa("template[name="+name+"]")[0].innerHTML;
+    return content;
+}
+
+/*
+  Load a script
+  Returns the content
+ */
+function load_script(name){
+    var content = qsa("script[name="+name+"]")[0].innerHTML;
     return content;
 }
 
@@ -118,8 +129,9 @@ function eecalc(root_el){
     root_el.innerHTML = load_template("eecalc");
     var cells = subqsa(root_el,".eecalc-cells")[0];
     var cell_count;
-
-    new_eecalc_cell(cells);
+    var exports = {};
+    
+    new_eecalc_cell("");
 
     function delete_cell(index){
 	if(index != 0){
@@ -130,6 +142,38 @@ function eecalc(root_el){
 	update_indices();
     }
 
+    function delete_all(){
+        cells.innerHTML = "";
+    }
+
+    function re_run(){
+        scope = {};
+        for(var i = 0; i < cells.children.length; i++){
+            cells.children[i].calculate();
+        }
+    }
+
+    exports.re_run = re_run;
+    
+    function load_json(data){
+        var data = JSON.parse(data);
+        var cells = data.cells;
+        
+        delete_all();
+        
+        for(var i = 0; i < cells.length; i++){
+            new_eecalc_cell(cells[i]);
+        }
+    }
+
+    exports.load_json = load_json;
+    
+    function get_json(){
+        // TODO
+    }
+    
+    exports.get_json = get_json;
+        
     function focus(index){
 	var cell = find_cell(index);
 	var input = subqsa(cell,".eecalc-input")[0];
@@ -151,7 +195,7 @@ function eecalc(root_el){
 	cell_count = i;
     }
     
-    function new_eecalc_cell(cells){
+    function new_eecalc_cell(content){
 	var cell = new_el(load_template("eecalc-cell"));
 	cells.appendChild(cell);
 	update_indices();
@@ -161,12 +205,15 @@ function eecalc(root_el){
 	var output = subqsa(cell,".eecalc-output")[0];
         
 	appear(cell);
+        input.value = content;
 	input.focus();
 
 	function get_index(){
 	    return parseInt(cell.getAttribute("data-index"));
 	}
-	
+
+        cell.calculate = calculate;
+        
 	function calculate(){
 	    var text = ee_parse(get_value());
 	    try{
@@ -189,7 +236,7 @@ function eecalc(root_el){
             
 	    // If last cell, add new cell
 	    if(get_index() == cell_count - 1){
-		new_eecalc_cell(cells);
+		new_eecalc_cell("");
 	    }
 	    // Or move focus to next cell
 	    else {
@@ -213,12 +260,14 @@ function eecalc(root_el){
 		}
 	    }
 	}
-
+        
         input.onkeyup = function(e){
 	};
 	
 	button.onclick = calculate;
     }
+    
+    return exports;
 }
 
 // Replace electrical engineering notation
@@ -234,4 +283,23 @@ function ee_parse(str){
     return str;
 }
 
-eecalc(qsa("eecalc")[0]);
+function init_starters(calc){
+    var buttons = qsa(".starters button");
+
+    for(var i = 0; i < buttons.length; i++){
+        enable_click(buttons[i]);
+    }
+    
+    function enable_click(el){
+        el.onclick = function(){
+            var name = el.name;
+            var starter = load_script(name);
+            calc.load_json(starter);
+            calc.re_run();
+        };
+    }
+}
+
+// Start everything
+var calc = eecalc(qsa("eecalc")[0]);
+init_starters(calc);

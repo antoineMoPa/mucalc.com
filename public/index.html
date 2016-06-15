@@ -15,6 +15,22 @@
 	</a>
       </p>
     </header>
+
+    <div class="starters">
+      <strong>Starters:</strong>
+      <br>
+      <div>
+        <button class="inline-block" name="voltage-divider">
+	  Voltage Divider
+        </button>
+        <button class="inline-block" name="rc-filter">
+	  RC Filter
+        </button>
+        <button class="inline-block" name="parallel-resistors">
+	  Parallel Resistors
+        </button>
+      </div>
+    </div>
     
     <eecalc></eecalc>
 
@@ -105,5 +121,37 @@
 
     <script src="lib/math.min.js"></script>
     <script src="main.js"></script>
+    <script name="voltage-divider" type="text/plain">
+      {
+      "title":"Voltage Divider",
+      "cells":[
+      "ra = 20",
+      "rb = 20",
+      "vin = 10",
+      "vout = ra * vin / (ra + rb)"
+      ]
+      }
+    </script>
+    <script name="rc-filter" type="text/plain">
+      {
+      "title":"RC Filter",
+      "cells":[
+      "r = 10K",
+      "c = 1u",
+      "f = 1 / (2 pi r c)"
+      ]
+      }
+    </script>
+    <script name="parallel-resistors" type="text/plain">
+      {
+      "title":"Parallel Resistors",
+      "cells":[
+      "LL(10K,5K)",
+      "1/(1/(10K) + 1/(5K))"
+      ]
+      }
+    </script>
+
+
   </body>
 </html>
