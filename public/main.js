@@ -280,6 +280,7 @@ function ee_parse(str){
     str = str.replace(/([0-9]+)( *)m/g,  "$1E-3");
     str = str.replace(/([0-9]+)( *)u/g,  "$1E-6");
     str = str.replace(/([0-9]+)( *)n/g,  "$1E-9");
+    str = str.replace(/([0-9]+)( *)p/g,  "$1E-12");
     return str;
 }
 
