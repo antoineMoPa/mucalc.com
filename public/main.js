@@ -272,14 +272,14 @@ function eecalc(root_el){
 
 // Replace electrical engineering notation
 function ee_parse(str){
-    str = str.replace(/([0-9]+) *G/g,  "$1*10^9");
-    str = str.replace(/([0-9]+) *M/g,  "$1*10^6");
-    str = str.replace(/([0-9]+) *meg/g,"$1*10^6");
-    str = str.replace(/([0-9]+) *K/g,  "$1*10^3");
-    str = str.replace(/([0-9]+) *k/g,  "$1*10^3");
-    str = str.replace(/([0-9]+) *m/g,  "$1*10^-3");
-    str = str.replace(/([0-9]+) *u/g,  "$1*10^-6");
-    str = str.replace(/([0-9]+) *n/g,  "$1*10^-9");
+    str = str.replace(/([0-9]+)( *)G/g,  "$1E9");
+    str = str.replace(/([0-9]+)( *)M/g,  "$1E6");
+    str = str.replace(/([0-9]+)( *)meg/g,"$1E6");
+    str = str.replace(/([0-9]+)( *)K/g,  "$1E3");
+    str = str.replace(/([0-9]+)( *)k/g,  "$1E3");
+    str = str.replace(/([0-9]+)( *)m/g,  "$1E-3");
+    str = str.replace(/([0-9]+)( *)u/g,  "$1E-6");
+    str = str.replace(/([0-9]+)( *)n/g,  "$1E-9");
     return str;
 }
 
