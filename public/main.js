@@ -163,7 +163,7 @@ function eecalc(root_el){
 	}
 
 	input.onkeydown = function(e){
-	    if(e.key == "Backspace"){
+	    if(e.code == "Backspace"){
 		// Delete cell
 		if(get_value() == ""){
 		    delete_cell(get_index());
@@ -171,7 +171,7 @@ function eecalc(root_el){
 	    }
 	}
 	input.onkeyup = function(e){
-	    if(e.key == "Enter"){
+	    if(e.code == "Enter"){
 		calculate();
 	    }
 	};

@@ -7,6 +7,19 @@
     text-align:left;
 }
 
+.col-6{
+    width:49.5%;
+}
+
+.col-10{
+    width:82%;
+}
+
+.col-2{
+    width:16%;
+}
+
+
 /* page-related stuff */
 body{
     background:#f8f8f8;
