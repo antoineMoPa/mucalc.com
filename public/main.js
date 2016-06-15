@@ -49,28 +49,65 @@ function eeify_mathjs(){
 /*
   Make something appear "smoothly"
  */
-function appear(el,step){
-    max = 6;
+function appear(el){
+    var options = {
+        max: 6,
+        begin: function(el){
+            el.style.position = "relative";
+        },
+        end: function(el){
+            el.style.position = "";
+        },
+        step: function(el,step,max){
+            var ratio = step / max;
+            el.style.opacity = "0.0";
+            el.style.opacity = 1.0 - ratio;
+            el.style.left = -100 * ratio + "px";
+        }
+    };
+    animate(el,options);
+}
+
+/*
+  Make something flash
+ */
+function flash(el,color){
+    var original_color;
+    var options = {
+        max: 2,
+        time_step: 300,
+        begin: function(el){
+            original_color = el.style.backgroundColor;
+            el.style.backgroundColor = color;
+        },
+        end: function(el){
+            el.style.backgroundColor = original_color;
+        },
+        step: function(el,step,max){
+        }
+    };
+    animate(el,options);
+}
+
+function animate(el,options,step){
+    max = options.max;
+    time_step = options.time_step || 33;
     if(step == undefined){
 	step = max;
-	el.style.position = "relative"
+        options.begin(el);
     }
     if(step < 0){
-	el.style.position = ""
+        options.end(el);
 	return;
     }
 
-    var ratio = step / max;
-    el.style.opacity = "0.0";
-    el.style.opacity = 1.0 - ratio;
-
-    el.style.left = -100 * ratio + "px";
-
+    options.step(el, step, max);
+    
     setTimeout(
 	function(){
-	    appear(el, step - 1);
+	    animate(el, options, step - 1);
 	},
-	20
+	time_step
     );
 }
 
@@ -148,6 +185,8 @@ function eecalc(root_el){
 		return;
 	    }
 
+            flash(output,"#ffee55");
+            
 	    // If last cell, add new cell
 	    if(get_index() == cell_count - 1){
 		new_eecalc_cell(cells);
