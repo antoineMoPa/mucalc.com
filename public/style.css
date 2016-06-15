@@ -8,7 +8,9 @@
 }
 
 .col-6{
+    display:inline-block;
     width:49.5%;
+    vertical-align:top;
 }
 
 .col-10{
@@ -74,7 +76,7 @@ template{
     padding-top:5px;
 }
 
-.eecalc input{
+.eecalc .eecalc-input{
     width: 100%;
     width: calc(100% - 150px);
     margin-left:10px;

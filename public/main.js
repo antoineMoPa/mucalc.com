@@ -122,7 +122,7 @@ function eecalc(root_el){
 	var input = subqsa(cell,".eecalc-input")[0];
 	var button = subqsa(cell,".eecalc-go-button")[0];
 	var output = subqsa(cell,".eecalc-output")[0];
-
+        
 	appear(cell);
 	input.focus();
 
@@ -163,6 +163,10 @@ function eecalc(root_el){
 	}
 
 	input.onkeydown = function(e){
+            if(e.code == "Enter" && !e.shiftKey){
+                e.preventDefault();
+		calculate();
+	     }
 	    if(e.code == "Backspace"){
 		// Delete cell
 		if(get_value() == ""){
@@ -170,10 +174,8 @@ function eecalc(root_el){
 		}
 	    }
 	}
-	input.onkeyup = function(e){
-	    if(e.code == "Enter"){
-		calculate();
-	    }
+
+        input.onkeyup = function(e){
 	};
 	
 	button.onclick = calculate;
