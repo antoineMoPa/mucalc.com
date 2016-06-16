@@ -175,6 +175,9 @@ function eecalc(root_el){
     exports.get_json = get_json;
         
     function focus(index){
+        if(index >= cell_count || index < 0){
+            return;
+        }
 	var cell = find_cell(index);
 	var input = subqsa(cell,".eecalc-input")[0];
 	input.focus();
@@ -252,8 +255,11 @@ function eecalc(root_el){
             if(e.keyCode == 13 && !e.shiftKey){
                 e.preventDefault();
 		calculate();
-	     }
-	    if(e.code == "Backspace"){
+	    } else if (e.keyCode == 38) {
+                focus(get_index()-1);
+            } else if (e.keyCode == 40) {
+                focus(get_index()+1);
+            } else if(e.code == "Backspace"){
 		// Delete cell
 		if(get_value() == ""){
 		    delete_cell(get_index());
