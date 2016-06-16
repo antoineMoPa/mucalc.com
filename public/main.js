@@ -62,18 +62,43 @@ function eeify_mathjs(){
  */
 function appear(el){
     var options = {
-        max: 6,
+        max: 20,
         begin: function(el){
-            el.style.position = "relative";
+            el.style.transform = "scale(0.0)";
         },
         end: function(el){
-            el.style.position = "";
+            el.style.transform = "";
         },
         step: function(el,step,max){
             var ratio = step / max;
             el.style.opacity = "0.0";
             el.style.opacity = 1.0 - ratio;
-            el.style.left = -100 * ratio + "px";
+            el.style.transform = "scale("+(1.0 - ratio)+")";
+        }
+    };
+    animate(el,options);
+}
+
+/*
+  Make something appear "smoothly"
+ */
+function animated_remove(el, callback){
+    var options = {
+        max: 10,
+        begin: function(el){
+            el.style.position = "relative";
+            el.style.opacity = "1.0";
+        },
+        end: function(el){
+            el.style.position = "";
+            el.parentNode.removeChild(el);
+            callback();
+        },
+        step: function(el,step,max){
+            var ratio = step / max;
+            el.style.opacity = ratio;
+            el.style.transform = "scale("+ratio+")";
+            el.style.top = 100 * (1.0 - ratio) + "px";
         }
     };
     animate(el,options);
@@ -136,10 +161,11 @@ function eecalc(root_el){
     function delete_cell(index){
 	if(index != 0){
 	    var cell = find_cell(index);
-	    cells.removeChild(cell);
-	    focus(index-1);
+            animated_remove(cell,function(){
+                update_indices();
+                focus(index-1);
+            });
 	}
-	update_indices();
     }
 
     function delete_all(){
