@@ -249,7 +249,7 @@ function eecalc(root_el){
 	}
 
 	input.onkeydown = function(e){
-            if(e.code == "Enter" && !e.shiftKey){
+            if(e.keyCode == 13 && !e.shiftKey){
                 e.preventDefault();
 		calculate();
 	     }
