@@ -62,7 +62,7 @@ function eeify_mathjs(){
  */
 function appear(el){
     var options = {
-        max: 20,
+        max: 6,
         begin: function(el){
             el.style.transform = "scale(0.0)";
         },
