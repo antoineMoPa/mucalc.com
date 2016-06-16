@@ -18,104 +18,106 @@
       </p>
     </header>
 
-    <div class="starters">
-      <strong>Starters:</strong>
-      <br>
-      <div class="starter-buttons-container">
+    <div class="main-page">
+      <div class="starters">
+        <strong>Starters:</strong>
+        <br>
+        <div class="starter-buttons-container">
+        </div>
       </div>
-    </div>
-    
-    <eecalc></eecalc>
-
-    <div class="col-6">
-      <p><strong>Usage</strong>: <br>
-        Backspace to delete an empty cell<br>
-        Use semicolon (;) to write what you would write on many cells:<br>
-        a = 1; b=2; sin(a+b)
-        <br>
-        <br>
-        Tab go to next cell
-        Shift+Tab go to previous cell
+      
+      <eecalc></eecalc>
+      
+      <div class="col-6">
+        <p><strong>Usage</strong>: <br>
+          Backspace to delete an empty cell<br>
+          Use semicolon (;) to write what you would write on many cells:<br>
+          a = 1; b=2; sin(a+b)
+          <br>
+          <br>
+          Tab go to next cell
+          Shift+Tab go to previous cell
+          
+        </p>
+        <p>
+          <br>
+          <strong>Numbers</strong>:<br>
+          You can use the electrical engineering notation with numbers (n,u,m,k/K,meg/M,G)<br>
+          ex: 1K = 1000<br>
+          
+          <br>
+        </p>
+        <p>
+          <strong>Constants</strong>:<br>
+          pi, e (euler), i (sqrt(-1)), etc. <a href="http://mathjs.org/docs/reference/constants.html" target="_blank">mathjs constants</a>
+        </p>
         
-      </p>
-      <p>
-        <br>
-        <strong>Numbers</strong>:<br>
-        You can use the electrical engineering notation with numbers (n,u,m,k/K,meg/M,G)<br>
-        ex: 1K = 1000<br>
-        
-        <br>
-      </p>
-      <p>
-        <strong>Constants</strong>:<br>
-        pi, e (euler), i (sqrt(-1)), etc. <a href="http://mathjs.org/docs/reference/constants.html" target="_blank">mathjs constants</a>
-      </p>
-
-    </div>
-    <div class="col-6">
-      <p>
-        
-        <strong>Math</strong>:<br>
-        sin(3.14)<br>
-        sin(360deg)<br>
-        a = 30<br>
-        b = 3 * a<br>
-        b<br>
-        <br>        
-      </p>
-      <p>
-        <strong>Conversions</strong>:<br>
-        3 (m) to inches<br>
-        3 in to cm<br>
-        1 gal to L<br>
-        1 L to cm^3<br>
-        <br>
-        (Note: 3 (m) = 3 meters and 3 m = 0.003)
-      </p>
-      <p>
-        
-      <p>
-        <strong>Bonus</strong>: <br>
-        LL(a,b,...) : value of resistances in parallel.
-      </p>
-    </div>
-    
-    <template name="eecalc">
-      <div class="eecalc">
-	<div class="eecalc-cells">
-	</div>
       </div>
-    </template>
-
-    <template name="starter-button">
-      <button class="inline-block">
-      </button>
-    </template>
-    
-    <template name="eecalc-cell">
-      <div class="eecalc-cell">
-	<fieldset>
-	  <div class="inline-block col-10">
-	    <input type="text" class="inline-block eecalc-input"
-		      placeholder="Type math">
-	    <button class="inline-block eecalc-go-button">
-	      Go
-	    </button>
-            <pre class="eecalc-output">
-	    </pre>
+      <div class="col-6">
+        <p>
+          
+          <strong>Math</strong>:<br>
+          sin(3.14)<br>
+          sin(360deg)<br>
+          a = 30<br>
+          b = 3 * a<br>
+          b<br>
+          <br>        
+        </p>
+        <p>
+          <strong>Conversions</strong>:<br>
+          3 (m) to inches<br>
+          3 in to cm<br>
+          1 gal to L<br>
+          1 L to cm^3<br>
+          <br>
+          (Note: 3 (m) = 3 meters and 3 m = 0.003)
+        </p>
+        <p>
+          
+        <p>
+          <strong>Bonus</strong>: <br>
+          LL(a,b,...) : value of resistances in parallel.
+        </p>
+      </div>
+      
+      <template name="eecalc">
+        <div class="eecalc">
+	  <div class="eecalc-cells">
 	  </div>
-          <div class="inline-block col-2">
-            
-          </div>
-	</fieldset>
-      </div>
-    </template>
-
-    <p class="text-right">Licence:
-      <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"  target="_blank">
-	GPLv3
-      </a>
-    </p>
+        </div>
+      </template>
+      
+      <template name="starter-button">
+        <button class="inline-block">
+        </button>
+      </template>
+      
+      <template name="eecalc-cell">
+        <div class="eecalc-cell">
+	  <fieldset>
+	    <div class="inline-block col-10">
+	      <input type="text" class="inline-block eecalc-input"
+		     placeholder="Type math">
+	      <button class="inline-block eecalc-go-button">
+	        Go
+	      </button>
+              <pre class="eecalc-output">
+	      </pre>
+	    </div>
+            <div class="inline-block col-2">
+              
+            </div>
+	  </fieldset>
+        </div>
+      </template>
+      
+      <p class="text-right">Licence:
+        <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"  target="_blank">
+	  GPLv3
+        </a>
+      </p>
+    </div>
     
     <div class="starter-scripts">
       <script name="clear" type="text/plain">
