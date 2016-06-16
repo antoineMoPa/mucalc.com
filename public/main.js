@@ -317,10 +317,23 @@ function ee_parse(str){
 }
 
 function init_starters(calc){
-    var buttons = qsa(".starters button");
+    var scripts = qsa(".starter-scripts script");
+    var container = qsa(".starter-buttons-container")[0];
 
-    for(var i = 0; i < buttons.length; i++){
-        enable_click(buttons[i]);
+    // Create buttons
+    for(var i = 0; i < scripts.length; i++){
+        var html = load_template("starter-button");
+        var button = new_el(html);
+        container.appendChild(button);
+
+        var name = scripts[i].getAttribute("name");
+        var script = scripts[i].innerHTML;
+        var json = JSON.parse(script);
+        var title = json.title;
+        
+        button.name = name;
+        button.innerHTML = title;
+        enable_click(button);
     }
     
     function enable_click(el){
