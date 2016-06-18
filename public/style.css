@@ -44,7 +44,8 @@ header{
     margin:0;
     padding:5px;
     margin:-10px;
-    box-shadow:0 0 3 px #000;
+    box-shadow:0 0 7px rgba(0,0,0,0.3);
+    border-bottom:3px solid #33a;
     margin-bottom:20px;
 }
 
@@ -68,8 +69,10 @@ button{
     background:#55f;
     font-size:14px;
     color:#fff;
-    box-shadow:0 0 3px rgba(0,0,0,0.5);
+    box-shadow:0 0 8px rgba(0,0,0,0.2);
+    border-radius:2px;
 }
+
 button:first-child{
     margin-left:0;
 }
