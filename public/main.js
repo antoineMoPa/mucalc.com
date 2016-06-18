@@ -155,12 +155,28 @@ function eecalc(root_el){
     var cells = subqsa(root_el,".eecalc-cells")[0];
     var cell_count;
     var exports = {};
+    var socket = io();
     
-    new_eecalc_cell("");
+    new_cell("");
 
+    socket.on("sheet",function(sheet){
+	load_json(sheet);
+    });
+
+    socket.on("edit cell",function(data){
+	var number = data.number;
+	var content = data.content;
+	
+	edit_cell(number, content);
+    });
+        
+    window.addEventListener("beforeunload", function(){
+	socket.close();
+    });
+    
     function delete_cell(index){
 	if(index != 0){
-	    var cell = find_cell(index);
+	    var cell = find_cell(index).element;
             animated_remove(cell,function(){
                 update_indices();
                 focus(index-1);
@@ -188,7 +204,7 @@ function eecalc(root_el){
         delete_all();
         
         for(var i = 0; i < cells.length; i++){
-            new_eecalc_cell(cells[i]);
+            new_cell(cells[i]);
         }
     }
 
@@ -204,13 +220,16 @@ function eecalc(root_el){
         if(index >= cell_count || index < 0){
             return;
         }
-	var cell = find_cell(index);
-	var input = subqsa(cell,".eecalc-input")[0];
-	input.focus();
+	find_cell(index).input.focus();
     }
     
     function find_cell(index){
-	return cells.children[index];
+	var el = cells.children[index];
+	return {
+	    element: el,
+	    input: subqsa(el, ".eecalc-input")[0],
+	    output: subqsa(el,".eecalc-output")[0],
+	};
     }
 
     function update_indices(){
@@ -224,7 +243,13 @@ function eecalc(root_el){
 	cell_count = i;
     }
     
-    function new_eecalc_cell(content){
+    function edit_cell(number, content){
+	var field = find_cell(number).input;
+	field.value = content();
+	console.log("edited cell");
+    }
+    
+    function new_cell(content){
 	var cell = new_el(load_template("eecalc-cell"));
 	cells.appendChild(cell);
 	update_indices();
@@ -241,46 +266,21 @@ function eecalc(root_el){
 	    return parseInt(cell.getAttribute("data-index"));
 	}
 
-        cell.calculate = calculate;
-        
-	function calculate(){
-	    var text = ee_parse(get_value());
-	    try{
-		var result = math.eval(text, scope);
-	    } catch (e){
-		output.innerHTML = e;
-		return;
-	    }
-	    
-	    if(text == ""){
-		return;
-	    } else if(result != undefined){
-		output.innerHTML = result;
-	    } else {
-		output.innerHTML = result;
-		return;
-	    }
-
-            flash(output,"#ffee55");
-            
-	    // If last cell, add new cell
-	    if(get_index() == cell_count - 1){
-		new_eecalc_cell("");
-	    }
-	    // Or move focus to next cell
-	    else {
-		subqsa(cells,".eecalc-input")[get_index() + 1].focus();
-	    }
-	}
-
 	function get_value(){
 	    return input.value;
 	}
 
+	function calculate(){
+	    calculate_cell(get_index());
+	};
+	
+        cell.calculate = calculate;
+	
 	input.onkeydown = function(e){
             if(e.keyCode == 13 && !e.shiftKey){
                 e.preventDefault();
 		calculate();
+		send_edit();
 	    } else if (e.keyCode == 38) {
                 focus(get_index()-1);
             } else if (e.keyCode == 40) {
@@ -292,11 +292,59 @@ function eecalc(root_el){
 		}
 	    }
 	}
-        
+
+	function send_edit(){
+	    console.log("edit");
+	    socket.emit("edit cell", {
+		number: get_index(),
+		content: input.value
+	    });
+	} 
+	
         input.onkeyup = function(e){
 	};
 	
 	button.onclick = calculate;
+    }
+
+    function calculate_cell(index){
+	var cell_data = find_cell(index);
+
+	var cell = cell_data.element;
+	var input = cell_data.input;
+	var output = cell_data.output;
+
+	function get_value(){
+	    return input.value;
+	}
+	
+	var text = ee_parse(get_value());
+	try{
+	    var result = math.eval(text, scope);
+	} catch (e){
+	    output.innerHTML = e;
+	    return;
+	}
+	
+	if(text == ""){
+	    return;
+	} else if(result != undefined){
+	    output.innerHTML = result;
+	} else {
+	    output.innerHTML = result;
+		return;
+	}
+	
+        flash(output,"#ffee55");
+        
+	// If last cell, add new cell
+	if(index == cell_count - 1){
+	    new_cell("");
+	}
+	// Or move focus to next cell
+	else {
+	    subqsa(cells,".eecalc-input")[index + 1].focus();
+	}
     }
     
     return exports;
