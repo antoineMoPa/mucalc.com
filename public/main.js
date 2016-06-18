@@ -166,15 +166,33 @@ function eecalc(root_el){
     socket.on("edit cell",function(data){
 	var number = data.number;
 	var content = data.content;
-	
 	edit_cell(number, content);
+	console.log("remote edit cell " + number);
     });
-        
+
+    socket.on("delete cell",function(data){
+	var number = data.number;
+	delete_cell(number, true);
+	console.log("remote delete of cell " + number);
+    });
+
+    
     window.addEventListener("beforeunload", function(){
 	socket.close();
     });
-    
-    function delete_cell(index){
+
+    /*
+      Delete a cell. If remote, we don't send an event to the server.
+     */
+    function delete_cell(index, remote){
+	var remote = remote || false;
+
+	if(!remote){
+	    socket.emit("delete cell", {
+		number: index
+	    });
+	}
+	
 	if(index != 0){
 	    var cell = find_cell(index).element;
             animated_remove(cell,function(){
@@ -245,8 +263,9 @@ function eecalc(root_el){
     
     function edit_cell(number, content){
 	var field = find_cell(number).input;
-	field.value = content();
-	console.log("edited cell");
+	field.value = content;
+	calculate_cell(number);
+	console.log("edited cell " + number);
     }
     
     function new_cell(content){
@@ -279,8 +298,8 @@ function eecalc(root_el){
 	input.onkeydown = function(e){
             if(e.keyCode == 13 && !e.shiftKey){
                 e.preventDefault();
-		calculate();
 		send_edit();
+		calculate();
 	    } else if (e.keyCode == 38) {
                 focus(get_index()-1);
             } else if (e.keyCode == 40) {

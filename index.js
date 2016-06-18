@@ -25,17 +25,23 @@ var default_sheet = {
 
 var test_sheet = deepcopy(default_sheet);
 
-io.on("edit cell",function(data){
-    console.log("edition");
-    socket.broadcast.emit("edit cell", data);
-});
-
 io.on("connection", function(socket){
     var sheet = test_sheet;
     console.log("connection");
 
     // Send sheet to user
     socket.emit("sheet", JSON.stringify(sheet));
+    
+    socket.on("edit cell", function(data){
+	console.log("edition");
+	socket.broadcast.emit("edit cell", data);
+    });
+
+    socket.on("delete cell", function(data){
+	console.log("deletion");
+	socket.broadcast.emit("delete cell", data);
+    });
+
     
     io.on("disconnect",function(socket){
 	console.log("disconnection");
