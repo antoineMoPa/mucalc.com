@@ -147,7 +147,7 @@ function animate(el,options,step){
     );
 }
 
-function eecalc(root_el){
+function eecalc(root_el, namespace){
     eeify_mathjs();
 
     var scope = {};
@@ -155,7 +155,8 @@ function eecalc(root_el){
     var cells = subqsa(root_el,".eecalc-cells")[0];
     var cell_count;
     var exports = {};
-    var socket = io();
+
+    var socket = io("/" + namespace);
     
     new_cell("");
 
@@ -413,6 +414,8 @@ function init_starters(calc){
     }
 }
 
+var namespace = /\/sheet\/(.*)/g.exec(window.location.href)[1];
+
 // Start everything
-var calc = eecalc(qsa("eecalc")[0]);
+var calc = eecalc(qsa("eecalc")[0], namespace);
 init_starters(calc);
