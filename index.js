@@ -5,7 +5,6 @@ var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
 
-
 app.use(body_parser.json());
 
 // Serve public files
@@ -42,10 +41,20 @@ io.on("connection", function(socket){
 	socket.broadcast.emit("delete cell", data);
     });
 
-    
     io.on("disconnect",function(socket){
 	console.log("disconnection");
     });
 });
 
 http.listen(3000);
+
+/*
+  Thank you, Stack Overflow:
+  http://stackoverflow.com/questions/8855687/secure-random-token-in-node-js
+*/
+function generate_token(){
+    require('crypto').randomBytes(16, function(err, buffer) {
+	var token = buffer.toString('hex');
+	console.log(token);
+    });
+}

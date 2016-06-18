@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.1",
+    "crypto": "0.0.3",
     "socket.io": "^1.4.6"
   }
 }

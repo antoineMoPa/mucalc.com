@@ -175,7 +175,6 @@ function eecalc(root_el){
 	delete_cell(number, true);
 	console.log("remote delete of cell " + number);
     });
-
     
     window.addEventListener("beforeunload", function(){
 	socket.close();
@@ -192,8 +191,9 @@ function eecalc(root_el){
 		number: index
 	    });
 	}
-	
-	if(index != 0){
+
+	// Never delete first cell
+	if(index > 0 && index < cells.children.length){
 	    var cell = find_cell(index).element;
             animated_remove(cell,function(){
                 update_indices();
