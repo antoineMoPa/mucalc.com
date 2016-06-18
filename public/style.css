@@ -91,9 +91,12 @@ button:first-child{
 
 .eecalc-cell{
     background:#eee;
-    box-shadow:0 0 2px #bbb;
+    padding-top:5px;
     padding-bottom:5px;
     margin-bottom:10px;
+    border-radius:2px;
+    box-shadow:0 0 8px #ddd;
+    border:1px solid #ddd;
 }
 
 .eecalc fieldset{
@@ -125,6 +128,7 @@ button:first-child{
     font-size:20px;
     padding:5px;
     padding-left:20px;
+    border-radius: 2px;
 }
 
 .eecalc-go-button{
@@ -137,4 +141,5 @@ button:first-child{
     padding:5px;
     background:#fff;
     color:#333;
+    box-shadow:0 0 5px rgba(0,0,0,0.1);
 }

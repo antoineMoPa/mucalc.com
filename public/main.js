@@ -355,7 +355,7 @@ function eecalc(root_el, namespace){
 		return;
 	}
 	
-        flash(output,"#ffee55");
+        flash(output,"#cdf");
         
 	// If last cell, add new cell
 	if(index == cell_count - 1){
