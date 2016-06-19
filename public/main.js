@@ -234,6 +234,7 @@ function eecalc(root_el, namespace){
         for(var i = 0; i < cells.length; i++){
             new_cell(cells[i]);
         }
+	re_run();
     }
 
     exports.load_json = load_json;
