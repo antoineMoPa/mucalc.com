@@ -242,7 +242,15 @@ function eecalc(root_el, namespace){
     }
     
     exports.get_json = get_json;
-        
+    
+    function send_all(){
+	for(var i = 0; i < cells.children.length; i++){
+	    send_value(i);
+	}
+    }
+
+    exports.send_all = send_all;
+    
     function focus(index){
         if(index >= cell_count || index < 0){
             return;
@@ -319,7 +327,7 @@ function eecalc(root_el, namespace){
 	input.onkeydown = function(e){
             if(e.keyCode == 13 && !e.shiftKey){
                 e.preventDefault();
-		send_edit();
+		send_value(get_index());
 		calculate();
 	    } else if (e.keyCode == 38) {
                 focus(get_index()-1);
@@ -332,14 +340,6 @@ function eecalc(root_el, namespace){
 		}
 	    }
 	}
-
-	function send_edit(){
-	    console.log("edit");
-	    socket.emit("edit cell", {
-		number: get_index(),
-		content: input.value
-	    });
-	} 
 	
         input.onkeyup = function(e){
 	};
@@ -347,9 +347,21 @@ function eecalc(root_el, namespace){
 	button.onclick = calculate;
     }
 
+    function send_value(index){
+	var cell_data = find_cell(index);
+	
+	var input = cell_data.input;
+
+	console.log("edit");
+	socket.emit("edit cell", {
+	    number: index,
+	    content: input.value
+	});
+    } 
+    
     function calculate_cell(index){
 	var cell_data = find_cell(index);
-
+	
 	var cell = cell_data.element;
 	var input = cell_data.input;
 	var output = cell_data.output;
@@ -414,7 +426,7 @@ function init_starters(calc){
         var html = load_template("starter-button");
         var button = new_el(html);
         container.appendChild(button);
-
+	
         var name = scripts[i].getAttribute("name");
         var script = scripts[i].innerHTML;
         var json = JSON.parse(script);
@@ -430,6 +442,7 @@ function init_starters(calc){
             var name = el.name;
             var starter = load_script(name);
             calc.load_json(starter);
+	    calc.send_all();
             calc.re_run();
         };
     }
