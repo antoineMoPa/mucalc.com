@@ -95,6 +95,14 @@ button:first-child{
     margin-left:0;
 }
 
+input{
+    border-radius:3px;
+    border:none;
+    padding:5px;
+    background:#fff;
+    box-shadow:0 0 8px rgba(0,0,0,0.2);
+}
+    
 /* eecalc stuff */
 
 .inline-block{
@@ -137,10 +145,10 @@ button:first-child{
     margin-left:10px;
     font-size:20px;
     margin-bottom:5px;
-    border-radius:0;
     border:none;
     padding:5px;
     background:#fff;
+    box-shadow:0 0 3px rgba(0,0,0,0.2);
 }
 
 .eecalc .eecalc-output{

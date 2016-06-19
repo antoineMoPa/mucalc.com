@@ -18,8 +18,53 @@ function subqsa(el,sel){
   returns the HTML
  */
 function load_template(name){
-    var content = qsa("template[name="+name+"]")[0].innerHTML;
-    return content;
+    var el = qsa("template[name="+name+"]")[0];
+    var content = el.innerHTML;
+
+    var params = el.getAttribute("data-params");
+
+    if(params == "" || params == null){
+	params = [];
+    } else {
+	params = params.split(","); 
+    }
+    
+    return {
+	content: content,
+	params: params
+    };
+}
+
+/* 
+   finds .instances
+   
+   replaces handlebars by data- attributes 
+   
+   {{meow}} will be replaced by attribute data-meow
+   
+   (Sort of a preprocessor)
+*/
+function instanciator(el){
+    var instances = subqsa(el, ".instance");
+    
+    for(var i = 0; i < instances.length; i++){
+	var instance = instances[i];
+	var name = instance.getAttribute("data-name");
+	var template = load_template(name);
+	var content = template.content;
+	var params = template.params;
+
+	for(var i = 0; i < params.length; i++){
+	    var attr = "data-"+params[i];
+	    var value = instance.getAttribute(attr);
+	    var attr = attr.replace(/^data-/,"")
+	    var handle = "{{"+attr+"}}";
+	    
+	    content = content.replace(handle,value);
+	}
+	
+	instance.innerHTML = content;
+    }
 }
 
 /*
@@ -151,7 +196,7 @@ function eecalc(root_el, namespace){
     eeify_mathjs();
 
     var scope = {};
-    root_el.innerHTML = load_template("eecalc");
+    root_el.innerHTML = load_template("eecalc").content;
     var cells = subqsa(root_el,".eecalc-cells")[0];
     var cell_count;
     var exports = {};
@@ -181,6 +226,21 @@ function eecalc(root_el, namespace){
 	socket.close();
     });
 
+    var nickname = "";
+    
+    function init_nickname_field(){
+	var input = qsa(".nickname input")[0];
+	var button = qsa(".nickname button")[0];
+	
+	button.addEventListener("click",function(){
+	    nickname = input.value;
+	    flash(input,"#eee");
+	    console.log(nickname);
+	});
+    }
+    
+    init_nickname_field();
+    
     /*
       Delete a cell. If remote, we don't send an event to the server.
      */
@@ -300,7 +360,7 @@ function eecalc(root_el, namespace){
     }
     
     function new_cell(content){
-	var cell = new_el(load_template("eecalc-cell"));
+	var cell = new_el(load_template("eecalc-cell").content);
 	cells.appendChild(cell);
 	update_indices();
 	
@@ -425,7 +485,7 @@ function init_starters(calc){
 
     // Create buttons
     for(var i = 0; i < scripts.length; i++){
-        var html = load_template("starter-button");
+        var html = load_template("starter-button").content;
         var button = new_el(html);
         container.appendChild(button);
 	
@@ -455,6 +515,9 @@ try{
 } catch(e){
     window.location.href = "/new"
 }
+
+// Start instanciator for templates
+instanciator(document.body);
 
 // Start everything
 var calc = eecalc(qsa("eecalc")[0], namespace);

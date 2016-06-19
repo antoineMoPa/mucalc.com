@@ -27,6 +27,13 @@
 
     <div class="main-page">      
       <eecalc></eecalc>
+
+      <div class="instance"
+	   data-name="single-field"
+	   data-label="Your nickname"
+	   data-class="nickname"
+	   data-default="anonymous">
+      </div>
       
       <div class="col-6">
         <p><strong>Usage</strong>: <br>
@@ -89,6 +96,13 @@
         </div>
       </div>
 
+      <template name="single-field" data-params="label,class,default">
+	<div class="single-field {{class}}">
+	  <strong>{{label}}</strong><br>
+	  <input value="{{default}}">
+	  <button>Confirm</button>
+	</div>
+      </template>
       
       <template name="eecalc">
         <div class="eecalc">
