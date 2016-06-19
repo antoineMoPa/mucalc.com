@@ -162,7 +162,6 @@ function eecalc(root_el, namespace){
 
     socket.on("sheet",function(sheet){
 	load_json(sheet);
-	console.log(sheet);
     });
 
     socket.on("edit cell",function(data){
