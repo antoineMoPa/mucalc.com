@@ -7,10 +7,15 @@
     text-align:left;
 }
 
-.col-6{
+.col-6,
+.col-10,
+.col-2{
     display:inline-block;
-    width:49.5%;
     vertical-align:top;
+}
+
+.col-6{
+    width:49.5%;
 }
 
 .col-10{
