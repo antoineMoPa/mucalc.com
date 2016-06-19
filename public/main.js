@@ -187,12 +187,6 @@ function eecalc(root_el, namespace){
     function delete_cell(index, remote){
 	var remote = remote || false;
 
-	if(!remote){
-	    socket.emit("delete cell", {
-		number: index
-	    });
-	}
-
 	// Never delete last remaining cell
 	var len = cells.children.length;
 	
@@ -209,6 +203,12 @@ function eecalc(root_el, namespace){
                 update_indices();
                 focus(index-1);
             });
+
+	    if(!remote){
+		socket.emit("delete cell", {
+		    number: index
+		});
+	    }
 	}
     }
 
