@@ -197,6 +197,13 @@ function eecalc(root_el, namespace){
 	// Never delete first cell
 	if(index > 0 && index < cells.children.length){
 	    var cell = find_cell(index).element;
+
+	    // Avoid deleting more than one time
+	    if(cell.getAttribute("data-deleting") == "true"){
+		return;
+	    }
+	    cell.setAttribute("data-deleting","true");
+	    
             animated_remove(cell,function(){
                 update_indices();
                 focus(index-1);
