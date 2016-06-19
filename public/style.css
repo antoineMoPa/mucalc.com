@@ -26,7 +26,6 @@
     width:16%;
 }
 
-
 /* page-related stuff */
 body{
     background:#f8f8f8;
@@ -43,6 +42,13 @@ h1{
     line-height:15px;
 }
 
+@media (max-width:500px){
+    h1{
+	font-size:15px;
+	margin:5px;
+    }
+}
+
 header{
     background:#55f;
     color:#fff;
@@ -52,6 +58,13 @@ header{
     box-shadow:0 0 7px rgba(0,0,0,0.3);
     border-bottom:3px solid #33a;
     margin-bottom:20px;
+}
+
+@media (max-width:500px){
+    header .col{
+	display:block;
+	width:100%;
+    }
 }
 
 header a{
@@ -92,6 +105,13 @@ button:first-child{
 .main-page{
     margin-left:40px;
     margin-right:40px;
+}
+
+@media (max-width:500px){
+    .main-page{
+	    margin-left:-5px;
+	    margin-right:-5px;
+    }
 }
 
 .eecalc-cell{
