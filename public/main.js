@@ -162,6 +162,7 @@ function eecalc(root_el, namespace){
 
     socket.on("sheet",function(sheet){
 	load_json(sheet);
+	console.log(sheet);
     });
 
     socket.on("edit cell",function(data){
@@ -263,10 +264,22 @@ function eecalc(root_el, namespace){
     }
     
     function edit_cell(number, content){
+	grow_to(number);
 	var field = find_cell(number).input;
 	field.value = content;
 	calculate_cell(number);
 	console.log("edited cell " + number);
+    }
+
+    /* To add cells if required*/
+    function grow_to(number){
+	var from = cells.children.length;
+	var to = number;
+
+	for(i = from; i <= to; i++){
+	    new_cell("");
+	    console.log("grow");
+	}
     }
     
     function new_cell(content){

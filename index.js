@@ -17,7 +17,7 @@ app.get("/sheet/:id",function (req, res) {
     if(namespaces.indexOf(sheet_id) <= -1){
 	new_namespace(sheet_id);
     }
-    
+
     res.sendFile(__dirname + "/public/index.html");
 });
 
@@ -28,28 +28,61 @@ var default_sheet = {
     ]
 };
 
-var test_sheet = deepcopy(default_sheet);
+var sheet_model = function(){
+    var sheet = deepcopy(default_sheet);
+
+    function edit(data){
+	var number = parseInt(data.number);
+	var content = data.content;
+
+	if(number >= 0){
+	    sheet.cells[number] = content;
+	}
+    }
+    
+    function remove(data){
+	var number = data.number;
+	
+	if(number > 0 && number < sheet.cells.length){
+	    sheet.cells.splice(number, 1);
+	}
+    }
+
+    function get_sheet(){
+	return sheet;
+    }
+    
+    var exports = {
+	get_sheet: get_sheet,
+	edit: edit,
+	remove: remove
+    };
+    
+    return exports;
+};
 
 function new_namespace(namespace){
     var nsp = io.of("/"+namespace);
-    
-    console.log("new namespace : " + namespace);
+    var model = sheet_model();
 
+    console.log("new namespace : " + namespace);
+    namespaces.push(namespace);
+    
     nsp.on("connection", function(socket){
-	var sheet = test_sheet;
-	
 	console.log("connection");
 	
 	// Send sheet to user
-	socket.emit("sheet", JSON.stringify(sheet));
+	socket.emit("sheet", JSON.stringify(model.get_sheet()));
 	
 	socket.on("edit cell", function(data){
 	    console.log("edition");
+	    model.edit(data);
 	    socket.broadcast.emit("edit cell", data);
 	});
 	
 	socket.on("delete cell", function(data){
 	    console.log("deletion");
+	    model.remove(data);
 	    socket.broadcast.emit("delete cell", data);
 	});
 	
