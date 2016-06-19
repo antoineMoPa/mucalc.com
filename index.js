@@ -46,8 +46,9 @@ var sheet_model = function(){
     
     function remove(data){
 	var number = data.number;
-	
-	if(number > 0 && number < sheet.cells.length){
+
+	var len = sheet.cells.length;
+	if((number > 0 || len > 1) && number < len){
 	    sheet.cells.splice(number, 1);
 	}
     }

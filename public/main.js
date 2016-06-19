@@ -193,8 +193,10 @@ function eecalc(root_el, namespace){
 	    });
 	}
 
-	// Never delete first cell
-	if(index > 0 && index < cells.children.length){
+	// Never delete last remaining cell
+	var len = cells.children.length;
+	
+	if((index > 0 || len > 1) && index < len){
 	    var cell = find_cell(index).element;
 
 	    // Avoid deleting more than one time
