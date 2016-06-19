@@ -176,3 +176,10 @@ input{
     color:#333;
     box-shadow:0 0 5px rgba(0,0,0,0.1);
 }
+
+.eecalc .users-info{
+    text-align:right;
+    font-size:11px;
+    height:10px;
+    margin:0 10px;
+}

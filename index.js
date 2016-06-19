@@ -56,11 +56,16 @@ var sheet_model = function(){
     function get_sheet(){
 	return sheet;
     }
+
+    function get_length(){
+	return sheet.cells.length + 1;
+    }
     
     var exports = {
 	get_sheet: get_sheet,
 	edit: edit,
-	remove: remove
+	remove: remove,
+	get_length: get_length
     };
     
     return exports;
@@ -72,12 +77,59 @@ function new_namespace(namespace){
 
     console.log("new namespace : " + namespace);
     namespaces.push(namespace);
+
+    var users = {};
     
     nsp.on("connection", function(socket){
 	console.log("connection");
+	var user_id = generate_token(6);
+
+	users[user_id] = {focus:-1};
+
+	/*
+	  Build array containing array of nicknames
+	  of user focussing on each cell
+	  
+	  [
+	  ["Paul","Anonymous"],
+	  [],
+	  ["George"]
+	  ]
+	  
+	  Goal: show the users who's editing what.
+	  
+	 */
+	function send_focus_index(){
+	    var fi = [];
+	    
+	    for(var i = 0; i < model.get_length(); i++){
+		fi.push([]);
+	    }
+
+	    for(var i in users){
+		var user = users[i];
+		if(user.focus != -1){
+		    fi[user.focus].push(user.nickname);
+		}
+	    }
+
+	    nsp.emit("focus index", fi);
+	}
 	
 	// Send sheet to user
 	socket.emit("sheet", JSON.stringify(model.get_sheet()));
+	
+	socket.on("set nickname",function(data){
+	    users[user_id].nickname = data.nickname;
+	    send_focus_index();
+	});
+	
+	socket.on("set focus",function(data){
+	    var index = data.index;
+	    users[user_id].focus = index;
+
+	    send_focus_index();
+	});
 	
 	socket.on("edit cell", function(data){
 	    console.log("edition");
@@ -86,13 +138,14 @@ function new_namespace(namespace){
 	});
 	
 	socket.on("delete cell", function(data){
-	    console.log("deletion");
 	    model.remove(data);
 	    socket.broadcast.emit("delete cell", data);
 	});
 	
 	socket.on("disconnect",function(socket){
 	    console.log("disconnection");
+	    delete users[user_id];
+	    send_focus_index();
 	});
     });
 }
@@ -103,6 +156,7 @@ http.listen(3000);
   Thank you, Stack Overflow:
   http://stackoverflow.com/questions/8855687/secure-random-token-in-node-jse
 */
-function generate_token(){
-    return require('crypto').randomBytes(10).toString('hex');
+function generate_token(num){
+    var num = num || 10;
+    return require('crypto').randomBytes(num).toString('hex');
 }

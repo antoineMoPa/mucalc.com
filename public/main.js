@@ -213,13 +213,29 @@ function eecalc(root_el, namespace){
 	var number = data.number;
 	var content = data.content;
 	edit_cell(number, content);
-	console.log("remote edit cell " + number);
     });
+    
+    socket.on("focus index",function(data){
+	for(var i = 0; i < data.length; i++){
+	    var cell = find_cell(i);
 
+	    if(cell == null){
+		return;
+	    }
+	    
+	    var usersinfo = cell.usersinfo;
+	    
+	    if(Array.isArray(data[i]) && data[i].length > 0){
+		usersinfo.innerHTML = data[i].join(", ") + " editing...";
+	    } else {
+		usersinfo.innerHTML = "";
+	    }
+	}
+    });
+    
     socket.on("delete cell",function(data){
 	var number = data.number;
 	delete_cell(number, true);
-	console.log("remote delete of cell " + number);
     });
     
     window.addEventListener("beforeunload", function(){
@@ -231,12 +247,31 @@ function eecalc(root_el, namespace){
     function init_nickname_field(){
 	var input = qsa(".nickname input")[0];
 	var button = qsa(".nickname button")[0];
+
+	input.onkeydown = function(e){
+	    if(e.keyCode == 13){
+		submit();
+	    }
+	}
 	
 	button.addEventListener("click",function(){
+	    submit();
+	});
+
+	function submit(){
 	    nickname = input.value;
 	    flash(input,"#eee");
-	    console.log(nickname);
-	});
+	    send_nickname(nickname);
+	}
+	
+	// Send it at page load
+	send_nickname("anonymous");
+	
+	function send_nickname(nickname){
+	    socket.emit("set nickname", {
+		nickname: nickname
+	    });
+	}
     }
     
     init_nickname_field();
@@ -318,14 +353,30 @@ function eecalc(root_el, namespace){
             return;
         }
 	find_cell(index).input.focus();
+	send_focus(index);
+    }
+
+    function send_focus(index){
+	if(index == null){
+	    index = -1;
+	}
+	socket.emit("set focus", {
+	    index: index
+	});
     }
     
     function find_cell(index){
 	var el = cells.children[index];
+
+	if(el == undefined){
+	    return null;
+	}
+	
 	return {
 	    element: el,
 	    input: subqsa(el, ".eecalc-input")[0],
 	    output: subqsa(el,".eecalc-output")[0],
+	    usersinfo: subqsa(el,".users-info")[0]
 	};
     }
 
@@ -345,7 +396,6 @@ function eecalc(root_el, namespace){
 	var field = find_cell(number).input;
 	field.value = content;
 	calculate_cell(number);
-	console.log("edited cell " + number);
     }
 
     /* To add cells if required*/
@@ -355,11 +405,11 @@ function eecalc(root_el, namespace){
 
 	for(i = from; i <= to; i++){
 	    new_cell("");
-	    console.log("grow");
 	}
     }
     
     function new_cell(content){
+	cell_count++;
 	var cell = new_el(load_template("eecalc-cell").content);
 	cells.appendChild(cell);
 	update_indices();
@@ -371,7 +421,9 @@ function eecalc(root_el, namespace){
 	appear(cell);
         input.value = content;
 	input.focus();
-
+	send_focus(get_index())
+	send_value(get_index());
+	
 	function get_index(){
 	    return parseInt(cell.getAttribute("data-index"));
 	}
@@ -383,6 +435,10 @@ function eecalc(root_el, namespace){
 	function calculate(){
 	    calculate_cell(get_index());
 	};
+
+	input.addEventListener("click",function(){
+	    send_focus(get_index());
+	});
 	
         cell.calculate = calculate;
 	
@@ -390,7 +446,7 @@ function eecalc(root_el, namespace){
             if(e.keyCode == 13 && !e.shiftKey){
                 e.preventDefault();
 		send_value(get_index());
-		calculate();
+		calculate_and_next();
 	    } else if (e.keyCode == 38) {
                 focus(get_index()-1);
             } else if (e.keyCode == 40) {
@@ -402,9 +458,21 @@ function eecalc(root_el, namespace){
 		}
 	    }
 	}
-	
-        input.onkeyup = function(e){
-	};
+
+	function calculate_and_next(){
+	    calculate();
+	    
+	    var index = get_index();
+	    
+	    // If last cell, add new cell
+	    if(index == cell_count - 1){
+		new_cell("");
+	    }
+	    // Or move focus to next cell
+	    else {
+		focus(index + 1);
+	    }
+	}
 	
 	button.onclick = calculate;
     }
@@ -414,7 +482,6 @@ function eecalc(root_el, namespace){
 	
 	var input = cell_data.input;
 
-	console.log("edit");
 	socket.emit("edit cell", {
 	    number: index,
 	    content: input.value
@@ -450,15 +517,6 @@ function eecalc(root_el, namespace){
 	}
 	
         flash(output,"#cdf");
-        
-	// If last cell, add new cell
-	if(index == cell_count - 1){
-	    new_cell("");
-	}
-	// Or move focus to next cell
-	else {
-	    subqsa(cells,".eecalc-input")[index + 1].focus();
-	}
     }
     
     return exports;
