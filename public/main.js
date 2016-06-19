@@ -401,6 +401,7 @@ function ee_parse(str){
     str = str.replace(/([0-9]+)( *)u/g,  "$1E-6");
     str = str.replace(/([0-9]+)( *)n/g,  "$1E-9");
     str = str.replace(/([0-9]+)( *)p/g,  "$1E-12");
+    str = str.replace(/\*\*/g,  "^");
     return str;
 }
 
@@ -434,7 +435,11 @@ function init_starters(calc){
     }
 }
 
-var namespace = /\/sheet\/(.*)/g.exec(window.location.href)[1];
+try{
+    var namespace = /\/sheet\/(.*)/g.exec(window.location.href)[1];
+} catch(e){
+    window.location.href = "/new"
+}
 
 // Start everything
 var calc = eecalc(qsa("eecalc")[0], namespace);

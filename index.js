@@ -21,6 +21,10 @@ app.get("/sheet/:id",function (req, res) {
     res.sendFile(__dirname + "/public/index.html");
 });
 
+app.get("/new",function (req, res) {
+    res.redirect("/sheet/"+generate_token());
+});
+
 var default_sheet = {
     "title":"Empty",
     "cells":[
@@ -99,8 +103,5 @@ http.listen(3000);
   http://stackoverflow.com/questions/8855687/secure-random-token-in-node-jse
 */
 function generate_token(){
-    require('crypto').randomBytes(16, function(err, buffer) {
-	var token = buffer.toString('hex');
-	console.log(token);
-    });
+    return require('crypto').randomBytes(10).toString('hex');
 }
