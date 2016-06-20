@@ -474,7 +474,10 @@ function eecalc(root_el, namespace){
 	    }
 	}
 	
-	button.onclick = calculate;
+	button.onclick = function(){
+	    send_value(get_index());
+	    calculate_and_next();
+	};
     }
 
     function send_value(index){
