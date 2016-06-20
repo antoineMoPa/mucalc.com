@@ -192,12 +192,12 @@ function animate(el,options,step){
     );
 }
 
-function eecalc(root_el, namespace){
+function livecalc(root_el, namespace){
     eeify_mathjs();
 
     var scope = {};
-    root_el.innerHTML = load_template("eecalc").content;
-    var cells = subqsa(root_el,".eecalc-cells")[0];
+    root_el.innerHTML = load_template("livecalc").content;
+    var cells = subqsa(root_el,".livecalc-cells")[0];
     var cell_count;
     var exports = {};
 
@@ -374,8 +374,8 @@ function eecalc(root_el, namespace){
 	
 	return {
 	    element: el,
-	    input: subqsa(el, ".eecalc-input")[0],
-	    output: subqsa(el,".eecalc-output")[0],
+	    input: subqsa(el, ".livecalc-input")[0],
+	    output: subqsa(el,".livecalc-output")[0],
 	    usersinfo: subqsa(el,".users-info")[0]
 	};
     }
@@ -385,7 +385,7 @@ function eecalc(root_el, namespace){
 	for(i = 0; i < cells.children.length; i++){
 	    var cell = cells.children[i];
 	    cell.setAttribute("data-index", i);
-	    subqsa(cell,".eecalc-input")[0]
+	    subqsa(cell,".livecalc-input")[0]
 		.setAttribute("tabindex", i + 1);
 	}
 	cell_count = i;
@@ -410,13 +410,13 @@ function eecalc(root_el, namespace){
     
     function new_cell(content){
 	cell_count++;
-	var cell = new_el(load_template("eecalc-cell").content);
+	var cell = new_el(load_template("livecalc-cell").content);
 	cells.appendChild(cell);
 	update_indices();
 	
-	var input = subqsa(cell,".eecalc-input")[0];
-	var button = subqsa(cell,".eecalc-go-button")[0];
-	var output = subqsa(cell,".eecalc-output")[0];
+	var input = subqsa(cell,".livecalc-input")[0];
+	var button = subqsa(cell,".livecalc-go-button")[0];
+	var output = subqsa(cell,".livecalc-output")[0];
         
 	appear(cell);
         input.value = content;
@@ -581,5 +581,5 @@ try{
 instanciator(document.body);
 
 // Start everything
-var calc = eecalc(qsa("eecalc")[0], namespace);
+var calc = livecalc(qsa("livecalc")[0], namespace);
 init_starters(calc);
