@@ -339,6 +339,8 @@ function livecalc(root_el, namespace){
 	send_focus(index);
     }
 
+    exports.focus = focus;
+    
     function send_focus(index){
 	if(index == null){
 	    index = -1;
@@ -393,6 +395,8 @@ function livecalc(root_el, namespace){
     }
     
     function new_cell(content){
+	var exports = {};
+	
 	cell_count++;
 	var cell = new_el(load_template("livecalc-cell").content);
 	cells.appendChild(cell);
@@ -462,8 +466,15 @@ function livecalc(root_el, namespace){
 	    send_value(get_index());
 	    calculate_and_next();
 	};
+
+	exports.calculate_and_next = calculate_and_next;
+	exports.calculate = calculate;
+	
+	return exports;
     }
 
+    exports.new_cell = new_cell;
+    
     function send_value(index){
 	var cell_data = find_cell(index);
 	
@@ -598,6 +609,25 @@ function init_starters(calc){
     }
 }
 
+function init_doc(calc){
+    var codes = qsa(".doc code");
+    
+    for(var i = 0; i < codes.length; i++){
+	var el = codes[i];
+	var content = el.innerHTML;
+	
+	init_click(el, content);
+	el.setAttribute("title","Click to add to sheet");
+    }
+
+    function init_click(el, code){
+	el.onclick = function(){
+	    var cell = calc.new_cell(code);
+	    cell.calculate();
+	}
+    }
+}
+
 try{
     var namespace = /\/sheet\/(.*)/g.exec(window.location.href)[1];
 } catch(e){
@@ -608,5 +638,10 @@ try{
 instanciator(document.body);
 
 // Start everything
+
+// Start calculator
 var calc = livecalc(qsa("livecalc")[0], namespace);
+
+// Start documentation
+init_doc(calc);
 init_starters(calc);
