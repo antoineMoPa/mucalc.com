@@ -86,23 +86,6 @@ function new_el(html){
 }
 
 /*
-  Add some useful stuff for electrical engineering
- */
-function eeify_mathjs(){
-    math.import({
-	/* Parallel resistors */
-	LL: function(a,b){
-	    var num = 0;
-	    for(i in arguments){
-		var arg = arguments[i];
-		num += 1/arg;
-	    }	
-	    return 1 / num;
-	}
-    });
-}
-
-/*
   Make something appear "smoothly"
  */
 function appear(el){
@@ -200,7 +183,7 @@ function livecalc(root_el, namespace){
     var cells = subqsa(root_el,".livecalc-cells")[0];
     var cell_count;
     var exports = {};
-
+    var currently_calculated_cell = null
     var socket = io("/" + namespace);
     
     new_cell("");
@@ -226,7 +209,7 @@ function livecalc(root_el, namespace){
 	    var usersinfo = cell.usersinfo;
 	    
 	    if(Array.isArray(data[i]) && data[i].length > 0){
-		usersinfo.innerHTML = data[i].join(", ") + " editing...";
+		usersinfo.innerHTML = data[i].join(", ") + " editing this cell...";
 	    } else {
 		usersinfo.innerHTML = "";
 	    }
@@ -376,7 +359,8 @@ function livecalc(root_el, namespace){
 	    element: el,
 	    input: subqsa(el, ".livecalc-input")[0],
 	    output: subqsa(el,".livecalc-output")[0],
-	    usersinfo: subqsa(el,".users-info")[0]
+	    usersinfo: subqsa(el,".users-info")[0],
+	    plot: subqsa(el,".plot")[0]
 	};
     }
 
@@ -493,7 +477,7 @@ function livecalc(root_el, namespace){
     
     function calculate_cell(index){
 	var cell_data = find_cell(index);
-	
+	currently_calculated_cell = cell_data;
 	var cell = cell_data.element;
 	var input = cell_data.input;
 	var output = cell_data.output;
@@ -520,6 +504,49 @@ function livecalc(root_el, namespace){
 	}
 	
         flash(output,"#cdf");
+    }
+
+    /*
+      Add some useful stuff to math.js
+    */
+    function eeify_mathjs(){
+	math.import({
+	    /* Parallel resistors */
+	    LL: function(a,b){
+		var num = 0;
+		for(i in arguments){
+		    var arg = arguments[i];
+		    num += 1/arg;
+		}	
+		return 1 / num;
+	    },
+	    plot: function(expression){
+		var plot_el = currently_calculated_cell.plot;
+
+		var div_width = plot_el.clientWidth;
+
+		// For most screens: keep this width
+		// To optimize vertical space used +
+		// pragmatic aspect ratio
+		var width = 550;
+
+		// Smaller screens limit widthx
+		if(div_width < 550){
+		    width = div_width;
+		}
+		
+		functionPlot({
+		    target: plot_el,
+		    width: width,
+		    data: [{
+			fn: expression
+		    }],
+		    grid: true
+		})
+		
+		return "";
+	    }
+	});
     }
     
     return exports;

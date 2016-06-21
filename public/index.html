@@ -1,6 +1,8 @@
 <!DOCTYPE HTML>
 <html>
   <head>
+    <meta charset="utf-8">
+    <meta> <!-- I'm so meta -->  
     <title>livecalc.xyz</title>
     <link rel="stylesheet" href="/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +17,7 @@
 	    mathjs docs
 	  </a>
           |
-          Version 0.0.4
+          Version 0.0.5
 	</p>
       </div>
       <div class="col-2 col text-right">
@@ -131,6 +133,8 @@
 	    </div>
 	  </fieldset>
 	  <p class="users-info"></p>
+	  <div class="plot">
+	  </div>
         </div>
       </template>
       
@@ -182,6 +186,8 @@
       </script>
     </div>
 
+    <script src="/lib/d3.min.js" charset="utf-8"></script>
+    <script src="/lib/function-plot.js" charset="utf-8"></script>
     <script src="/lib/socket.io.js"></script>
     <script src="/lib/math.min.js"></script>
     <script src="/main.js"></script>

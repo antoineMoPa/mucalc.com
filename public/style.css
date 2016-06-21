@@ -208,6 +208,15 @@ h3{
 .livecalc .users-info{
     text-align:right;
     font-size:11px;
-    height:10px;
-    margin:0 10px;
+    margin:5px;
+}
+
+.livecalc .plot{
+    margin:10px 10px;
+}
+
+.livecalc .plot svg{
+    background:#fff;
+    margin:auto;
+    display:block;
 }
