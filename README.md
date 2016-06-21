@@ -2,7 +2,7 @@
 
 eecalc is a multi-user math web app. The math syntax is parsed in the browser by [math.js](http://mathjs.org/).
 
-[Live demo](http://a-mo-pa.com:3000/sheet/demo)
+[Live demo](https://www.livecalc.xyz/sheet/demo)
 
 # Example
 
