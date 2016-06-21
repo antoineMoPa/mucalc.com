@@ -45,8 +45,10 @@ h1{
 
 @media (max-width:500px){
     h1{
-	font-size:15px;
-	margin:5px;
+	margin:10px;
+	margin-top:20px;
+	display:block!important;
+	text-align:center;
     }
 }
 

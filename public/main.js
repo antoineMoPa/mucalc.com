@@ -532,7 +532,7 @@ function livecalc(root_el, namespace){
 
 		// Smaller screens limit widthx
 		if(div_width < 550){
-		    width = div_width;
+		    width = div_width - 10;
 		}
 		
 		functionPlot({
