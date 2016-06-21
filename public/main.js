@@ -554,15 +554,15 @@ function livecalc(root_el, namespace){
 
 // Replace electrical engineering notation
 function ee_parse(str){
-    str = str.replace(/([0-9]+)( *)G/g,  "$1E9");
-    str = str.replace(/([0-9]+)( *)M/g,  "$1E6");
-    str = str.replace(/([0-9]+)( *)meg/g,"$1E6");
-    str = str.replace(/([0-9]+)( *)K/g,  "$1E3");
-    str = str.replace(/([0-9]+)( *)k/g,  "$1E3");
-    str = str.replace(/([0-9]+)( *)m/g,  "$1E-3");
-    str = str.replace(/([0-9]+)( *)u/g,  "$1E-6");
-    str = str.replace(/([0-9]+)( *)n/g,  "$1E-9");
-    str = str.replace(/([0-9]+)( *)p/g,  "$1E-12");
+    str = str.replace(/([0-9]+)G/g,  "$1E9");
+    str = str.replace(/([0-9]+)M/g,  "$1E6");
+    str = str.replace(/([0-9]+)meg/g,"$1E6");
+    str = str.replace(/([0-9]+)K/g,  "$1E3");
+    str = str.replace(/([0-9]+)k/g,  "$1E3");
+    str = str.replace(/([0-9]+)m/g,  "$1E-3");
+    str = str.replace(/([0-9]+)u/g,  "$1E-6");
+    str = str.replace(/([0-9]+)n/g,  "$1E-9");
+    str = str.replace(/([0-9]+)p/g,  "$1E-12");
     str = str.replace(/\*\*/g,  "^");
     return str;
 }
