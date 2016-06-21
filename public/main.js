@@ -550,6 +550,8 @@ function livecalc(root_el, namespace){
 		    target: plot_el,
 		    width: width,
 		    data: [{
+			sampler: 'builtIn', /* To use math.js */
+			graphType: 'polyline', /* To use math.js */
 			fn: expression
 		    }],
 		    grid: true

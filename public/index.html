@@ -63,7 +63,8 @@
 	<h3>Plots</h3>
 	<p>
 	  You can plot an expression:<br>
-          <code>plot("sin(x+0.5)")</code>
+          <code>plot("sin(x+0.5)")</code><br>
+	  <code>plot("e**x")</code>
         </p>
         
       </div>
@@ -78,7 +79,7 @@
         </p>
         <h3>Conversions</h3>
 	<p>
-          <code>3 (m) to inches</code><br>
+          <code>3 m to inches</code><br>
           <code>3 in to cm</code><br>
           <code>1 gal to L</code><br>
           <code>1 L to cm^3</code><br>
@@ -88,7 +89,8 @@
         <h3>Bonus</h3>
 	<p>
 
-          <code>LL(a,b)</code> : value of resistances in parallel.
+          <code>a=1K; b=2K; LL(a,b)</code>:
+	  equivalent value of resistors in parallel.
         </p>
       </div>
 
@@ -186,11 +188,11 @@
         }
       </script>
     </div>
-
+    
+    <script src="/lib/math.min.js"></script>
     <script src="/lib/d3.min.js" charset="utf-8"></script>
     <script src="/lib/function-plot.js" charset="utf-8"></script>
     <script src="/lib/socket.io.js"></script>
-    <script src="/lib/math.min.js"></script>
     <script src="/main.js"></script>
   </body>
 </html>
