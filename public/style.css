@@ -40,6 +40,7 @@ h1{
     margin-right:40px;
     margin-left:10px;
     line-height:15px;
+    color:#fff;
 }
 
 @media (max-width:500px){
@@ -50,7 +51,7 @@ h1{
 }
 
 header{
-    background:#55f;
+    background:#88f;
     color:#fff;
     margin:0;
     padding:5px;
@@ -68,6 +69,11 @@ header{
 }
 
 header a{
+    color:#131;
+    text-decoration:none;
+}
+
+.new-sheet-button{
     color:#fff;
 }
 
@@ -89,6 +95,7 @@ button{
     color:#fff;
     box-shadow:0 0 8px rgba(0,0,0,0.2);
     border-radius:2px;
+    cursor:pointer;
 }
 
 button:first-child{
@@ -98,11 +105,33 @@ button:first-child{
 input{
     border-radius:3px;
     border:none;
-    padding:5px;
+    padding:0px 5px;
     background:#fff;
     box-shadow:0 0 8px rgba(0,0,0,0.2);
+    height:32px;
 }
-    
+
+h3{
+    font-weight:300;
+    font-size:120%;
+    margin-left:0;
+    margin:5px 0;
+    text-shadow:1px 1px 0 #fff;
+}
+
+p{
+    line-height:150%;
+}
+
+.doc code,
+.doc pre{
+    background:#fff;
+    display:inline-block;
+    margin:5px 0;
+    padding:0 5px;
+    box-shadow:0 0 8px rgba(0,0,0,0.2);
+}
+
 /* livecalc stuff */
 
 .inline-block{
@@ -146,7 +175,6 @@ input{
     font-size:20px;
     margin-bottom:5px;
     border:none;
-    padding:5px;
     background:#fff;
     box-shadow:0 0 3px rgba(0,0,0,0.2);
 }

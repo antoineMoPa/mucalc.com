@@ -20,7 +20,7 @@
       </div>
       <div class="col-2 col text-right">
 	<p>
-	  <a href="/new" target="_blank">New Sheet ✏</a>
+	  <a href="/new" class="new-sheet-button" target="_blank">New Sheet ✏</a>
 	</p>
       </div>
     </header>
@@ -28,6 +28,7 @@
     <div class="main-page">      
       <livecalc></livecalc>
 
+      <br>
       <div class="instance"
 	   data-name="single-field"
 	   data-label="Your nickname"
@@ -35,64 +36,62 @@
 	   data-default="anonymous">
       </div>
       
-      <div class="col-6">
-        <p><strong>Usage</strong>: <br>
+      <div class="col-6 doc">
+        <h3>How to use this?</h3>
+	<p>
+	  Type math (example: <code>13*42*(3+32)/12</code>)<br>
 	  Data is saved when you press GO/Enter<br>
 	  Copy/Paste URL to share sheet<br>
           Backspace to delete an empty cell<br>
           Use semicolon (;) to write what you would write on many cells:<br>
-          a = 1; b=2; sin(a+b)
+          <code>a = 1; b=2; sin(a+b)</code>
           <br>
           <br>
-          Tab go to next cell
-          Shift+Tab go to previous cell
+          Navigation: Tab/Shift+tab, arrows
           
         </p>
-        <p>
-          <br>
-          <strong>Numbers</strong>:<br>
+        <h3>Numbers</h3>
+	<p>
           You can use the electrical engineering notation with numbers (n,u,m,k/K,meg/M,G)<br>
-          ex: 1K = 1000<br>
+          ex: <code>1K</code> = 1000<br>
           
           <br>
         </p>
-        <p>
-          <strong>Constants</strong>:<br>
-          pi, e (euler), i (sqrt(-1)), etc. <a href="http://mathjs.org/docs/reference/constants.html" target="_blank">mathjs constants</a>
+        <h3>Constants</h3>
+	<p>
+          <code>pi</code>, <code>e</code> (euler), <code>i</code> (sqrt(-1)), etc. <a href="http://mathjs.org/docs/reference/constants.html" target="_blank">mathjs constants</a>
         </p>
         
       </div>
-      <div class="col-6">
-        <p>
-          
-          <strong>Math</strong>:<br>
-          sin(3.14)<br>
-          sin(360deg)<br>
-          a = 30<br>
-          b = 3 * a<br>
-          b (to show the value of 'b')<br>
-          <br>        
+      <div class="col-6 doc">
+        <h3>Math</h3>
+	<p>
+          <code>sin(3.14)</code><br>
+          <code>sin(360deg)</code><br>
+          <code>a = 30</code><br>
+          <code>b = 3 * a</code><br>
+          <code>b</code> (to show the value of 'b')<br>
         </p>
-        <p>
-          <strong>Conversions</strong>:<br>
-          3 (m) to inches<br>
-          3 in to cm<br>
-          1 gal to L<br>
-          1 L to cm^3<br>
-	  4 bytes in bits<br>
+        <h3>Conversions</h3>
+	<p>
+          <code>3 (m) to inches</code><br>
+          <code>3 in to cm</code><br>
+          <code>1 gal to L</code><br>
+          <code>1 L to cm^3</code><br>
+	  <code>4 bytes in bits</code><br>
           <br>
-          (Note: 3 (m) = 3 meters and 3 m = 0.003)
+          (Note: <code>3 (m)</code> = <code>3 meters</code> and <code>3 m</code> = <code>0.003</code>)
         </p>
-        <p>
-          
-        <p>
-          <strong>Bonus</strong>: <br>
-          LL(a,b,...) : value of resistances in parallel.
+        <h3>Bonus</h3>
+	<p>
+
+          <code>LL(a,b,...)</code> : value of resistances in parallel.
         </p>
       </div>
 
       <div class="starters">
-        <strong>Starters:</strong> (Warning: This will remove all your cells)
+        <h3>Starters</h3>
+	(Warning: This will remove all your cells)
         <br>
         <div class="starter-buttons-container">
         </div>
@@ -100,7 +99,7 @@
 
       <template name="single-field" data-params="label,class,default">
 	<div class="single-field {{class}}">
-	  <strong>{{label}}</strong><br>
+	  <h3>{{label}}</h3>
 	  <input value="{{default}}">
 	  <button>Confirm</button>
 	</div>
