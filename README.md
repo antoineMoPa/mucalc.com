@@ -15,4 +15,4 @@ The client UI is mostly written in vanilla JS. No jQuery, no angular, no react, 
 
 # Contributing
 
-Submit an issue or clone and code then send a pull request. :smile: :thumbsup: :heart: :heart_eyes:
+Submit an issue or clone and code then send a pull request.
