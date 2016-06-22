@@ -198,7 +198,6 @@ function livecalc(root_el, namespace){
     socket.on("edit cell",function(data){
 	var number = data.number;
 	var content = data.content;
-	console.log("on edit cell",content);
 	edit_cell(number, content);
     });
     
@@ -411,8 +410,6 @@ function livecalc(root_el, namespace){
 	var button = subqsa(cell,".livecalc-go-button")[0];
 	var output = subqsa(cell,".livecalc-output")[0];
 
-	console.log(input);
-	
 	appear(cell);
         input.setAttribute("value",content);
 	
