@@ -643,6 +643,11 @@ var href = window.location.href;
 
 if(href.match(/\/sheet\/(.*)/)){
     // In a sheet
+    
+    // Remove landing page
+    var landing = qsa(".only-landing")[0];
+    landing.parentNode.removeChild(landing);
+
     var namespace = /\/sheet\/(.*)/g.exec(href)[1];
 
     // Start everything
@@ -653,13 +658,6 @@ if(href.match(/\/sheet\/(.*)/)){
     // Start documentation
     init_doc(calc);
     init_starters(calc);
-
-    // Remove landing page
-    var landing = qsa(".only-landing")[0];
-    landing.parentNode.removeChild(landing);
-
 } else {
     // Landing page
-    
-    //window.location.href = "/new"
 }
