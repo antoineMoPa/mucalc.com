@@ -660,4 +660,38 @@ if(href.match(/\/sheet\/(.*)/)){
     init_starters(calc);
 } else {
     // Landing page
+    // Nice background animation
+    var can = new_el("<canvas id='bg-canvas'></canvas>");
+    var body = document.body;
+    body.appendChild(can);
+    can.style.position = "absolute";
+    can.style.top = 0;
+    can.style.left = 0;
+    can.style.zIndex = -1;
+    
+    var w = body.clientWidth;
+    var h = body.clientHeight;
+    can.width = w;
+    can.height = h;
+    var ctx = can.getContext("2d");
+
+    var x = 0;
+    var last;
+    setInterval(function(){
+        var t = new Date().getTime()/1000;
+        var deltat = t - last;
+        ctx.fillStyle = "rgba(255,255,255,0.02)";
+        ctx.fillRect(0,0,w,h);
+        var iterations = 5;
+        for(var i=0; i < iterations; i++){
+            x+=2;
+            x %= w;
+            ctx.fillStyle = "rgba(40,40,200,0.6)";
+            // Don't ask me how I ended up with this
+            var y = h/2 *
+                Math.sin(t+(i/iterations*deltat)*4) + h/2;
+            ctx.fillRect(x,y,2,2);
+        };
+        last = t;
+    },33);
 }
