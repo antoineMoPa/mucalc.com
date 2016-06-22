@@ -36,7 +36,7 @@ function load_template(name){
 }
 
 /* 
-   finds .instances
+   finds template-instances
    
    replaces handlebars by data- attributes 
    
@@ -45,8 +45,8 @@ function load_template(name){
    (Sort of a preprocessor)
 */
 function instanciator(el){
-    var instances = subqsa(el, ".instance");
-    
+    var instances = subqsa(el,"template-instance");
+
     for(var i = 0; i < instances.length; i++){
 	var instance = instances[i];
 	var name = instance.getAttribute("data-name");
@@ -54,8 +54,8 @@ function instanciator(el){
 	var content = template.content;
 	var params = template.params;
 
-	for(var i = 0; i < params.length; i++){
-	    var attr = "data-"+params[i];
+	for(var j = 0; j < params.length; j++){
+	    var attr = "data-"+params[j];
 	    var value = instance.getAttribute(attr);
 	    var attr = attr.replace(/^data-/,"")
 	    var handle = "{{"+attr+"}}";
@@ -180,13 +180,16 @@ function livecalc(root_el, namespace){
 
     var scope = {};
     root_el.innerHTML = load_template("livecalc").content;
+    instanciator(root_el);
     var cells = subqsa(root_el,".livecalc-cells")[0];
     var cell_count;
     var exports = {};
     var currently_calculated_cell = null
     var socket = io("/" + namespace);
+
+    exports.el = root_el;
     
-    new_cell("");
+    new_cell("", true);
 
     socket.on("sheet",function(sheet){
 	load_json(sheet);
@@ -195,6 +198,7 @@ function livecalc(root_el, namespace){
     socket.on("edit cell",function(data){
 	var number = data.number;
 	var content = data.content;
+	console.log("on edit cell",content);
 	edit_cell(number, content);
     });
     
@@ -310,7 +314,7 @@ function livecalc(root_el, namespace){
         delete_all();
         
         for(var i = 0; i < cells.length; i++){
-            new_cell(cells[i]);
+            new_cell(cells[i], true);
         }
 	re_run();
     }
@@ -390,27 +394,27 @@ function livecalc(root_el, namespace){
 	var to = number;
 
 	for(i = from; i <= to; i++){
-	    new_cell("");
+	    new_cell("",false);
 	}
     }
     
-    function new_cell(content){
+    function new_cell(content, send_data){
 	var exports = {};
-	
+	var content = content || "";
+
 	cell_count++;
 	var cell = new_el(load_template("livecalc-cell").content);
 	cells.appendChild(cell);
 	update_indices();
-	
+
 	var input = subqsa(cell,".livecalc-input")[0];
 	var button = subqsa(cell,".livecalc-go-button")[0];
 	var output = subqsa(cell,".livecalc-output")[0];
-        
+
+	console.log(input);
+	
 	appear(cell);
-        input.value = content;
-	input.focus();
-	send_focus(get_index())
-	send_value(get_index());
+        input.setAttribute("value",content);
 	
 	function get_index(){
 	    return parseInt(cell.getAttribute("data-index"));
@@ -454,7 +458,7 @@ function livecalc(root_el, namespace){
 	    
 	    // If last cell, add new cell
 	    if(index == cell_count - 1){
-		new_cell("");
+		new_cell("", true);
 	    }
 	    // Or move focus to next cell
 	    else {
@@ -469,6 +473,13 @@ function livecalc(root_el, namespace){
 
 	exports.calculate_and_next = calculate_and_next;
 	exports.calculate = calculate;
+
+	input.focus();
+
+	if(send_data){
+	    send_focus(get_index());
+	    send_value(get_index());
+	}
 	
 	return exports;
     }
@@ -612,8 +623,8 @@ function init_starters(calc){
 }
 
 function init_doc(calc){
-    var codes = qsa(".doc code");
-    
+    var codes = subqsa(calc.el, ".doc code");
+
     for(var i = 0; i < codes.length; i++){
 	var el = codes[i];
 	var content = el.innerHTML;
@@ -624,26 +635,34 @@ function init_doc(calc){
 
     function init_click(el, code){
 	el.onclick = function(){
-	    var cell = calc.new_cell(code);
+	    var cell = calc.new_cell(code, true);
 	    cell.calculate();
-	}
+	};
     }
 }
 
-try{
-    var namespace = /\/sheet\/(.*)/g.exec(window.location.href)[1];
-} catch(e){
-    window.location.href = "/new"
+
+var href = window.location.href;
+
+if(href.match(/\/sheet\/(.*)/)){
+    // In a sheet
+    var namespace = /\/sheet\/(.*)/g.exec(href)[1];
+
+    // Start everything
+    
+    // Start calculator
+    var calc = livecalc(qsa("livecalc")[0], namespace);
+    
+    // Start documentation
+    init_doc(calc);
+    init_starters(calc);
+
+    // Remove landing page
+    var landing = qsa(".only-landing")[0];
+    landing.parentNode.removeChild(landing);
+
+} else {
+    // Landing page
+    
+    //window.location.href = "/new"
 }
-
-// Start instanciator for templates
-instanciator(document.body);
-
-// Start everything
-
-// Start calculator
-var calc = livecalc(qsa("livecalc")[0], namespace);
-
-// Start documentation
-init_doc(calc);
-init_starters(calc);

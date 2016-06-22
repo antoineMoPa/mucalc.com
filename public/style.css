@@ -7,6 +7,10 @@
     text-align:left;
 }
 
+.text-center{
+    text-align:center;
+}
+
 .col-6,
 .col-10,
 .col-2{
@@ -26,9 +30,21 @@
     width:16%;
 }
 
+/* landing page */
+
+.landing h1{
+    line-height:80px;
+}
+
+.landing p{
+    line-height:150%;
+    font-size:20px;
+    font-family:sans-serif;
+}
+
 /* page-related stuff */
 body{
-    background:#f8f8f8;
+    background:#fff;
     font-family: sans-serif;
     padding:0;
     margin:10px;
@@ -39,8 +55,11 @@ h1{
     font-weight:300;
     margin-right:40px;
     margin-left:10px;
-    line-height:15px;
+}
+
+header h1{
     color:#fff;
+    line-height:15px;
 }
 
 @media (max-width:500px){
@@ -121,6 +140,10 @@ h3{
     text-shadow:1px 1px 0 #fff;
 }
 
+p{
+    line-height:140%;
+}
+
 .doc p{
     line-height:150%;
 }
@@ -130,7 +153,7 @@ h3{
     display:inline-block;
     margin:5px 0;
     padding:0 5px;
-    box-shadow:0 0 8px rgba(0,0,0,0.1);
+    box-shadow:0 0 3px rgba(0,0,0,0.1);
     cursor:pointer;
     border-radius:3px;
 }
