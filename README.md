@@ -1,6 +1,6 @@
-# eecalc
+# livecalc.xyz
 
-eecalc is a multi-user math web app. The math syntax is parsed in the browser by [math.js](http://mathjs.org/).
+livecalc.xyz is a multi-user math web app. The math syntax is parsed in the browser by [math.js](http://mathjs.org/).
 
 [Live demo](https://www.livecalc.xyz/sheet/demo)
 
@@ -23,7 +23,7 @@ Backend dependencies:
 
     npm install
 
-I was too lazy and hipster to learn browserify. So I decided to create a makefile to download frontend dependencies: 
+I was too hipster for browserify. So I decided to create a makefile to download frontend dependencies: 
 
     make download
 
