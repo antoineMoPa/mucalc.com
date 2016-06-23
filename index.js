@@ -4,6 +4,7 @@ var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
 var sheet_db = require("./sheet_db");
+var stats = require("./stats");
 
 app.use(body_parser.json());
 
@@ -29,6 +30,7 @@ app.get("/new",function (req, res) {
 function new_namespace(namespace){
     var nsp = io.of("/"+namespace);
     var model = require("./sheet_model").create();
+    stats.new_sheet();
 
     namespaces.push(namespace);
 
