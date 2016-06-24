@@ -259,7 +259,8 @@ p{
     margin:10px 10px;
 }
 
-.livecalc .plot svg{
+.livecalc .plot svg,
+.livecalc .plot canvas{
     background:#fff;
     margin:auto;
     display:block;

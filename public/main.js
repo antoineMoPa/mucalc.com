@@ -566,6 +566,73 @@ function livecalc(root_el, namespace){
 		})
 		
 		return "";
+	    },
+	    zfractal: function(expression, iterations, size){
+		var iterations = iterations || 10;
+		var exp = math.compile(expression);
+		var plot_el = currently_calculated_cell.plot;
+		plot_el.innerHTML = "";
+		var div_width = plot_el.clientWidth;
+		var pixel_ratio = 1;
+		
+		var size = size || 30;
+
+		if(iterations > 30){
+		    iterations = 30;
+		}
+
+		if(size > 200){
+		    size = 200;
+		}
+		
+		var width = size;
+		var height = size;
+		
+		var can = new_el("<canvas></canvas>");
+		var ctx = can.getContext("2d");
+		
+		plot_el.appendChild(can);
+
+		// Make it square
+		can.width = width * pixel_ratio;
+		can.height = height * pixel_ratio;
+		
+		for(var i = 0; i < width; i++){
+		    for(var j = 0; j < height; j++){
+			scope.z = math.complex(
+			    4.0 * (i/width - 0.5),
+			    4.0 * (j/height-0.5)
+			);
+			
+			for(var k = 0; k < iterations; k++){
+			    scope.z = exp.eval(scope);
+
+			    if(len(scope.z) > 1.0){
+				var val = "" +
+				    parseInt(((k/iterations) * 255));
+
+				ctx.fillStyle =
+				    "rgba("+val+","+val+","+val+",1)";
+				
+				ctx.fillRect(i*pixel_ratio,
+					     j*pixel_ratio,
+					     pixel_ratio,
+					     pixel_ratio);
+				break;
+			    }
+			}
+			
+		    }
+		}
+
+		function len(z){
+		    return Math.sqrt(
+			Math.pow(z.re,2) + 
+			    Math.pow(z.im,2)
+		    );
+		}
+		
+		return "";
 	    }
 	});
     }
