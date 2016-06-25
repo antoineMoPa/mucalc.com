@@ -599,7 +599,8 @@ function livecalc(root_el, namespace){
         button.onclick = go;
         
         function go(){
-            callback();
+            button.innerHTML = "Computing...";
+            setTimeout(callback,100);
         }
     }
 
