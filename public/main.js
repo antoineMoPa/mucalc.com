@@ -624,6 +624,8 @@ function livecalc(root_el, namespace){
         // Make it square
         can.width = width * pixel_ratio;
         can.height = height * pixel_ratio;
+
+        var data = ctx.createImageData(width, height);
         
         for(var i = 0; i < width; i++){
             for(var j = 0; j < height; j++){
@@ -633,27 +635,27 @@ function livecalc(root_el, namespace){
                 );
                 
                 scope.z = math.complex(scope.c);
+
+                var val = 255;
                 
                 for(var k = 0; k < iterations; k++){
                     scope.z = exp.eval(scope);
-                    
                     if(len(scope.z) > 2.0){
-                        var val = "" +
-                            parseInt(((k/iterations) * 255));
-                        
-                        ctx.fillStyle =
-                            "rgba("+val+","+val+","+val+",1)";
-                        
-                        ctx.fillRect(i*pixel_ratio,
-                                     j*pixel_ratio,
-                                     pixel_ratio,
-                                     pixel_ratio);
+                        val = parseInt(((k/iterations) * 255));
                         break;
                     }
                 }
-                
+
+                var index = 4 * (j * width + i);
+                        
+                data.data[index + 0] = val;
+                data.data[index + 1] = val;
+                data.data[index + 2] = val;
+                data.data[index + 3] = 255
             }
         }
+
+        ctx.putImageData(data,0,0);
         
         function len(z){
             return Math.sqrt(
