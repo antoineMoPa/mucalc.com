@@ -68,6 +68,18 @@ function instanciator(el){
 }
 
 /*
+  Create an instance of a template and put it in to_el
+  Improvement idea: manage parameters and use this in instanciator
+  instead of current code.
+*/
+function instanciate_to(template_name, to_el){
+    var template = load_template(template_name).content;
+    var el = new_el(template);
+    to_el.innerHTML = "";
+    to_el.appendChild(el);
+} 
+
+/*
   Load a script
   Returns the content
  */
@@ -567,27 +579,38 @@ function livecalc(root_el, namespace){
                 
                 return "";
             },
-            zfractal: zfractal
+            zfractal: function(e,i,s){
+                var cell = currently_calculated_cell;
+                wait_for_click(cell, function(){
+                    zfractal(cell.plot, e, i, s);
+                });
+            }
         });
     }
 
-    function zfractal(expression, iterations, size){
+    /* 
+       Wait for user click before 
+       calculating something potentially long 
+    */
+    function wait_for_click(cell, callback){
+        instanciate_to("livecalc-wait-click", cell.plot);
+        
+        var button = subqsa(cell.plot,"button")[0];
+        button.onclick = go;
+        
+        function go(){
+            callback();
+        }
+    }
+
+    function zfractal(plot_el, expression, iterations, size){
         var iterations = iterations || 10;
         var exp = math.compile(expression);
-        var plot_el = currently_calculated_cell.plot;
         plot_el.innerHTML = "";
         var div_width = plot_el.clientWidth;
         var pixel_ratio = 1;
         
         var size = size || 30;
-        
-        if(iterations > 30){
-            iterations = 30;
-        }
-        
-        if(size > 200){
-            size = 200;
-        }
         
         var width = size;
         var height = size;
