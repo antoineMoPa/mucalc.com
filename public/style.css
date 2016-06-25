@@ -52,8 +52,8 @@
 
 @media (min-width:1000px){
     .features .block-center{
-	width:40%;
-	margin:auto;
+        width:40%;
+        margin:auto;
     }
 }
 
@@ -82,10 +82,10 @@ header h1 a{
 
 @media (max-width:500px){
     h1{
-	margin:10px;
-	margin-top:20px;
-	display:block!important;
-	text-align:center;
+        margin:10px;
+        margin-top:20px;
+        display:block!important;
+        text-align:center;
     }
 }
 
@@ -102,8 +102,8 @@ header{
 
 @media (max-width:500px){
     header .col{
-	display:block;
-	width:100%;
+        display:block;
+        width:100%;
     }
 }
 
@@ -190,8 +190,8 @@ p{
 
 @media (max-width:500px){
     .main-page{
-	    margin-left:-5px;
-	    margin-right:-5px;
+            margin-left:-5px;
+            margin-right:-5px;
     }
 }
 

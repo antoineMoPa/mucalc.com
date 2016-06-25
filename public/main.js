@@ -24,14 +24,14 @@ function load_template(name){
     var params = el.getAttribute("data-params");
 
     if(params == "" || params == null){
-	params = [];
+        params = [];
     } else {
-	params = params.split(","); 
+        params = params.split(","); 
     }
     
     return {
-	content: content,
-	params: params
+        content: content,
+        params: params
     };
 }
 
@@ -48,22 +48,22 @@ function instanciator(el){
     var instances = subqsa(el,"template-instance");
 
     for(var i = 0; i < instances.length; i++){
-	var instance = instances[i];
-	var name = instance.getAttribute("data-name");
-	var template = load_template(name);
-	var content = template.content;
-	var params = template.params;
+        var instance = instances[i];
+        var name = instance.getAttribute("data-name");
+        var template = load_template(name);
+        var content = template.content;
+        var params = template.params;
 
-	for(var j = 0; j < params.length; j++){
-	    var attr = "data-"+params[j];
-	    var value = instance.getAttribute(attr);
-	    var attr = attr.replace(/^data-/,"")
-	    var handle = "{{"+attr+"}}";
-	    
-	    content = content.replace(handle,value);
-	}
-	
-	instance.innerHTML = content;
+        for(var j = 0; j < params.length; j++){
+            var attr = "data-"+params[j];
+            var value = instance.getAttribute(attr);
+            var attr = attr.replace(/^data-/,"")
+            var handle = "{{"+attr+"}}";
+            
+            content = content.replace(handle,value);
+        }
+        
+        instance.innerHTML = content;
     }
 }
 
@@ -157,21 +157,21 @@ function animate(el,options,step){
     max = options.max;
     time_step = options.time_step || 33;
     if(step == undefined){
-	step = max;
+        step = max;
         options.begin(el);
     }
     if(step < 0){
         options.end(el);
-	return;
+        return;
     }
 
     options.step(el, step, max);
     
     setTimeout(
-	function(){
-	    animate(el, options, step - 1);
-	},
-	time_step
+        function(){
+            animate(el, options, step - 1);
+        },
+        time_step
     );
 }
 
@@ -192,72 +192,72 @@ function livecalc(root_el, namespace){
     new_cell("", true);
 
     socket.on("sheet",function(sheet){
-	load_json(sheet);
+        load_json(sheet);
     });
 
     socket.on("edit cell",function(data){
-	var number = data.number;
-	var content = data.content;
-	edit_cell(number, content);
+        var number = data.number;
+        var content = data.content;
+        edit_cell(number, content);
     });
     
     socket.on("focus index",function(data){
-	for(var i = 0; i < data.length; i++){
-	    var cell = find_cell(i);
+        for(var i = 0; i < data.length; i++){
+            var cell = find_cell(i);
 
-	    if(cell == null){
-		return;
-	    }
-	    
-	    var usersinfo = cell.usersinfo;
-	    
-	    if(Array.isArray(data[i]) && data[i].length > 0){
-		usersinfo.innerHTML = data[i].join(", ") + " editing this cell...";
-	    } else {
-		usersinfo.innerHTML = "";
-	    }
-	}
+            if(cell == null){
+                return;
+            }
+            
+            var usersinfo = cell.usersinfo;
+            
+            if(Array.isArray(data[i]) && data[i].length > 0){
+                usersinfo.innerHTML = data[i].join(", ") + " editing this cell...";
+            } else {
+                usersinfo.innerHTML = "";
+            }
+        }
     });
     
     socket.on("delete cell",function(data){
-	var number = data.number;
-	delete_cell(number, true);
+        var number = data.number;
+        delete_cell(number, true);
     });
     
     window.addEventListener("beforeunload", function(){
-	socket.close();
+        socket.close();
     });
 
     var nickname = "";
     
     function init_nickname_field(){
-	var input = qsa(".nickname input")[0];
-	var button = qsa(".nickname button")[0];
+        var input = qsa(".nickname input")[0];
+        var button = qsa(".nickname button")[0];
 
-	input.onkeydown = function(e){
-	    if(e.keyCode == 13){
-		submit();
-	    }
-	}
-	
-	button.addEventListener("click",function(){
-	    submit();
-	});
+        input.onkeydown = function(e){
+            if(e.keyCode == 13){
+                submit();
+            }
+        }
+        
+        button.addEventListener("click",function(){
+            submit();
+        });
 
-	function submit(){
-	    nickname = input.value;
-	    flash(input,"#eee");
-	    send_nickname(nickname);
-	}
-	
-	// Send it at page load
-	send_nickname("anonymous");
-	
-	function send_nickname(nickname){
-	    socket.emit("set nickname", {
-		nickname: nickname
-	    });
-	}
+        function submit(){
+            nickname = input.value;
+            flash(input,"#eee");
+            send_nickname(nickname);
+        }
+        
+        // Send it at page load
+        send_nickname("anonymous");
+        
+        function send_nickname(nickname){
+            socket.emit("set nickname", {
+                nickname: nickname
+            });
+        }
     }
     
     init_nickname_field();
@@ -266,31 +266,31 @@ function livecalc(root_el, namespace){
       Delete a cell. If remote, we don't send an event to the server.
      */
     function delete_cell(index, remote){
-	var remote = remote || false;
+        var remote = remote || false;
 
-	// Never delete last remaining cell
-	var len = cells.children.length;
-	
-	if((index > 0 || len > 1) && index < len){
-	    var cell = find_cell(index).element;
+        // Never delete last remaining cell
+        var len = cells.children.length;
+        
+        if((index > 0 || len > 1) && index < len){
+            var cell = find_cell(index).element;
 
-	    // Avoid deleting more than one time
-	    if(cell.getAttribute("data-deleting") == "true"){
-		return;
-	    }
-	    cell.setAttribute("data-deleting","true");
-	    
+            // Avoid deleting more than one time
+            if(cell.getAttribute("data-deleting") == "true"){
+                return;
+            }
+            cell.setAttribute("data-deleting","true");
+            
             animated_remove(cell,function(){
                 update_indices();
                 focus(index-1);
             });
 
-	    if(!remote){
-		socket.emit("delete cell", {
-		    number: index
-		});
-	    }
-	}
+            if(!remote){
+                socket.emit("delete cell", {
+                    number: index
+                });
+            }
+        }
     }
 
     function delete_all(){
@@ -315,7 +315,7 @@ function livecalc(root_el, namespace){
         for(var i = 0; i < cells.length; i++){
             new_cell(cells[i], true);
         }
-	re_run();
+        re_run();
     }
 
     exports.load_json = load_json;
@@ -327,9 +327,9 @@ function livecalc(root_el, namespace){
     exports.get_json = get_json;
     
     function send_all(){
-	for(var i = 0; i < cells.children.length; i++){
-	    send_value(i);
-	}
+        for(var i = 0; i < cells.children.length; i++){
+            send_value(i);
+        }
     }
 
     exports.send_all = send_all;
@@ -338,190 +338,190 @@ function livecalc(root_el, namespace){
         if(index >= cell_count || index < 0){
             return;
         }
-	find_cell(index).input.focus();
-	send_focus(index);
+        find_cell(index).input.focus();
+        send_focus(index);
     }
 
     exports.focus = focus;
     
     function send_focus(index){
-	if(index == null){
-	    index = -1;
-	}
-	socket.emit("set focus", {
-	    index: index
-	});
+        if(index == null){
+            index = -1;
+        }
+        socket.emit("set focus", {
+            index: index
+        });
     }
     
     function find_cell(index){
-	var el = cells.children[index];
+        var el = cells.children[index];
 
-	if(el == undefined){
-	    return null;
-	}
-	
-	return {
-	    element: el,
-	    input: subqsa(el, ".livecalc-input")[0],
-	    output: subqsa(el,".livecalc-output")[0],
-	    usersinfo: subqsa(el,".users-info")[0],
-	    plot: subqsa(el,".plot")[0]
-	};
+        if(el == undefined){
+            return null;
+        }
+        
+        return {
+            element: el,
+            input: subqsa(el, ".livecalc-input")[0],
+            output: subqsa(el,".livecalc-output")[0],
+            usersinfo: subqsa(el,".users-info")[0],
+            plot: subqsa(el,".plot")[0]
+        };
     }
 
     function update_indices(){
-	var i = 0;
-	for(i = 0; i < cells.children.length; i++){
-	    var cell = cells.children[i];
-	    cell.setAttribute("data-index", i);
-	    subqsa(cell,".livecalc-input")[0]
-		.setAttribute("tabindex", i + 1);
-	}
-	cell_count = i;
+        var i = 0;
+        for(i = 0; i < cells.children.length; i++){
+            var cell = cells.children[i];
+            cell.setAttribute("data-index", i);
+            subqsa(cell,".livecalc-input")[0]
+                .setAttribute("tabindex", i + 1);
+        }
+        cell_count = i;
     }
     
     function edit_cell(number, content){
-	grow_to(number);
-	var field = find_cell(number).input;
-	field.value = content;
-	calculate_cell(number);
+        grow_to(number);
+        var field = find_cell(number).input;
+        field.value = content;
+        calculate_cell(number);
     }
 
     /* To add cells if required*/
     function grow_to(number){
-	var from = cells.children.length;
-	var to = number;
+        var from = cells.children.length;
+        var to = number;
 
-	for(i = from; i <= to; i++){
-	    new_cell("",false);
-	}
+        for(i = from; i <= to; i++){
+            new_cell("",false);
+        }
     }
     
     function new_cell(content, send_data){
-	var exports = {};
-	var content = content || "";
+        var exports = {};
+        var content = content || "";
 
-	cell_count++;
-	var cell = new_el(load_template("livecalc-cell").content);
-	cells.appendChild(cell);
-	update_indices();
+        cell_count++;
+        var cell = new_el(load_template("livecalc-cell").content);
+        cells.appendChild(cell);
+        update_indices();
 
-	var input = subqsa(cell,".livecalc-input")[0];
-	var button = subqsa(cell,".livecalc-go-button")[0];
-	var output = subqsa(cell,".livecalc-output")[0];
+        var input = subqsa(cell,".livecalc-input")[0];
+        var button = subqsa(cell,".livecalc-go-button")[0];
+        var output = subqsa(cell,".livecalc-output")[0];
 
-	appear(cell);
+        appear(cell);
         input.setAttribute("value",content);
-	
-	function get_index(){
-	    return parseInt(cell.getAttribute("data-index"));
-	}
+        
+        function get_index(){
+            return parseInt(cell.getAttribute("data-index"));
+        }
 
-	function get_value(){
-	    return input.value;
-	}
+        function get_value(){
+            return input.value;
+        }
 
-	function calculate(){
-	    calculate_cell(get_index());
-	};
+        function calculate(){
+            calculate_cell(get_index());
+        };
 
-	input.addEventListener("click",function(){
-	    send_focus(get_index());
-	});
-	
+        input.addEventListener("click",function(){
+            send_focus(get_index());
+        });
+        
         cell.calculate = calculate;
-	
-	input.onkeydown = function(e){
+        
+        input.onkeydown = function(e){
             if(e.keyCode == 13 && !e.shiftKey){
                 e.preventDefault();
-		send_value(get_index());
-		calculate_and_next();
-	    } else if (e.keyCode == 38) {
+                send_value(get_index());
+                calculate_and_next();
+            } else if (e.keyCode == 38) {
                 focus(get_index()-1);
             } else if (e.keyCode == 40) {
                 focus(get_index()+1);
             } else if(e.code == "Backspace"){
-		// Delete cell
-		if(get_value() == ""){
-		    delete_cell(get_index());
-		}
-	    }
-	}
+                // Delete cell
+                if(get_value() == ""){
+                    delete_cell(get_index());
+                }
+            }
+        }
 
-	function calculate_and_next(){
-	    calculate();
-	    
-	    var index = get_index();
-	    
-	    // If last cell, add new cell
-	    if(index == cell_count - 1){
-		new_cell("", true);
-	    }
-	    // Or move focus to next cell
-	    else {
-		focus(index + 1);
-	    }
-	}
-	
-	button.onclick = function(){
-	    send_value(get_index());
-	    calculate_and_next();
-	};
+        function calculate_and_next(){
+            calculate();
+            
+            var index = get_index();
+            
+            // If last cell, add new cell
+            if(index == cell_count - 1){
+                new_cell("", true);
+            }
+            // Or move focus to next cell
+            else {
+                focus(index + 1);
+            }
+        }
+        
+        button.onclick = function(){
+            send_value(get_index());
+            calculate_and_next();
+        };
 
-	exports.calculate_and_next = calculate_and_next;
-	exports.calculate = calculate;
+        exports.calculate_and_next = calculate_and_next;
+        exports.calculate = calculate;
 
-	input.focus();
+        input.focus();
 
-	if(send_data){
-	    send_focus(get_index());
-	    send_value(get_index());
-	}
-	
-	return exports;
+        if(send_data){
+            send_focus(get_index());
+            send_value(get_index());
+        }
+        
+        return exports;
     }
 
     exports.new_cell = new_cell;
     
     function send_value(index){
-	var cell_data = find_cell(index);
-	
-	var input = cell_data.input;
+        var cell_data = find_cell(index);
+        
+        var input = cell_data.input;
 
-	socket.emit("edit cell", {
-	    number: index,
-	    content: input.value
-	});
+        socket.emit("edit cell", {
+            number: index,
+            content: input.value
+        });
     } 
     
     function calculate_cell(index){
-	var cell_data = find_cell(index);
-	currently_calculated_cell = cell_data;
-	var cell = cell_data.element;
-	var input = cell_data.input;
-	var output = cell_data.output;
+        var cell_data = find_cell(index);
+        currently_calculated_cell = cell_data;
+        var cell = cell_data.element;
+        var input = cell_data.input;
+        var output = cell_data.output;
 
-	function get_value(){
-	    return input.value;
-	}
-	
-	var text = ee_parse(get_value());
-	try{
-	    var result = math.eval(text, scope);
-	} catch (e){
-	    output.innerHTML = e;
-	    return;
-	}
-	
-	if(text == ""){
-	    return;
-	} else if(result != undefined){
-	    output.innerHTML = result;
-	} else {
-	    output.innerHTML = result;
-		return;
-	}
-	
+        function get_value(){
+            return input.value;
+        }
+        
+        var text = ee_parse(get_value());
+        try{
+            var result = math.eval(text, scope);
+        } catch (e){
+            output.innerHTML = e;
+            return;
+        }
+        
+        if(text == ""){
+            return;
+        } else if(result != undefined){
+            output.innerHTML = result;
+        } else {
+            output.innerHTML = result;
+                return;
+        }
+        
         flash(output,"#cdf");
     }
 
@@ -529,114 +529,114 @@ function livecalc(root_el, namespace){
       Add some useful stuff to math.js
     */
     function eeify_mathjs(){
-	math.import({
-	    /* Parallel resistors */
-	    LL: function(a,b){
-		var num = 0;
-		for(i in arguments){
-		    var arg = arguments[i];
-		    num += 1/arg;
-		}	
-		return 1 / num;
-	    },
-	    plot: function(expression){
-		var plot_el = currently_calculated_cell.plot;
+        math.import({
+            /* Parallel resistors */
+            LL: function(a,b){
+                var num = 0;
+                for(i in arguments){
+                    var arg = arguments[i];
+                    num += 1/arg;
+                }        
+                return 1 / num;
+            },
+            plot: function(expression){
+                var plot_el = currently_calculated_cell.plot;
 
-		var div_width = plot_el.clientWidth;
+                var div_width = plot_el.clientWidth;
 
-		// For most screens: keep this width
-		// To optimize vertical space used +
-		// pragmatic aspect ratio
-		var width = 550;
+                // For most screens: keep this width
+                // To optimize vertical space used +
+                // pragmatic aspect ratio
+                var width = 550;
 
-		// Smaller screens limit widthx
-		if(div_width < 550){
-		    width = div_width - 10;
-		}
-		
-		functionPlot({
-		    target: plot_el,
-		    width: width,
-		    data: [{
-			sampler: 'builtIn', /* To use math.js */
-			graphType: 'polyline', /* To use math.js */
-			fn: expression
-		    }],
-		    grid: true
-		})
-		
-		return "";
-	    },
-	    zfractal: function(expression, iterations, size){
-		var iterations = iterations || 10;
-		var exp = math.compile(expression);
-		var plot_el = currently_calculated_cell.plot;
-		plot_el.innerHTML = "";
-		var div_width = plot_el.clientWidth;
-		var pixel_ratio = 1;
-		
-		var size = size || 30;
+                // Smaller screens limit widthx
+                if(div_width < 550){
+                    width = div_width - 10;
+                }
+                
+                functionPlot({
+                    target: plot_el,
+                    width: width,
+                    data: [{
+                        sampler: 'builtIn', /* To use math.js */
+                        graphType: 'polyline', /* To use math.js */
+                        fn: expression
+                    }],
+                    grid: true
+                })
+                
+                return "";
+            },
+            zfractal: function(expression, iterations, size){
+                var iterations = iterations || 10;
+                var exp = math.compile(expression);
+                var plot_el = currently_calculated_cell.plot;
+                plot_el.innerHTML = "";
+                var div_width = plot_el.clientWidth;
+                var pixel_ratio = 1;
+                
+                var size = size || 30;
 
-		if(iterations > 30){
-		    iterations = 30;
-		}
+                if(iterations > 30){
+                    iterations = 30;
+                }
 
-		if(size > 200){
-		    size = 200;
-		}
-		
-		var width = size;
-		var height = size;
-		
-		var can = new_el("<canvas></canvas>");
-		var ctx = can.getContext("2d");
-		
-		plot_el.appendChild(can);
+                if(size > 200){
+                    size = 200;
+                }
+                
+                var width = size;
+                var height = size;
+                
+                var can = new_el("<canvas></canvas>");
+                var ctx = can.getContext("2d");
+                
+                plot_el.appendChild(can);
 
-		// Make it square
-		can.width = width * pixel_ratio;
-		can.height = height * pixel_ratio;
-		
-		for(var i = 0; i < width; i++){
-		    for(var j = 0; j < height; j++){
-			scope.c = math.complex(
-			    4.0 * (i/width - 0.5),
-			    4.0 * (j/height - 0.5)
-			);
+                // Make it square
+                can.width = width * pixel_ratio;
+                can.height = height * pixel_ratio;
+                
+                for(var i = 0; i < width; i++){
+                    for(var j = 0; j < height; j++){
+                        scope.c = math.complex(
+                            4.0 * (i/width - 0.5),
+                            4.0 * (j/height - 0.5)
+                        );
 
-			scope.z = math.complex(scope.c);
-			
-			for(var k = 0; k < iterations; k++){
-			    scope.z = exp.eval(scope);
+                        scope.z = math.complex(scope.c);
+                        
+                        for(var k = 0; k < iterations; k++){
+                            scope.z = exp.eval(scope);
 
-			    if(len(scope.z) > 2.0){
-				var val = "" +
-				    parseInt(((k/iterations) * 255));
+                            if(len(scope.z) > 2.0){
+                                var val = "" +
+                                    parseInt(((k/iterations) * 255));
 
-				ctx.fillStyle =
-				    "rgba("+val+","+val+","+val+",1)";
-				
-				ctx.fillRect(i*pixel_ratio,
-					     j*pixel_ratio,
-					     pixel_ratio,
-					     pixel_ratio);
-				break;
-			    }
-			}
-			
-		    }
-		}
+                                ctx.fillStyle =
+                                    "rgba("+val+","+val+","+val+",1)";
+                                
+                                ctx.fillRect(i*pixel_ratio,
+                                             j*pixel_ratio,
+                                             pixel_ratio,
+                                             pixel_ratio);
+                                break;
+                            }
+                        }
+                        
+                    }
+                }
 
-		function len(z){
-		    return Math.sqrt(
-			Math.pow(z.re,2) + 
-			    Math.pow(z.im,2)
-		    );
-		}
-		
-		return "";
-	    }
-	});
+                function len(z){
+                    return Math.sqrt(
+                        Math.pow(z.re,2) + 
+                            Math.pow(z.im,2)
+                    );
+                }
+                
+                return "";
+            }
+        });
     }
     
     return exports;
@@ -666,7 +666,7 @@ function init_starters(calc){
         var html = load_template("starter-button").content;
         var button = new_el(html);
         container.appendChild(button);
-	
+        
         var name = scripts[i].getAttribute("name");
         var script = scripts[i].innerHTML;
         var json = JSON.parse(script);
@@ -682,7 +682,7 @@ function init_starters(calc){
             var name = el.name;
             var starter = load_script(name);
             calc.load_json(starter);
-	    calc.send_all();
+            calc.send_all();
             calc.re_run();
         };
     }
@@ -692,18 +692,18 @@ function init_doc(calc){
     var codes = subqsa(calc.el, ".doc code");
 
     for(var i = 0; i < codes.length; i++){
-	var el = codes[i];
-	var content = el.innerHTML;
-	
-	init_click(el, content);
-	el.setAttribute("title","Click to add to sheet");
+        var el = codes[i];
+        var content = el.innerHTML;
+        
+        init_click(el, content);
+        el.setAttribute("title","Click to add to sheet");
     }
 
     function init_click(el, code){
-	el.onclick = function(){
-	    var cell = calc.new_cell(code, true);
-	    cell.calculate();
-	};
+        el.onclick = function(){
+            var cell = calc.new_cell(code, true);
+            cell.calculate();
+        };
     }
 }
 
