@@ -37,4 +37,4 @@ You can now visit [http://127.0.0.1:3000](http://127.0.0.1:3000).
 
 You can submit issues.
 
-You cans also clone and code then send a pull request.
+You can also clone and code then send a pull request.
