@@ -599,15 +599,17 @@ function livecalc(root_el, namespace){
 		
 		for(var i = 0; i < width; i++){
 		    for(var j = 0; j < height; j++){
-			scope.z = math.complex(
+			scope.c = math.complex(
 			    4.0 * (i/width - 0.5),
-			    4.0 * (j/height-0.5)
+			    4.0 * (j/height - 0.5)
 			);
+
+			scope.z = math.complex(scope.c);
 			
 			for(var k = 0; k < iterations; k++){
 			    scope.z = exp.eval(scope);
 
-			    if(len(scope.z) > 1.0){
+			    if(len(scope.z) > 2.0){
 				var val = "" +
 				    parseInt(((k/iterations) * 255));
 
