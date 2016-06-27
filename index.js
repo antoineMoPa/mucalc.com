@@ -30,6 +30,7 @@ app.get("/new",function (req, res) {
 function new_namespace(namespace){
     var nsp = io.of("/"+namespace);
     var model = require("./sheet_model").create();
+    var user_count = 0;
     stats.new_sheet();
 
     namespaces.push(namespace);
@@ -46,12 +47,15 @@ function new_namespace(namespace){
             listen();
         }
     });
-
+    
     function listen(){
         var users = {};
         
         nsp.on("connection", function(socket){
-            console.log("connection");
+            user_count++;
+            console.log("connection - " + user_count + " users");
+            nsp.emit("user count", user_count);
+        
             var user_id = generate_token(6);
             
             users[user_id] = {focus:-1};
@@ -114,6 +118,8 @@ function new_namespace(namespace){
             
             socket.on("disconnect",function(socket){
                 console.log("disconnection");
+                user_count--;
+                nsp.emit("user count", user_count);
                 delete users[user_id];
                 send_focus_index();
             });

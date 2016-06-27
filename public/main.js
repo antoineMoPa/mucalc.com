@@ -207,6 +207,14 @@ function livecalc(root_el, namespace){
         load_json(sheet);
     });
 
+    var user_count = subqsa(root_el, ".user-count")[0];
+    
+    socket.on("user count",function(count){
+        var plural = count > 1;
+        user_count.innerHTML = count + " user" + (plural? "s": "");
+    });
+
+    
     socket.on("edit cell",function(data){
         var number = data.number;
         var content = data.content;

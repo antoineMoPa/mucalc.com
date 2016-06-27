@@ -278,4 +278,12 @@ p{
 .livecalc-wait-click-button{
     margin-bottom:0;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
-} 
+}
+
+.livecalc-header{
+    text-align:right;
+}
+
+.livecalc-header .user-count{
+    margin-bottom:10px;
+}
