@@ -577,6 +577,7 @@ function livecalc(root_el, namespace){
                 functionPlot({
                     target: plot_el,
                     width: width,
+                    disableZoom: true,
                     data: [{
                         sampler: 'builtIn', /* To use math.js */
                         graphType: 'polyline', /* To use math.js */
