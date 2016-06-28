@@ -59,7 +59,7 @@ function instanciator(el){
             var value = instance.getAttribute(attr);
             
             // Sanitize value to avoid XSS
-            value = value.replace(/[^A-Za-z0-9\-]/g,"");
+            value = value.replace(/[^A-Za-z0-9\- ]/g,"");
             var attr = attr.replace(/^data-/,"")
             var handle = "{{"+attr+"}}";
             
@@ -227,11 +227,12 @@ function livecalc(root_el, namespace){
     });
 
     socket.on("sheet locked",function(data){
+        // data.initiator is normally sanited on server
         alert( "Sheet was locked by \"" +
-               data.nickname +
+               data.initiator +
                "\". You can still open a copy."
              );
-
+        
         params.locked = true;
         
         update_state();
