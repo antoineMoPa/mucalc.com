@@ -175,19 +175,25 @@
     <template name="livecalc">
       <div class="livecalc">
         <div class="livecalc-header">
+          <p class="sheet-state text-left">
+          </p>
           <div class="user-count">
           </div>
         </div>
         <div class="livecalc-cells">
         </div>
-        
+
+        <template-instance
+           data-name="sheet-panel">
+        </template-instance>
+
         <template-instance
              data-name="single-field"
              data-label="Your nickname"
              data-class="nickname"
              data-default="anonymous">
         </template-instance>
-
+        
         <template-instance
            data-name="small-doc">
         </template-instance>
@@ -197,6 +203,22 @@
     <template name="starter-button">
       <button class="inline-block">
       </button>
+    </template>
+
+    <template name="sheet-panel">
+      <h3>Sheet Panel</h3>
+      Lock sheet from further editing
+      <br>
+      <button name="lock-sheet">
+        Lock Sheet
+      </button>
+      <br>
+      Open a copy
+      <br>
+      <button name="new-copy">
+        New Copy
+      </button>
+
     </template>
     
     <template name="livecalc-cell">

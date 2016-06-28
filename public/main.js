@@ -57,6 +57,9 @@ function instanciator(el){
         for(var j = 0; j < params.length; j++){
             var attr = "data-"+params[j];
             var value = instance.getAttribute(attr);
+            
+            // Sanitize value to avoid XSS
+            value = value.replace(/[^A-Za-z0-9\-]/g,"");
             var attr = attr.replace(/^data-/,"")
             var handle = "{{"+attr+"}}";
             
@@ -198,11 +201,12 @@ function livecalc(root_el, namespace){
     var exports = {};
     var currently_calculated_cell = null
     var socket = io("/" + namespace);
-
+    var params = {};
+    
     exports.el = root_el;
     
     new_cell("", true);
-
+    
     socket.on("sheet",function(sheet){
         load_json(sheet);
     });
@@ -211,6 +215,7 @@ function livecalc(root_el, namespace){
     
     socket.on("user count",function(count){
         var plural = count > 1;
+        var count = parseInt(count);
         user_count.innerHTML = count + " user" + (plural? "s": "");
     });
 
@@ -219,6 +224,17 @@ function livecalc(root_el, namespace){
         var number = data.number;
         var content = data.content;
         edit_cell(number, content);
+    });
+
+    socket.on("sheet locked",function(data){
+        alert( "Sheet was locked by \"" +
+               data.nickname +
+               "\". You can still open a copy."
+             );
+
+        params.locked = true;
+        
+        update_state();
     });
     
     socket.on("focus index",function(data){
@@ -232,9 +248,9 @@ function livecalc(root_el, namespace){
             var usersinfo = cell.usersinfo;
             
             if(Array.isArray(data[i]) && data[i].length > 0){
-                usersinfo.innerHTML = data[i].join(", ") + " editing this cell...";
+                usersinfo.textContent = data[i].join(", ") + " editing this cell...";
             } else {
-                usersinfo.innerHTML = "";
+                usersinfo.textContent = "";
             }
         }
     });
@@ -251,8 +267,8 @@ function livecalc(root_el, namespace){
     var nickname = "";
     
     function init_nickname_field(){
-        var input = qsa(".nickname input")[0];
-        var button = qsa(".nickname button")[0];
+        var input = subqsa(root_el, ".nickname input")[0];
+        var button = subqsa(root_el, ".nickname button")[0];
 
         input.onkeydown = function(e){
             if(e.keyCode == 13){
@@ -281,6 +297,28 @@ function livecalc(root_el, namespace){
     }
     
     init_nickname_field();
+
+    function init_sheet_panel(){
+        var lock_sheet_button = subqsa(
+            root_el,
+            "button[name='lock-sheet']"
+        )[0];
+
+        lock_sheet_button.onclick = function(){
+            socket.emit("lock sheet");
+        };
+        
+        var new_copy_button = subqsa(
+            root_el,
+            "button[name='new-copy']"
+        )[0];
+        
+        new_copy_button.onclick = function(){
+            window.location.href = "/copy/"+namespace;
+        }
+    }
+
+    init_sheet_panel();
     
     /*
       Delete a cell. If remote, we don't send an event to the server.
@@ -329,6 +367,9 @@ function livecalc(root_el, namespace){
     function load_json(data){
         var data = JSON.parse(data);
         var cells = data.cells;
+        params = data.params;
+
+        update_state();
         
         delete_all();
         
@@ -339,12 +380,18 @@ function livecalc(root_el, namespace){
     }
 
     exports.load_json = load_json;
+
+    var sheet_state = subqsa(root_el, ".sheet-state")[0];
     
-    function get_json(){
-        // TODO
+    function update_state(){
+        if(params.locked){
+            sheet_state.textContent = "This sheet is locked. Modifications will not be saved. You can still open a copy (See bottom of the page).";
+        } else {
+            sheet_state.textContent = "This sheet is public.";
+        }
     }
-    
-    exports.get_json = get_json;
+
+    update_state();
     
     function send_all(){
         for(var i = 0; i < cells.children.length; i++){
@@ -529,16 +576,16 @@ function livecalc(root_el, namespace){
         try{
             var result = math.eval(text, scope);
         } catch (e){
-            output.innerHTML = e;
+            output.textContent = e;
             return;
         }
         
         if(text == ""){
             return;
         } else if(result != undefined){
-            output.innerHTML = result;
+            output.textContent = result;
         } else {
-            output.innerHTML = result;
+            output.textContent = result;
                 return;
         }
         

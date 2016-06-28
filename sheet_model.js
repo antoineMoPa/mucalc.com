@@ -1,7 +1,10 @@
 var deepcopy = require("deepcopy");
 
 var default_sheet = {
-    "title":"Empty",
+    "params":{
+        "title":"Empty",
+        "locked":false,
+    },
     "cells":[
         ""
     ]
@@ -11,10 +14,14 @@ module.exports = {};
 
 module.exports.create = function(){
     var sheet = deepcopy(default_sheet);
-
-    var exports = {};
     
+    var exports = {};
+
     exports.edit = function(data){
+        if(sheet.params.locked){
+            return;
+        }
+        
         var number = parseInt(data.number);
         var content = data.content;
         
@@ -24,6 +31,10 @@ module.exports.create = function(){
     }
     
     exports.remove = function(data){
+        if(sheet.params.locked){
+            return;
+        }
+        
         var number = data.number;
         
         var len = sheet.cells.length;
@@ -31,9 +42,28 @@ module.exports.create = function(){
             sheet.cells.splice(number, 1);
         }
     }
+
+    exports.lock = function(){
+        sheet.params.locked = true;
+    }
+    
+    exports.is_locked = function(){
+        if(sheet.params.locked == undefined){
+            sheet.params.locked = false;
+        }
+        return sheet.params.locked;
+    }
     
     exports.set_sheet = function(data){
+        if(sheet.params.locked){
+            return sheet;
+        }
+
         sheet = data;
+        sheet.params = sheet.params || {};
+        sheet.params.locked = sheet.params.locked || false;
+        
+        return sheet;
     }
     
     exports.get_sheet = function(){
