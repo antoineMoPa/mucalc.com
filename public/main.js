@@ -892,37 +892,6 @@ function ee_parse(str){
     return str;
 }
 
-function init_starters(calc){
-    var scripts = qsa(".starter-scripts script");
-    var container = qsa(".starter-buttons-container")[0];
-
-    // Create buttons
-    for(var i = 0; i < scripts.length; i++){
-        var html = load_template("starter-button").content;
-        var button = new_el(html);
-        container.appendChild(button);
-        
-        var name = scripts[i].getAttribute("name");
-        var script = scripts[i].innerHTML;
-        var json = JSON.parse(script);
-        var title = json.title;
-        
-        button.name = name;
-        button.innerHTML = title;
-        enable_click(button);
-    }
-    
-    function enable_click(el){
-        el.onclick = function(){
-            var name = el.name;
-            var starter = load_script(name);
-            calc.load_json(starter);
-            calc.send_all();
-            calc.re_run();
-        };
-    }
-}
-
 function init_doc(calc){
     var codes = subqsa(calc.el, ".doc code");
 
@@ -961,7 +930,6 @@ if(href.match(/\/sheet\/(.*)/)){
     
     // Start documentation
     init_doc(calc);
-    init_starters(calc);
 } else {
     // Landing page
     // Nice background animation
