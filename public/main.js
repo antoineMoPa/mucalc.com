@@ -559,12 +559,17 @@ function livecalc(root_el, namespace){
                 }        
                 return 1 / num;
             },
+            rule: function(number){
+                var cell = currently_calculated_cell;
+                return rule(cell.plot, number);
+            },
             plot: plot,
             zfractal: function(e,i,s){
                 var cell = currently_calculated_cell;
                 wait_for_click(cell, function(){
                     zfractal(cell.plot, e, i, s);
                 });
+                return "";
             }
         });
     }
@@ -585,6 +590,150 @@ function livecalc(root_el, namespace){
         }
     }
 
+    /*
+      Cellular automata
+     */
+    function rule(plot_el, number){
+        var number = parseInt(number);
+        
+        if(number < 0 || number > 255){
+            throw "Number should be between 0 and 255";
+        }
+        
+        plot_el.innerHTML = "";
+        var div_width = plot_el.clientWidth;
+        
+        var grid_size = 40;
+        var pixel_size = 5;
+        
+        var width = grid_size;
+        var height = grid_size;
+
+        var can = new_el("<canvas></canvas>");
+        var ctx = can.getContext("2d");
+        
+        plot_el.appendChild(can);
+        
+        can.width = width * pixel_size;
+        can.height = height * pixel_size;
+
+        var imgdata = ctx.createImageData(can.width, can.height);
+
+        var line = new_line();
+
+        line[parseInt(width/2)] = true;
+
+        // This is a port of my GLSL code found
+        // [here](https://github.com/antoineMoPa/ogl-js/blob/master/tests/triangles/post-fragment.glsl)
+
+        // Draw a pixel
+        // (That may be many pixel, depending on pixel_size)
+        function set_pixel(i,j,val){
+            var j = j * pixel_size;
+            var i = i * pixel_size;
+
+            // repeat the pixel
+            for(var k = 0; k < pixel_size; k++){
+                for(var l = 0; l < pixel_size; l++){
+                    set_one_pixel(i+k,j+l,val);
+                }
+            }
+        }
+
+        // Draw one actual canvas pixel
+        function set_one_pixel(i,j,val){
+            var index = 4 * (j * can.width + i);
+            // Set value
+            imgdata.data[index + 0] = val;
+            imgdata.data[index + 1] = val;
+            imgdata.data[index + 2] = val;
+            imgdata.data[index + 3] = 255;
+        }
+
+        // Parse screen and follow the rule to create new line
+        for(var j = 0; j < height; j++){
+            // Keep last line in memory
+            var last_line = copy_line(line);
+            for(var i = 1; i < width-1; i++){
+                // Drawing
+                var val = 255;
+
+                if(line[i]){
+                    val = 0;
+                }
+
+                set_pixel(i, j, val);
+                
+                var cell_1 = last_line[i-1];
+                var cell_2 = last_line[i];
+                var cell_3 = last_line[i+1];
+                
+                var num = 0;
+                
+                if(cell_1){
+                    num += 4;
+                }
+                if(cell_2){
+                    num += 2;
+                }
+                if(cell_3){
+                    num += 1;
+                }
+
+                next = false;
+                
+                // `rule`: 8 bits
+                // `num`: 3 bits addressing `rule` bits
+                //
+                // `rule` indicates which cases of `num` will produce
+                // an open pixel
+                //
+                // bitwise or (&) operator example:
+                // 0010 0000 & 0010 0001 == 0010 0000
+                //
+                // Example with rule 3
+                // Rule 3 = 0000 0011
+                // So bits 1 and 2 are activated
+                // Which means 2^0 and 2^1 is activated
+                // 0000 0011 & 0000 0001 != 0 and
+                // 0000 0011 & 0000 0010 != 0
+                //
+                // In these cases, the next state of the pixel is `1`
+                //
+                if(number & parseInt(Math.pow(2,num))){
+                    next = true;
+                }
+                
+                if(next){
+                    line[i] = true;
+                } else {
+                    line[i] = false;
+                }
+            }
+        }
+
+        function new_line(){
+            var line = [];
+            for(var i = 0; i < width; i++){
+                line.push(false);
+            }
+            return line;
+        }
+
+        function copy_line(old){
+            var line = [];
+            for(var i = 0; i < old.length; i++){
+                line.push(old[i]);
+            }
+            return line;
+        }
+        
+        ctx.putImageData(imgdata,0,0);
+        
+        // We must return a value
+        return "";
+    }
+    
     function plot(expression){
         var plot_el = currently_calculated_cell.plot;
         
@@ -611,7 +760,8 @@ function livecalc(root_el, namespace){
             }],
             grid: true
         })
-        
+
+        // We must return a value
         return "";
     }
     
@@ -674,8 +824,6 @@ function livecalc(root_el, namespace){
                     Math.pow(z.im,2)
             );
         }
-        
-        return "";
     }
     
     return exports;
