@@ -141,15 +141,19 @@ function new_namespace(namespace){
             });
             
             socket.on("edit cell", function(data){
-                model.edit(data);
-                socket.broadcast.emit("edit cell", data);
-                save();
+                if(!model.is_locked()){
+                    model.edit(data);
+                    socket.broadcast.emit("edit cell", data);
+                    save();
+                }
             });
             
             socket.on("delete cell", function(data){
-                model.remove(data);
-                save();
-                socket.broadcast.emit("delete cell", data);
+                if(!model.is_locked()){
+                    model.remove(data);
+                    save();
+                    socket.broadcast.emit("delete cell", data);
+                }
             });
             
             socket.on("disconnect",function(socket){
