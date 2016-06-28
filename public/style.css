@@ -123,8 +123,6 @@ template{
 button{
     height:32px;
     margin-bottom:20px;
-    margin-left:5px;
-    margin-right:5px;
     margin-top:5px;
     border-radius:0;
     border:none;
@@ -132,7 +130,6 @@ button{
     background:#55f;
     font-size:14px;
     color:#fff;
-    box-shadow:0 0 8px rgba(0,0,0,0.2);
     border-radius:2px;
     cursor:pointer;
 }
@@ -142,11 +139,10 @@ button:first-child{
 }
 
 input{
-    border-radius:3px;
     border:none;
     padding:0px 5px;
     background:#fff;
-    box-shadow:0 0 8px rgba(0,0,0,0.2);
+    box-shadow:0 0 3px rgba(0,0,0,0.2);
     height:32px;
 }
 
@@ -195,14 +191,14 @@ p{
     }
 }
 
-.livecalc-cell{
+.livecalc-cell,
+.livecalc .livecalc-header{
     background:#eee;
     padding-top:5px;
     padding-bottom:5px;
     margin-bottom:10px;
     border-radius:2px;
-    box-shadow:0 0 8px #ddd;
-    border:1px solid #ddd;
+    border-bottom:2px solid #aab;
 }
 
 .livecalc fieldset{
@@ -220,7 +216,8 @@ p{
     margin-bottom:5px;
     border:none;
     background:#fff;
-    box-shadow:0 0 3px rgba(0,0,0,0.2);
+    box-shadow:none;
+    border-bottom:2px solid #aab;
 }
 
 .livecalc .livecalc-output{
@@ -246,7 +243,7 @@ p{
     padding:5px;
     background:#fff;
     color:#333;
-    box-shadow:0 0 5px rgba(0,0,0,0.1);
+    border-bottom:2px solid #aab;
 }
 
 .livecalc .users-info{
@@ -281,9 +278,20 @@ p{
 }
 
 .livecalc-header{
-    text-align:right;
+    text-align:left;
+    font-size:11px;
+    color:#333;
+}
+
+.livecalc-header .sheet-state{
+    display: inline-block;
+    width: calc(100% - 180px);
+    margin-left:10px;
 }
 
 .livecalc-header .user-count{
-    margin-bottom:10px;
+    display: inline-block;
+    text-align: right;
+    width:150px;
+    margin-right:10px;
 }

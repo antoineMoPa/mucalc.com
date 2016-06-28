@@ -386,9 +386,11 @@ function livecalc(root_el, namespace){
     
     function update_state(){
         if(params.locked){
-            sheet_state.textContent = "This sheet is locked. Modifications will not be saved. You can still open a copy (See bottom of the page).";
+            sheet_state.textContent = "This sheet is locked.";
+            sheet_state.setAttribute("title","Modifications will not be saved. You can still open a copy (See bottom of the page).");
         } else {
             sheet_state.textContent = "This sheet is public.";
+            sheet_state.setAttribute("title","");
         }
     }
 
@@ -502,8 +504,10 @@ function livecalc(root_el, namespace){
         input.onkeydown = function(e){
             if(e.keyCode == 13 && !e.shiftKey){
                 e.preventDefault();
-                send_value(get_index());
-                calculate_and_next();
+                if(get_value() != ""){
+                    send_value(get_index());
+                    calculate_and_next();
+                }
             } else if (e.keyCode == 38) {
                 focus(get_index()-1);
             } else if (e.keyCode == 40) {
@@ -590,7 +594,7 @@ function livecalc(root_el, namespace){
                 return;
         }
         
-        flash(output,"#cdf");
+        flash(output,"#c5ddf5");
     }
 
     /*
