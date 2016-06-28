@@ -559,35 +559,7 @@ function livecalc(root_el, namespace){
                 }        
                 return 1 / num;
             },
-            plot: function(expression){
-                var plot_el = currently_calculated_cell.plot;
-
-                var div_width = plot_el.clientWidth;
-
-                // For most screens: keep this width
-                // To optimize vertical space used +
-                // pragmatic aspect ratio
-                var width = 550;
-
-                // Smaller screens limit widthx
-                if(div_width < 550){
-                    width = div_width - 10;
-                }
-                
-                functionPlot({
-                    target: plot_el,
-                    width: width,
-                    disableZoom: true,
-                    data: [{
-                        sampler: 'builtIn', /* To use math.js */
-                        graphType: 'polyline', /* To use math.js */
-                        fn: expression
-                    }],
-                    grid: true
-                })
-                
-                return "";
-            },
+            plot: plot,
             zfractal: function(e,i,s){
                 var cell = currently_calculated_cell;
                 wait_for_click(cell, function(){
@@ -596,7 +568,7 @@ function livecalc(root_el, namespace){
             }
         });
     }
-
+    
     /* 
        Wait for user click before 
        calculating something potentially long 
@@ -613,6 +585,36 @@ function livecalc(root_el, namespace){
         }
     }
 
+    function plot(expression){
+        var plot_el = currently_calculated_cell.plot;
+        
+        var div_width = plot_el.clientWidth;
+        
+        // For most screens: keep this width
+        // To optimize vertical space used +
+        // pragmatic aspect ratio
+        var width = 550;
+        
+        // Smaller screens limit widthx
+        if(div_width < 550){
+            width = div_width - 10;
+        }
+        
+        functionPlot({
+            target: plot_el,
+            width: width,
+            disableZoom: true,
+            data: [{
+                sampler: 'builtIn', /* To use math.js */
+                graphType: 'polyline', /* To use math.js */
+                fn: expression
+            }],
+            grid: true
+        })
+        
+        return "";
+    }
+    
     function zfractal(plot_el, expression, iterations, size){
         var iterations = iterations || 10;
         var exp = math.compile(expression);
