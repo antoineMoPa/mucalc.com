@@ -603,8 +603,8 @@ function livecalc(root_el, namespace){
         plot_el.innerHTML = "";
         var div_width = plot_el.clientWidth;
         
-        var grid_size = 40;
-        var pixel_size = 5;
+        var grid_size = 100;
+        var pixel_size = 4;
         
         var width = grid_size;
         var height = grid_size;
@@ -654,12 +654,12 @@ function livecalc(root_el, namespace){
         for(var j = 0; j < height; j++){
             // Keep last line in memory
             var last_line = copy_line(line);
-            for(var i = 1; i < width-1; i++){
+            for(var i = 0; i < width; i++){
                 // Drawing
-                var val = 255;
+                var val = 230;
 
                 if(line[i]){
-                    val = 0;
+                    val = 30;
                 }
 
                 set_pixel(i, j, val);
