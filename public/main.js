@@ -949,15 +949,27 @@ if(href.match(/\/sheet\/(.*)/)){
     can.style.left = 0;
     can.style.zIndex = -1;
 
-    var winh = window.innerHeight;
-    var bodh = body.clientHeight;
+    var winh;
+    var bodh;
     
-    var w = window.innerWidth;
-    var h = bodh > winh? bodh: winh;
-    can.width = w;
-    can.height = h;
+    var w;
+    var h;
     var ctx = can.getContext("2d");
 
+    function onresize(){
+        winh = window.innerHeight;
+        bodh = body.clientHeight;
+        w = window.innerWidth;
+        h = bodh > winh? bodh: winh;
+        can.width = w;
+        can.height = h;
+
+    }
+
+    onresize();
+
+    window.addEventListener("resize",onresize);
+    
     var x = 0;
     var last;
     var col = "rgba(130,140,255,0.2)";
