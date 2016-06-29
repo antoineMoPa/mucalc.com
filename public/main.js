@@ -925,15 +925,18 @@ if(href.match(/\/sheet\/(.*)/)){
     var landing = qsa(".only-landing")[0];
     landing.parentNode.removeChild(landing);
 
-    var namespace = /\/sheet\/(.*)/g.exec(href)[1];
-
-    // Start everything
-    
-    // Start calculator
-    var calc = livecalc(qsa("livecalc")[0], namespace);
-    
-    // Start documentation
-    init_doc(calc);
+    // Avoid locking UI
+    // To allow time to remove node
+    setTimeout(function(){
+        var namespace = /\/sheet\/(.*)/g.exec(href)[1];
+        
+        // Start everything
+        // Start calculator
+        var calc = livecalc(qsa("livecalc")[0], namespace);
+        
+        // Start documentation
+        init_doc(calc);
+    },10);
 } else {
     // Landing page
     // Nice background animation
@@ -957,21 +960,30 @@ if(href.match(/\/sheet\/(.*)/)){
 
     var x = 0;
     var last;
+    var col = "rgba(130,140,255,0.2)";
+
+    document.body.style.backgroundColor = col;
     
     setInterval(function(){
         var t = new Date().getTime()/1000;
         var deltat = t - last;
-        ctx.fillStyle = "rgba(130,140,255,0.1)";
+        ctx.fillStyle = col;
         ctx.fillRect(0,0,w,h);
         var iterations = 5;
         for(var i=0; i < iterations; i++){
             x+=2;
             x %= w;
-            ctx.fillStyle = "rgba(255,255,255,0.6)";
+            ctx.fillStyle = "rgba(225,225,255,0.8)";
             // Don't ask me how I ended up with this
             var y = h/2 *
-                Math.sin(t+(i/iterations*deltat)*4) + h/2;
-            ctx.fillRect(x,y,6,6);
+                Math.sin(t + (i/iterations)*30) + h/2;
+            ctx.fillRect(x,y,4,4);
+
+            ctx.fillStyle = "rgba(225,225,255,0.1)";
+            
+            var y = h/2 *
+                Math.sin(t + (deltat*i/iterations)*10) + h/2;
+            ctx.fillRect(x,y,20,20);
         };
         last = t;
     },33);
