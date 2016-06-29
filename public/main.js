@@ -925,15 +925,18 @@ if(href.match(/\/sheet\/(.*)/)){
     var landing = qsa(".only-landing")[0];
     landing.parentNode.removeChild(landing);
 
-    var namespace = /\/sheet\/(.*)/g.exec(href)[1];
-
-    // Start everything
-    
-    // Start calculator
-    var calc = livecalc(qsa("livecalc")[0], namespace);
-    
-    // Start documentation
-    init_doc(calc);
+    // Avoid locking UI
+    // To allow time to remove node
+    setTimeout(function(){
+        var namespace = /\/sheet\/(.*)/g.exec(href)[1];
+        
+        // Start everything
+        // Start calculator
+        var calc = livecalc(qsa("livecalc")[0], namespace);
+        
+        // Start documentation
+        init_doc(calc);
+    },10);
 } else {
     // Landing page
     // Nice background animation
@@ -957,11 +960,14 @@ if(href.match(/\/sheet\/(.*)/)){
 
     var x = 0;
     var last;
+    var col = "rgba(130,140,255,0.1)";
+
+    document.body.style.backgroundColor = col;
     
     setInterval(function(){
         var t = new Date().getTime()/1000;
         var deltat = t - last;
-        ctx.fillStyle = "rgba(130,140,255,0.1)";
+        ctx.fillStyle = col;
         ctx.fillRect(0,0,w,h);
         var iterations = 5;
         for(var i=0; i < iterations; i++){
