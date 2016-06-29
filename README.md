@@ -1,6 +1,6 @@
 # livecalc.xyz
 
-livecalc.xyz is a multi-user math web app. The math syntax is parsed in the browser by [math.js](http://mathjs.org/).
+livecalc.xyz is a multi-user math web app. The math is parsed & computed in the browser by [math.js](http://mathjs.org/).
 
 [Live demo](https://www.livecalc.xyz/sheet/demo)
 
