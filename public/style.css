@@ -35,13 +35,18 @@
 .landing h1{
     line-height:80px;
     color:#fff;
+    font-size:30px;
+    font-family: 'Fira Sans';
+    font-weight:300;
 }
 
 .landing p{
     line-height:150%;
     color:#fff;
-    font-size:20px;
+    font-size:24px;
     font-family:sans-serif;
+    font-family: 'Fira Sans';
+    font-weight:300;
 }
 
 .landing a{
@@ -73,6 +78,7 @@
 body{
     background:#fff;
     font-family: sans-serif;
+    font-family: 'Fira Sans';
     padding:0;
     margin:0;
     width:100%;
@@ -87,7 +93,9 @@ h1{
 }
 
 header h1{
-    line-height:15px;
+    line-height:19px;
+    font-family: 'Fira Sans';
+    font-weight:300;
 }
 
 header h1 a{
@@ -164,7 +172,8 @@ input{
 }
 
 h3{
-    font-weight:300;
+    font-family: 'Fira Sans';
+    font-weight:400;
     font-size:120%;
     margin-left:0;
     margin:5px 0;
