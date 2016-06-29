@@ -937,6 +937,7 @@ if(href.match(/\/sheet\/(.*)/)){
 } else {
     // Landing page
     // Nice background animation
+    // Todo: manage window resize
     var can = new_el("<canvas id='bg-canvas'></canvas>");
     var body = document.body;
     body.appendChild(can);
@@ -944,29 +945,33 @@ if(href.match(/\/sheet\/(.*)/)){
     can.style.top = 0;
     can.style.left = 0;
     can.style.zIndex = -1;
+
+    var winh = window.innerHeight;
+    var bodh = body.clientHeight;
     
-    var w = body.clientWidth;
-    var h = body.clientHeight;
+    var w = window.innerWidth;
+    var h = bodh > winh? bodh: winh;
     can.width = w;
     can.height = h;
     var ctx = can.getContext("2d");
 
     var x = 0;
     var last;
+    
     setInterval(function(){
         var t = new Date().getTime()/1000;
         var deltat = t - last;
-        ctx.fillStyle = "rgba(255,255,255,0.02)";
+        ctx.fillStyle = "rgba(130,140,255,0.1)";
         ctx.fillRect(0,0,w,h);
         var iterations = 5;
         for(var i=0; i < iterations; i++){
             x+=2;
             x %= w;
-            ctx.fillStyle = "rgba(40,40,200,0.6)";
+            ctx.fillStyle = "rgba(255,255,255,0.6)";
             // Don't ask me how I ended up with this
             var y = h/2 *
                 Math.sin(t+(i/iterations*deltat)*4) + h/2;
-            ctx.fillRect(x,y,2,2);
+            ctx.fillRect(x,y,6,6);
         };
         last = t;
     },33);

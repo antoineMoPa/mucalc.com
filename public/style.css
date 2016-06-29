@@ -34,20 +34,32 @@
 
 .landing h1{
     line-height:80px;
+    color:#fff;
 }
 
 .landing p{
     line-height:150%;
+    color:#fff;
     font-size:20px;
     font-family:sans-serif;
 }
 
+.landing a{
+    color:#335;
+}
+
 .features{
     background:#eee;
+    background:linear-gradient(to top,#ddd,#fff);
+    color:#333;
     margin-left:-20px;
     margin-right:-20px;
     padding:20px;
-    
+    border-bottom:5px solid #55e;
+}
+
+.features h3{
+    text-shadow:none;
 }
 
 @media (min-width:1000px){
@@ -62,14 +74,16 @@ body{
     background:#fff;
     font-family: sans-serif;
     padding:0;
-    margin:10px;
+    margin:0;
+    width:100%;
+    overflow-x:hidden;
 }
 
 h1{
     font-size:25px;
     font-weight:300;
     margin-right:40px;
-    margin-left:10px;
+    margin-left:20px;
 }
 
 header h1{
@@ -92,9 +106,12 @@ header h1 a{
 header{
     background:#88f;
     color:#fff;
+    width:100%;
+    display:block;
     margin:0;
-    padding:5px;
-    margin:-10px;
+    padding:15px;
+    padding-top:4px;
+    padding-bottom:4px;
     box-shadow:0 0 7px rgba(0,0,0,0.3);
     border-bottom:3px solid #33a;
     margin-bottom:20px;
@@ -182,13 +199,6 @@ p{
 .main-page{
     margin-left:10px;
     margin-right:10px;
-}
-
-@media (max-width:500px){
-    .main-page{
-            margin-left:-5px;
-            margin-right:-5px;
-    }
 }
 
 .livecalc-cell,
