@@ -190,6 +190,10 @@ function animate(el,options,step){
     );
 }
 
+
+/**
+   Interface between the shell and the server.
+ */
 function lc_network_engine(socket, shell){
     var exports = {};
     
@@ -216,7 +220,40 @@ function lc_network_engine(socket, shell){
     socket.on("delete cell",function(data){
         shell.on_delete_cell(data);
     });
-    
+
+    exports.close = function(){
+        socket.close();
+    };
+
+    exports.send_nickname = function(nickname){
+        socket.emit("set nickname", {
+            nickname: nickname
+        });
+    };
+
+    exports.lock_sheet = function(){
+        socket.emit("lock sheet");
+    };
+
+    exports.delete_cell = function(index){
+        socket.emit("delete cell", {
+            number: index
+        });
+    };
+
+    exports.send_focus = function(index){
+        socket.emit("set focus", {
+            index: index
+        });
+    };
+
+    exports.edit_cell = function(index, value){
+        socket.emit("edit cell", {
+            number: index,
+            content: value
+        });
+    }
+        
     return exports;
 }
 
@@ -292,9 +329,7 @@ function livecalc(root_el, namespace){
         delete_cell(number, true);
     }
     
-    window.addEventListener("beforeunload", function(){
-        socket.close();
-    });
+    window.addEventListener("beforeunload", net_engine.close);
 
     var nickname = "";
     
@@ -322,9 +357,7 @@ function livecalc(root_el, namespace){
         send_nickname("anonymous");
         
         function send_nickname(nickname){
-            socket.emit("set nickname", {
-                nickname: nickname
-            });
+            net_engine.send_nickname(nickname);
         }
     }
     
@@ -337,7 +370,7 @@ function livecalc(root_el, namespace){
         )[0];
 
         lock_sheet_button.onclick = function(){
-            socket.emit("lock sheet");
+            net_engine.lock_sheet();
         };
         
         var new_copy_button = subqsa(
@@ -368,6 +401,7 @@ function livecalc(root_el, namespace){
             if(cell.getAttribute("data-deleting") == "true"){
                 return;
             }
+            
             cell.setAttribute("data-deleting","true");
             
             animated_remove(cell,function(){
@@ -376,9 +410,7 @@ function livecalc(root_el, namespace){
             });
 
             if(!remote){
-                socket.emit("delete cell", {
-                    number: index
-                });
+                net_engine.delete_cell(index);
             }
         }
     }
@@ -449,9 +481,7 @@ function livecalc(root_el, namespace){
         if(index == null){
             index = -1;
         }
-        socket.emit("set focus", {
-            index: index
-        });
+        net_engine.send_focus(index);
     }
     
     function find_cell(index){
@@ -591,10 +621,7 @@ function livecalc(root_el, namespace){
         
         var input = cell_data.input;
 
-        socket.emit("edit cell", {
-            number: index,
-            content: input.value
-        });
+        net_engine.edit_cell(index, input.value);
     } 
     
     function calculate_cell(index){
