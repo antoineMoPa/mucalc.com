@@ -190,6 +190,36 @@ function animate(el,options,step){
     );
 }
 
+function lc_network_engine(socket, shell){
+    var exports = {};
+    
+    socket.on("sheet",function(sheet){
+        shell.on_sheet(sheet);
+    });
+
+    socket.on("user count",function(count){
+        shell.on_count(count);
+    });
+
+    socket.on("edit cell",function(data){
+        shell.on_edit_cell(data);
+    });
+
+    socket.on("sheet locked",function(data){
+        shell.on_sheet_locked(data);
+    });
+
+    socket.on("focus index",function(data){
+        shell.on_focus_index(data);
+    });
+
+    socket.on("delete cell",function(data){
+        shell.on_delete_cell(data);
+    });
+    
+    return exports;
+}
+
 function livecalc(root_el, namespace){
     eeify_mathjs();
 
@@ -202,31 +232,32 @@ function livecalc(root_el, namespace){
     var currently_calculated_cell = null
     var socket = io("/" + namespace);
     var params = {};
+
+    var net_engine = lc_network_engine(socket, exports);
     
     exports.el = root_el;
     
     new_cell("", true);
     
-    socket.on("sheet",function(sheet){
+    exports.on_sheet = function(sheet){
         load_json(sheet);
-    });
-
-    var user_count = subqsa(root_el, ".user-count")[0];
+    };
     
-    socket.on("user count",function(count){
+    var user_count = subqsa(root_el, ".user-count")[0];
+
+    exports.on_count = function(count){
         var plural = count > 1;
         var count = parseInt(count);
         user_count.innerHTML = count + " user" + (plural? "s": "");
-    });
+    };
 
-    
-    socket.on("edit cell",function(data){
+    exports.on_edit_cell = function(data){
         var number = data.number;
         var content = data.content;
         edit_cell(number, content);
-    });
+    };
 
-    socket.on("sheet locked",function(data){
+    exports.on_sheet_locked = function(data){
         // data.initiator is normally sanited on server
         alert( "Sheet was locked by \"" +
                data.initiator +
@@ -236,12 +267,12 @@ function livecalc(root_el, namespace){
         params.locked = true;
         
         update_state();
-    });
+    };
     
-    socket.on("focus index",function(data){
+    exports.on_focus_index = function(data){
         for(var i = 0; i < data.length; i++){
             var cell = find_cell(i);
-
+            
             if(cell == null){
                 return;
             }
@@ -254,12 +285,12 @@ function livecalc(root_el, namespace){
                 usersinfo.textContent = "";
             }
         }
-    });
+    };
     
-    socket.on("delete cell",function(data){
+    exports.on_delete_cell = function(data){
         var number = data.number;
         delete_cell(number, true);
-    });
+    }
     
     window.addEventListener("beforeunload", function(){
         socket.close();
