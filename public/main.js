@@ -205,6 +205,11 @@ function animate(el,options,step){
  */
 function lc_network_engine(socket, shell){
     var exports = {};
+
+    socket.on("too many users",function(sheet){
+        shell.die("Too many users are editing this sheet right now."+
+                  " Try again later or create a new sheet.");
+    });
     
     socket.on("sheet",function(sheet){
         shell.on_sheet(sheet);
@@ -272,7 +277,7 @@ function mathjs_compute_engine(){
 
 function livecalc(root_el, namespace){
     eeify_mathjs();
-
+    var chat;
     var scope = {};
 
     // Create template
@@ -299,6 +304,20 @@ function livecalc(root_el, namespace){
     
     var user_count = subqsa(root_el, ".user-count")[0];
 
+    exports.die = function(message){
+        render("livecalc-die",root_el);
+
+        if(chat != undefined){
+            chat.die();
+        }
+        
+        alert(message);
+    };
+
+    exports.set_chat = function(c){
+        chat = c;
+    };
+    
     exports.on_count = function(count){
         var plural = count > 1;
         var count = parseInt(count);
@@ -998,6 +1017,11 @@ function livechat(root_el, namespace, socket){
     var header = subqsa(root_el, ".sheet-chat-header")[0];
     var textarea = subqsa(root_el, "textarea")[0];
     var button = subqsa(root_el, "button")[0];
+    var exports = {};
+
+    exports.die = function(){
+        root_el.innerHTML = "";
+    };
     
     socket.on("new message", function(data){
         var el = render("livechat-received-message");
@@ -1098,6 +1122,8 @@ function livechat(root_el, namespace, socket){
         });
         textarea.value = "";
     }
+
+    return exports;
 }
 
 var href = window.location.href;
@@ -1118,6 +1144,7 @@ if(href.match(/\/sheet\/(.*)/)){
         // Start calculator
         var calc = livecalc(qsa("livecalc")[0], namespace);
         var chat = livechat(qsa("livechat")[0], namespace, calc.socket);
+        calc.set_chat(chat);
         
         // Start documentation
         init_doc(calc);

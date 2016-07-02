@@ -92,6 +92,12 @@ function livecalc(namespace, nsp){
         var users = {};
         
         nsp.on("connection", function(socket){
+            // Dumb and drastic rate limiting
+            if(user_count > 7){
+                socket.emit("too many users");
+                return;
+            }
+            
             user_count++;
             console.log("connection - " + user_count + " users");
             nsp.emit("user count", user_count);
