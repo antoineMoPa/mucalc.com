@@ -1,6 +1,6 @@
 var redis = require("redis");
 
-var client = redis.createClient()
+var client = redis.createClient();
 
 module.exports = {};
 
@@ -11,7 +11,7 @@ module.exports.store_sheet = function(id, data){
             console.log("err: " + err);
         }
     });
-}
+};
 
 /*
   
@@ -25,7 +25,7 @@ module.exports.get_sheet = function(id, callback){
         }
         callback(JSON.parse(reply));
     });
-}
+};
 
 /*
   
@@ -40,4 +40,4 @@ module.exports.exists = function(id, callback){
 
         callback(exists);
     });
-}
+};

@@ -558,8 +558,8 @@ function livecalc(root_el, namespace){
         var input = subqsa(cell,".livecalc-input")[0];
         var button = subqsa(cell,".livecalc-go-button")[0];
         var output = subqsa(cell,".livecalc-output")[0];
-
-        appear(cell);
+        
+        //appear(cell);
         input.setAttribute("value",content);
         
         function get_index(){
@@ -993,8 +993,12 @@ function init_doc(calc){
 
 function livechat(root_el, namespace, socket){
     render("livechat", root_el);
-    var log = subqsa(root_el, ".message-log")[0];
 
+    var log = subqsa(root_el, ".message-log")[0];
+    var header = subqsa(root_el, ".sheet-chat-header")[0];
+    var textarea = subqsa(root_el, "textarea")[0];
+    var button = subqsa(root_el, "button")[0];
+    
     socket.on("new message", function(data){
         var el = render("livechat-received-message");
         var message = subqsa(el, ".content")[0];
@@ -1009,17 +1013,16 @@ function livechat(root_el, namespace, socket){
         var message = subqsa(el, ".content")[0];
         message.textContent = data.message;
         log.appendChild(el);
+        scroll_bottom();
     });
 
-    var textarea = subqsa(root_el, "textarea")[0];
-    
     function get_value(){
         return textarea.value;
     }
     
-    var button = subqsa(root_el, "button")[0];
-
-    textarea.style.width = parseInt(window.innerWidth/4-20)+"px";
+    function scroll_bottom(){
+        log.scrollTop = log.scrollHeight;
+    }
     
     textarea.onkeydown = function(e){
         if(e.keyCode == 13 && !e.shiftKey){
@@ -1027,9 +1030,68 @@ function livechat(root_el, namespace, socket){
             submit();
         }
     }
+
+    /*
+      Note: This is full of ugly hacks to position and size
+      The chat elements.
+     */
+    function resize(){
+        var winw = window.innerWidth;
+        var winh = window.innerHeight;
+        var header = 82;
+        var scroll = window.scrollY || 0;
+
+        /*
+          If scrolled enough, take space left by header
+          Allow a 10 px margin
+         */
+        if(scroll > header){
+            header = 10;
+        }
+        
+        /* set with to one column + margin */
+        var w = (parseInt(winw)/4);
+        
+        root_el.style.width = w+"px";
+        textarea.style.width = (w-20)+"px";
+
+        var chat_header = 14;
+        var input = 40;
+        
+        log.style.height = (
+            parseInt(winh)-
+                header - input - chat_header - 30
+        ) + "px";
+    }
+
+    resize();
+    
+    window.addEventListener("resize", resize);
+    window.addEventListener("scroll", resize);
     
     button.addEventListener("click",submit);
+    
+    socket.on("past messages", function(messages){
+        for(var i = messages.length - 1; i >= 0; i--){
+            var data = JSON.parse(messages[i]);
+            var el = render("livechat-received-message");
+            var message = subqsa(el, ".content")[0];
+            var sender = subqsa(el, ".sender")[0];
+            message.textContent = data.message;
+            sender.textContent = data.sender;
 
+            // Children 0 is header
+            // Children 1 is oldest loaded comment
+            if(log.children[1] != undefined){
+                log.insertBefore(el, log.children[1]);
+            } else {
+                log.appendChild(el);
+            }
+        }
+    });
+
+    socket.emit("load more messages",0);
+    
     function submit(){
         socket.emit("new message",{
             message: get_value()

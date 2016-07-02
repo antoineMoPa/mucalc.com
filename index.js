@@ -4,6 +4,7 @@ var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
 var sheet_db = require("./sheet_db");
+var chat_db = require("./chat_db");
 var stats = require("./stats");
 
 app.use(body_parser.json());
@@ -47,14 +48,23 @@ function new_namespace(namespace){
 
 /* Sidebar chat */
 function livechat(namespace, nsp, socket, users, user_id){
+
+    socket.on("load more messages",function(last_sent){
+        chat_db.get_conv(namespace,function(data){
+            socket.emit("past messages", data);
+        });
+    });
+    
     socket.on("new message", function(data){
-        socket.broadcast.emit("new message",{
+        var data = {
             message: data.message,
             sender: users[user_id].nickname
-        });
-        socket.emit("own message",{
-            message: data.message
-        });
+        };
+        
+        chat_db.add_message(namespace, data);
+        
+        socket.broadcast.emit("new message", data);
+        socket.emit("own message", data);
     });
 }
 

@@ -11,6 +11,11 @@
     text-align:center;
 }
 
+@media (max-width:768px){
+    .mobile-center{
+        text-align:center;
+    }
+}
 
 col-md-10,
 col-md-9,
@@ -39,6 +44,24 @@ col-md-9{
 
 col-md-3{
     width:24%;
+}
+
+@media (max-width:768px){
+    col-md-1,
+    col-md-2,
+    col-md-3,
+    col-md-4,
+    col-md-5,
+    col-md-6,
+    col-md-7,
+    col-md-8,
+    col-md-9,
+    col-md-10,
+    col-md-11,
+    col-md-12{
+        display:block;
+        width:100%;
+    }
 }
 
 /* landing page */
@@ -110,6 +133,13 @@ header h1{
     font-weight:300;
 }
 
+@media (max-width:768px){
+    header h1{
+        text-align:center!important;
+        display:block!important;
+    }
+}
+
 header h1 a{
     color:#fff;
 }
@@ -135,6 +165,8 @@ header{
     box-shadow:0 0 7px rgba(0,0,0,0.3);
     border-bottom:3px solid #33a;
     margin-bottom:20px;
+    position:relative;
+    z-index:100;
 }
 
 @media (max-width:500px){
@@ -332,6 +364,14 @@ livecalc{
     overflow-x:hidden;
 }
 
+.sheet-panel{
+    background:#efefef;
+    padding:10px;
+    border-bottom:3px solid #aab
+}
+
+/* Chat */
+
 .livechat-sent-message,
 .livechat-received-message{
     width:100%;
@@ -350,6 +390,12 @@ livecalc{
     background:#3af;
 }
 
+livechat{
+    position:fixed;
+    bottom:80px;
+    right:10px;
+}
+
 livechat button{
     position:fixed;
     bottom:0px;
@@ -360,9 +406,36 @@ livechat textarea{
     position:fixed;
     bottom:10px;
     right:10px;
+    height:40px;
+    max-height:40px;
+    padding:5px;
+    border:none;
+    border-bottom:2px solid #55e;
+    background:#fafafa;
+    resize:none;
+}
+
+livechat .message-log{
+    overflow-y: scroll;
+    padding-left:5px;
+    padding-right:15px;
 }
 
 livechat .sender{
     font-size:10px;
     text-align:right;
+}
+
+.sheet-chat-header{
+    font-size:12px;
+    margin-left:4px;
+    margin-bottom:6px;
+    color:#666;
+    text-align:center;
+}
+
+@media (max-width:768px){
+    livechat{
+        display:none;
+    }
 }
