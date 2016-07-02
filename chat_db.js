@@ -18,5 +18,6 @@ module.exports.get_conv = function(id, callback){
         if(err != null){
             console.log(err);
         }
+        callback(reply);
     });
 };
