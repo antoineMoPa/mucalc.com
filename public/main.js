@@ -627,10 +627,6 @@ function livecalc(root_el, namespace){
             if(index == cell_count - 1){
                 new_cell("", true);
             }
-            // Or move focus to next cell
-            else {
-                focus(index + 1);
-            }
         }
         
         button.onclick = function(){
@@ -1160,9 +1156,22 @@ if(href.match(/\/sheet\/(.*)/)){
         init_doc(calc);
     },10);
 } else {
+    landing_bg_anim();
+}
+
+function landing_bg_anim(){
     // Landing page
     // Nice background animation
-    // Todo: manage window resize
+    var col = "rgba(130,140,255,0.2)";
+    var bg_col = "rgba(130,140,255,1.0)";
+    
+    document.body.style.background = bg_col;
+
+    if(window.innerWidth < 768){
+        // Mobile: abort animation
+        return;
+    }
+
     var can = dom("<canvas id='bg-canvas'></canvas>");
     var body = document.body;
     body.appendChild(can);
@@ -1170,8 +1179,8 @@ if(href.match(/\/sheet\/(.*)/)){
     can.style.top = 0;
     can.style.left = 0;
     can.style.zIndex = -1;
-
-    var winh;
+    
+    var winh, winw;
     var bodh;
     
     var w;
@@ -1180,23 +1189,20 @@ if(href.match(/\/sheet\/(.*)/)){
 
     function onresize(){
         winh = window.innerHeight;
+        winw = window.innerWidth;
         bodh = body.clientHeight;
         w = window.innerWidth;
         h = bodh > winh? bodh: winh;
         can.width = w;
         can.height = h;
-
-    }
-
+    }    
+    
     onresize();
-
+    
     window.addEventListener("resize",onresize);
     
     var x = 0;
     var last;
-    var col = "rgba(130,140,255,0.2)";
-
-    document.body.style.backgroundColor = col;
     
     setInterval(function(){
         var t = new Date().getTime()/1000;
@@ -1222,3 +1228,4 @@ if(href.match(/\/sheet\/(.*)/)){
         last = t;
     },33);
 }
+
