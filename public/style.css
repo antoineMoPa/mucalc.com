@@ -11,23 +11,34 @@
     text-align:center;
 }
 
-.col-6,
-.col-10,
-.col-2{
+
+col-md-10,
+col-md-9,
+col-md-2,
+col-md-3,
+col-md-6{
     display:inline-block;
     vertical-align:top;
 }
 
-.col-6{
+col-md-6{
     width:49.5%;
 }
 
-.col-10{
+col-md-10{
     width:82%;
 }
 
-.col-2{
+col-md-2{
     width:16%;
+}
+
+col-md-9{
+    width:74%;
+}
+
+col-md-3{
+    width:24%;
 }
 
 /* landing page */
@@ -315,4 +326,43 @@ p{
     text-align: right;
     width:150px;
     margin-right:10px;
+}
+
+livecalc{
+    overflow-x:hidden;
+}
+
+.livechat-sent-message,
+.livechat-received-message{
+    width:100%;
+    margin-bottom:5px;
+    border-radius:3px;
+    padding:5px;
+}
+
+.livechat-received-message{
+    color:#333;
+    background:#eee;
+}
+
+.livechat-sent-message{
+    color:#fff;
+    background:#3af;
+}
+
+livechat button{
+    position:fixed;
+    bottom:0px;
+    right:20px;
+}
+
+livechat textarea{
+    position:fixed;
+    bottom:10px;
+    right:10px;
+}
+
+livechat .sender{
+    font-size:10px;
+    text-align:right;
 }

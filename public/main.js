@@ -19,6 +19,11 @@ function subqsa(el,sel){
  */
 function load_template(name){
     var el = qsa("template[name="+name+"]")[0];
+
+    if(el == undefined){
+        console.error("Template "+name+"does not exist.");
+    }
+    
     var content = el.innerHTML;
 
     var params = el.getAttribute("data-params");
@@ -71,15 +76,19 @@ function instanciator(el){
 }
 
 /*
-  Create an instance of a template and put it in to_el
+  Create an instance of a template and put it in to_el, 
+  replacing the content
   Improvement idea: manage parameters and use this in instanciator
   instead of current code.
 */
-function instanciate_to(template_name, to_el){
+function render(template_name, to_el){
     var template = load_template(template_name).content;
-    var el = new_el(template);
-    to_el.innerHTML = "";
-    to_el.appendChild(el);
+    
+    var to_el = to_el || dom("<div></div>");
+    to_el.innerHTML = template;
+    instanciator(to_el);
+    
+    return to_el;
 } 
 
 /*
@@ -94,7 +103,7 @@ function load_script(name){
 /*
   Create a dom element
  */
-function new_el(html){
+function dom(html){
     var node = document.createElement("div");
     node.innerHTML = html;
     return node.children[0];
@@ -257,12 +266,18 @@ function lc_network_engine(socket, shell){
     return exports;
 }
 
+function mathjs_compute_engine(){
+    
+}
+
 function livecalc(root_el, namespace){
     eeify_mathjs();
 
     var scope = {};
-    root_el.innerHTML = load_template("livecalc").content;
-    instanciator(root_el);
+
+    // Create template
+    render("livecalc", root_el);
+    
     var cells = subqsa(root_el,".livecalc-cells")[0];
     var cell_count;
     var exports = {};
@@ -273,6 +288,8 @@ function livecalc(root_el, namespace){
     var net_engine = lc_network_engine(socket, exports);
     
     exports.el = root_el;
+
+    exports.socket = socket;
     
     new_cell("", true);
     
@@ -441,6 +458,7 @@ function livecalc(root_el, namespace){
             new_cell(cells[i], true);
         }
         re_run();
+        focus(0);
     }
 
     exports.load_json = load_json;
@@ -533,7 +551,7 @@ function livecalc(root_el, namespace){
         var content = content || "";
 
         cell_count++;
-        var cell = new_el(load_template("livecalc-cell").content);
+        var cell = dom(load_template("livecalc-cell").content);
         cells.appendChild(cell);
         update_indices();
 
@@ -638,8 +656,8 @@ function livecalc(root_el, namespace){
         var text = ee_parse(get_value());
         try{
             var result = math.eval(text, scope);
-        } catch (e){
-            output.textContent = e;
+        } catch (exception){
+            output.textContent = exception;
             return;
         }
         
@@ -689,7 +707,7 @@ function livecalc(root_el, namespace){
        calculating something potentially long 
     */
     function wait_for_click(cell, callback){
-        instanciate_to("livecalc-wait-click", cell.plot);
+        render("livecalc-wait-click", cell.plot);
         
         var button = subqsa(cell.plot,"button")[0];
         button.onclick = go;
@@ -719,7 +737,7 @@ function livecalc(root_el, namespace){
         var width = grid_size;
         var height = grid_size;
 
-        var can = new_el("<canvas></canvas>");
+        var can = dom("<canvas></canvas>");
         var ctx = can.getContext("2d");
         
         plot_el.appendChild(can);
@@ -887,7 +905,7 @@ function livecalc(root_el, namespace){
         var width = size;
         var height = size;
         
-        var can = new_el("<canvas></canvas>");
+        var can = dom("<canvas></canvas>");
         var ctx = can.getContext("2d");
         
         plot_el.appendChild(can);
@@ -973,6 +991,52 @@ function init_doc(calc){
     }
 }
 
+function livechat(root_el, namespace, socket){
+    render("livechat", root_el);
+    var log = subqsa(root_el, ".message-log")[0];
+
+    socket.on("new message", function(data){
+        var el = render("livechat-received-message");
+        var message = subqsa(el, ".content")[0];
+        var sender = subqsa(el, ".sender")[0];
+        message.textContent = data.message;
+        sender.textContent = data.sender;
+        log.appendChild(el);
+    });
+
+    socket.on("own message", function(data){
+        var el = render("livechat-sent-message");
+        var message = subqsa(el, ".content")[0];
+        message.textContent = data.message;
+        log.appendChild(el);
+    });
+
+    var textarea = subqsa(root_el, "textarea")[0];
+    
+    function get_value(){
+        return textarea.value;
+    }
+    
+    var button = subqsa(root_el, "button")[0];
+
+    textarea.style.width = parseInt(window.innerWidth/4-20)+"px";
+    
+    textarea.onkeydown = function(e){
+        if(e.keyCode == 13 && !e.shiftKey){
+            e.preventDefault();
+            submit();
+        }
+    }
+    
+    button.addEventListener("click",submit);
+
+    function submit(){
+        socket.emit("new message",{
+            message: get_value()
+        });
+        textarea.value = "";
+    }
+}
 
 var href = window.location.href;
 
@@ -991,6 +1055,7 @@ if(href.match(/\/sheet\/(.*)/)){
         // Start everything
         // Start calculator
         var calc = livecalc(qsa("livecalc")[0], namespace);
+        var chat = livechat(qsa("livechat")[0], namespace, calc.socket);
         
         // Start documentation
         init_doc(calc);
@@ -999,7 +1064,7 @@ if(href.match(/\/sheet\/(.*)/)){
     // Landing page
     // Nice background animation
     // Todo: manage window resize
-    var can = new_el("<canvas id='bg-canvas'></canvas>");
+    var can = dom("<canvas id='bg-canvas'></canvas>");
     var body = document.body;
     body.appendChild(can);
     can.style.position = "absolute";

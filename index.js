@@ -40,6 +40,25 @@ app.get("/new",function (req, res) {
 
 function new_namespace(namespace){
     var nsp = io.of("/"+namespace);
+    
+    livecalc(namespace, nsp);
+    
+}
+
+/* Sidebar chat */
+function livechat(namespace, nsp, socket, users, user_id){
+    socket.on("new message", function(data){
+        socket.broadcast.emit("new message",{
+            message: data.message,
+            sender: users[user_id].nickname
+        });
+        socket.emit("own message",{
+            message: data.message
+        });
+    });
+}
+
+function livecalc(namespace, nsp){
     var model = require("./sheet_model").create();
     var user_count = 0;
     stats.new_sheet();
@@ -66,10 +85,12 @@ function new_namespace(namespace){
             user_count++;
             console.log("connection - " + user_count + " users");
             nsp.emit("user count", user_count);
-        
+            
             var user_id = generate_token(6);
             
             users[user_id] = {focus:-1};
+
+            livechat(namespace, nsp, socket, users, user_id);
             
             /*
               Build array containing array of nicknames

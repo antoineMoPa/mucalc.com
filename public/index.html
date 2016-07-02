@@ -10,7 +10,7 @@
   </head>
   <body>
     <header>
-      <div class="col-10 col">
+      <col-md-10>
         <h1 class="inline-block">
           <a href="https://livecalc.xyz">livecalc.xyz</a>
         </h1>
@@ -22,12 +22,12 @@
           |
           Version 0.0.7
         </p>
-      </div>
-      <div class="col-2 col text-right">
+      </col-md-10>
+      <col-md-2 class="text-right">
         <p>
           <a href="/new" class="new-sheet-button" target="_blank">New Sheet</a>
         </p>
-      </div>
+      </col-md-2>
     </header>
 
     <div class="main-page">
@@ -68,7 +68,12 @@
         </p>
       </div>
 
-      <livecalc></livecalc>
+      <col-md-9>
+        <livecalc></livecalc>
+      </col-md-9>
+      <col-md-3>
+        <livechat></livechat>
+      </col-md-3>
       
       <br>  
       <p class="text-right">
@@ -79,9 +84,36 @@
       </p>
       <br>
     </div>
+
+    <template name="livechat">
+      <div class="message-log"></div>
+      <div class="message-input">
+        <textarea></textarea>
+        <button>
+          Send
+        </button>
+      </div>
+    </template>
+
+    <template name="livechat-received-message">
+      <div class="livechat-received-message">
+        <div class="content">
+        </div>
+        <div class="sender">
+        </div>
+      </div>
+    </template>
+    
+    <template name="livechat-sent-message">
+      <div class="livechat-sent-message">
+        <div class="content">
+        </div>
+      </div>
+    </template>
+
     
     <template name="small-doc">
-      <div class="col-6 doc">
+      <col-md-6 class="doc">
         <h3>How to use this?</h3>
         <p>
           Type math (example: <code>13*42*(3+32)/12</code>)<br>
@@ -122,8 +154,8 @@
           <br>
           Cellular automaton: <code>rule(45)</code>
         </p>
-      </div>
-      <div class="col-6 doc">
+      </col-md-6>
+      <col-md-6 class="doc">
         <h3>Math</h3>
         <p>
           <code>sin(3.14)</code><br>
@@ -147,7 +179,7 @@
           <code>a=1K; b=2K; LL(a,b)</code>:
           equivalent value of resistors in parallel.
         </p>
-      </div>
+      </col-md-6>
     </template>
     
     <template name="single-field" data-params="label,class,default">
