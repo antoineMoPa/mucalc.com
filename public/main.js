@@ -1023,23 +1023,6 @@ function livechat(root_el, namespace, socket){
         root_el.innerHTML = "";
     };
     
-    socket.on("new message", function(data){
-        var el = render("livechat-received-message");
-        var message = subqsa(el, ".content")[0];
-        var sender = subqsa(el, ".sender")[0];
-        message.textContent = data.message;
-        sender.textContent = data.sender;
-        log.appendChild(el);
-    });
-
-    socket.on("own message", function(data){
-        var el = render("livechat-sent-message");
-        var message = subqsa(el, ".content")[0];
-        message.textContent = data.message;
-        log.appendChild(el);
-        scroll_bottom();
-    });
-
     function get_value(){
         return textarea.value;
     }
@@ -1095,15 +1078,24 @@ function livechat(root_el, namespace, socket){
     
     button.addEventListener("click",submit);
     
+    socket.on("new message", function(data){
+        var el = render_message(data);
+        log.appendChild(el);
+        scroll_bottom();
+    });
+
+    socket.on("own message", function(data){
+        var el = render_message(data,true);
+        log.appendChild(el);
+        scroll_bottom();
+    });
+
+    
     socket.on("past messages", function(messages){
         for(var i = messages.length - 1; i >= 0; i--){
             var data = JSON.parse(messages[i]);
-            var el = render("livechat-received-message");
-            var message = subqsa(el, ".content")[0];
-            var sender = subqsa(el, ".sender")[0];
-            message.textContent = data.message;
-            sender.textContent = data.sender;
-
+            var el = render_message(data);
+            
             // Children 0 is header
             // Children 1 is oldest loaded comment
             if(log.children[1] != undefined){
@@ -1113,7 +1105,25 @@ function livechat(root_el, namespace, socket){
             }
         }
     });
+    
+    function render_message(data, own){
+        var el;
+        if(own){
+            el = render("livechat-sent-message");
+        } else {
+            el = render("livechat-received-message");
+        }
+        var message = subqsa(el, ".content")[0];
+        message.textContent = data.message;
 
+        if(!own){
+            var sender = subqsa(el, ".sender")[0];
+            sender.textContent = data.sender;
+        }
+        
+        return el;
+    }
+    
     socket.emit("load more messages",0);
     
     function submit(){
