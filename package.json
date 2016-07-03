@@ -13,6 +13,9 @@
     "crypto": "0.0.3",
     "deepcopy": "^0.6.3",
     "express": "^4.14.0",
+    "multer": "^1.1.0",
+    "password-hash": "^1.2.2",
+    "pug": "^2.0.0-beta3",
     "redis": "^2.6.2",
     "socket.io": "^1.4.6"
   }

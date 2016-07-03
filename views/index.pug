@@ -1,0 +1,228 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta
+    // I'm so meta
+    title livecalc.xyz Collaborative Calculator 
+    link(rel='stylesheet', href='/fonts/fira/fira.css')
+    link(rel='stylesheet', href='/style.css')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+  body
+    header
+      col-md-10
+        h1.inline-block.mobile-center
+          a(href='https://livecalc.xyz') livecalc.xyz
+        p.inline-block.text-left.mobile-center
+          | Github 
+          a(href='https://github.com/antoineMoPa/livecalc', target='_blank') project
+          |  | backend: math.js | syntax documentation:
+          a(href='http://mathjs.org/docs/expressions/syntax.html', target='_blank')
+            | mathjs docs
+          |           |
+          |           Version 0.0.8
+      col-md-2.text-right.mobile-center
+        p
+          a.new-sheet-button(href='/new', target='_blank') New Sheet
+    .main-page
+      .landing.only-landing
+        h1.text-center Welcome to livecalc.xyz
+        p.text-center
+          | livecalc.xyz is an open source collaborative calculator
+          br
+          br
+          |           Create a 
+          a(href='/new', target='_blank') new sheet
+          |  to calculate stuff.  (You may also go to this public 
+          a(href='/sheet/demo') playground
+          | ).
+          br
+          |           Up to 8 users can edit a sheet at the same time.
+          br
+          |           Press enter to get the result and to share the line to other users.
+          br
+          |           Share the URL to your friends/classmates/colleagues to edit a sheet together.
+          br
+          br
+        .features
+          .block-center
+            h3 Features
+            p
+              ul
+                li All math that you would expect from a calculator
+                li Function plots
+                li Real-time collaboration
+                li livecalc.xyz runs entirely in the browser thanks to math.js.
+                li A huge community of ~1 developer/user
+                // lol
+        p.text-center
+          | Contribute code & issues on 
+          a(href='https://github.com/antoineMoPa/livecalc', target='_blank') github
+          br
+      col-md-9
+        livecalc
+      col-md-3
+        livechat
+      br
+      p.text-right
+        | Licence:
+        a(href='https://www.gnu.org/licenses/gpl-3.0.en.html', target='_blank')
+          | GPLv3
+      br
+    template(name='livecalc-die')
+      h3 Create a new sheet
+      a(href='/new')
+        button Create a new sheet
+      h3 Go to homepage
+      a(href='/')
+        button Homepage
+    template(name='livechat')
+      .message-log
+        .sheet-chat-header Sheet Chat
+      .message-input
+        textarea
+        button
+          | Send
+    template(name='livechat-received-message')
+      .livechat-received-message
+        .content
+        .sender
+    template(name='livechat-sent-message')
+      .livechat-sent-message
+        .content
+    template(name='small-doc')
+      h2 Get started with livecalc.xyz
+      col-md-6.doc
+        h3 Basics
+        p
+          | Type math (example: 
+          code 13*42*(3+32)/12
+          | )
+          br
+          |           Data is saved when you press GO/Enter
+          br
+          |           Copy/Paste URL to share sheet
+          br
+          |           Backspace to delete an empty cell
+          br
+          |           Use semicolon (;) to write what you would write on many cells:
+          br
+          code a = 1; b=2; sin(a+b)
+          br
+          |           Navigation: Tab/Shift+tab, arrows
+        h3 Numbers
+        p
+          | You can use the electrical engineering notation with numbers (n,u,m,k/K,meg/M,G)
+          br
+          |           ex: 
+          code 1K
+          |  = 1000
+          br
+        h3 Constants
+        p
+          code pi
+          | , 
+          code e
+          |  (Euler), 
+          code i
+          |  (sqrt(-1)), etc. 
+          a(href='http://mathjs.org/docs/reference/constants.html', target='_blank') mathjs constants
+        h3 Plots
+        p
+          | You can plot an expression:
+          br
+          code plot("sin(x+0.5)")
+          br
+          code plot("e**x")
+        h3 Fractals
+        p
+          | (warning: cpu intensive)
+          br
+          |           For this expression with 10 iteration and a size of 140 pixels:
+          br
+          |           Julia: 
+          code zfractal("z**2+0.4-0.05i",10,140)
+          br
+          |           Mandelbrot: 
+          code zfractal("z**2+c",10,140)
+          br
+          |           Cellular automaton: 
+          code rule(45)
+      col-md-6.doc
+        h3 Math
+        p
+          code sin(3.14)
+          br
+          code sin(360deg)
+          br
+          code a = 30
+          br
+          code b = 3 * a
+          br
+          code b
+          |  (to show the value of 'b')
+          br
+        h3 Conversions
+        p
+          code 3 meters to inches
+          br
+          code 3 in to cm
+          br
+          code 1 gal to L
+          br
+          code 1 L to cm^3
+          br
+          code 4 bytes in bits
+          br
+          br
+        h3 Bonus
+        p
+          code a=1K; b=2K; LL(a,b)
+          | :
+          |           equivalent value of resistors in parallel.
+    template(name='single-field', data-params='label,class,default')
+      .single-field(class='{{class}}')
+        h3 {{label}}
+        input(value='{{default}}')
+        button Confirm
+    template(name='livecalc-wait-click')
+      .livecalc-wait-click
+        button.livecalc-wait-click-button View
+        p This might take some time to compute.
+    template(name='livecalc')
+      .livecalc
+        .livecalc-header
+          .sheet-state.text-left
+          .user-count(title='(Including you)')
+        .livecalc-cells
+        template-instance(data-name='sheet-panel')
+        template-instance(data-name='single-field', data-label='Your nickname', data-class='nickname', data-default='anonymous')
+        template-instance(data-name='small-doc')
+    template(name='sheet-panel')
+      .sheet-panel
+        h3 Sheet Panel
+        col-md-3
+          | Lock sheet from further editing
+          button(name='lock-sheet')
+            | Lock Sheet
+        col-md-3
+          | Open a copy
+          br
+          button(name='new-copy')
+            | New Copy
+    template(name='livecalc-cell')
+      .livecalc-cell
+        fieldset
+          div
+            input.inline-block.livecalc-input(type='text', placeholder='Type math')
+            button.inline-block.livecalc-go-button
+              | Go
+            pre.livecalc-output.
+        p.users-info
+        .plot
+    script(src='/lib/math.min.js')
+    script(src='/lib/d3.min.js', charset='utf-8')
+    script(src='/lib/function-plot.js', charset='utf-8')
+    script(src='/lib/socket.io.js')
+    script(src='/main.js')
+

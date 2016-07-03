@@ -11,7 +11,14 @@ app.use(body_parser.json());
 
 app.use(express.static('public'));
 
+app.set('views', './views')
+app.set('view engine', 'pug');
+
 var namespaces = [];
+
+app.get('/', function (req, res) {
+    res.render('index');
+});
 
 app.get("/sheet/:id",function (req, res) {
     var sheet_id = req.params.id;
@@ -21,7 +28,7 @@ app.get("/sheet/:id",function (req, res) {
         new_namespace(sheet_id);
     }
 
-    res.sendFile(__dirname + "/public/index.html");
+    res.render('index');
 });
 
 app.get("/copy/:id",function (req, res) {
