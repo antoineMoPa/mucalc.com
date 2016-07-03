@@ -21,8 +21,6 @@ module.exports.User = function(id){
     exports.fetch = function(callback){
         db.get_user(id, function(from_db){
             data = from_db;
-            console.log("fetch");
-            console.log(data);
             callback();
         });
     };

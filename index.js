@@ -59,13 +59,13 @@ function new_namespace(namespace){
 }
 
 /* Sidebar chat */
-function livechat(namespace, nsp, socket, users, user_id){
-    var user_id = user_id;
-
+function livechat(namespace, nsp, socket, user){
+    var user;
+    
     var exports = {};
 
-    exports.set_user_id = function(new_id){
-        user_id = new_id;
+    exports.set_user = function(new_user){
+        user = new_user;
     };
     
     socket.on("load more messages",function(last_sent){
@@ -77,8 +77,8 @@ function livechat(namespace, nsp, socket, users, user_id){
     socket.on("new message", function(data){
         var data = {
             message: data.message,
-            sender: users[user_id].nickname,
-            user_id: user_id
+            sender: user.get_nickname(),
+            user_id: user.get_id()
         };
 
         chat_db.add_message(namespace, data);
@@ -124,12 +124,18 @@ function livecalc(namespace, nsp){
             console.log("connection - " + user_count + " users");
             nsp.emit("user count", user_count);
 
+            // Temporary user
+            // Will be saved at disconnection
+            // To keep nickname and other info
+            // Will be changed immediatly with socket.io
+            // if the browser already contains a user_id
+            // in localStorage
             var user = user_model.create();
             var user_id = user.get_id();
             
             users[user_id] = {focus:-1};
-
-            var chat = livechat(namespace, nsp, socket, users, user_id);
+            
+            var chat = livechat(namespace, nsp, socket, user);
             
             /*
               Build array containing array of nicknames
@@ -150,7 +156,7 @@ function livecalc(namespace, nsp){
                 for(var i = 0; i < model.get_length(); i++){
                     fi.push([]);
                 }
-
+                
                 if(!model.is_locked()){
                     for(var i in users){
                         var user = users[i];
@@ -162,7 +168,6 @@ function livecalc(namespace, nsp){
                         }
                     }
                 }
-                
                 nsp.emit("focus index", fi);
             }
             
@@ -190,12 +195,18 @@ function livecalc(namespace, nsp){
                 
                 user_model.exists(new_id, function(exists){
                     if(exists){
+                        // This ID is effectively in database
+                        // Todo: prevent session hijacking
+                        // with tokens or something
+                        // (everybody can se user ids now)
+                        // Not a priority now because it does not
+                        // give access to anything
                         user = user_model.User(new_id);
                         
                         user.fetch(function(){
                             user_id = user.get_id();
                             users[user_id] = user.get_public_data();
-                            chat.set_user_id(user_id);
+                            chat.set_user(user);
                             send_user_data();
 
                             // Delete old temp user in memory
@@ -204,6 +215,8 @@ function livecalc(namespace, nsp){
                             }
                         });
                     } else {
+                        // Nope, we don't have this id
+                        // Here is your new one
                         send_user_id();
                     }
                 });

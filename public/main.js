@@ -393,6 +393,7 @@ function livecalc(root_el, namespace, user){
         user.set_id(data.user_id);
         exports.set_nickname("anonymous");
         exports.send_nickname();
+        chat.on_user_ready();
     }
     
     window.addEventListener("beforeunload", net_engine.close);
@@ -410,6 +411,7 @@ function livecalc(root_el, namespace, user){
 
         exports.on_user_data = function(data){
             exports.set_nickname(data.nickname);
+            chat.on_user_ready();
         };
         
         exports.send_nickname = function(){
@@ -1051,8 +1053,17 @@ function livechat(root_el, namespace, socket, user){
     var button = subqsa(root_el, "button")[0];
     var exports = {};
 
+    textarea.value = "";
+    
     exports.die = function(){
         root_el.innerHTML = "";
+    };
+
+    exports.on_user_ready = function(){
+        // Now that we know the user id, we
+        // load the messages
+        // (and we will be able to mark "own" messages)
+        socket.emit("load more messages",0);
     };
     
     function get_value(){
@@ -1121,14 +1132,14 @@ function livechat(root_el, namespace, socket, user){
         log.appendChild(el);
         scroll_bottom();
     });
-
     
     socket.on("past messages", function(messages){
         var user_id = user.get_id();
+
         for(var i = messages.length - 1; i >= 0; i--){
             var data = JSON.parse(messages[i]);
             var own = false;
-            
+
             if(data.user_id == user_id){
                 own = true;
             }
@@ -1158,18 +1169,27 @@ function livechat(root_el, namespace, socket, user){
         var sender = subqsa(el, ".sender")[0];
         sender.textContent = data.sender;
 
+        // Remove newline at begining and end of string
+        el.innerHTML = el.innerHTML.replace(/^[\n]*/g,"");
+        el.innerHTML = el.innerHTML.replace(/[\n]*$/g,"");
+        el.innerHTML = el.innerHTML.replace(/\n/g,"");
         el.innerHTML = el.innerHTML.replace(/\n/g,"<br>");
-        
+
         return el;
     }
     
-    socket.emit("load more messages",0);
+    
     
     function submit(){
-        socket.emit("new message",{
-            message: get_value()
-        });
-        textarea.value = "";
+        var val = get_value();
+
+        if(val != ""){
+            socket.emit("new message",{
+                message: val
+            });
+            
+            textarea.value = "";
+        }
     }
 
     return exports;
