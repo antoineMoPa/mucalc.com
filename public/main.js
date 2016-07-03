@@ -1091,6 +1091,8 @@ function livechat(root_el, namespace, socket){
         for(var i = messages.length - 1; i >= 0; i--){
             var data = JSON.parse(messages[i]);
             var el = render_message(data);
+
+            el.innerHTML = el.innerHTML.replace(/\n/g,"<br>");
             
             // Children 0 is header
             // Children 1 is oldest loaded comment
