@@ -450,3 +450,36 @@ livechat .sender{
         display:none;
     }
 }
+
+/* modals */
+
+.modal-overlay{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#333;
+    background:rgba(0,0,0,0.3);
+}
+
+.modal{
+    width:400px;
+    min-height:100px;
+    background:#fff;
+    color:#000;
+    position:fixed;
+    top:40%;
+    left:40%;
+    padding:20px;
+    border:10px solid #eee;
+    border-radius:3px;
+}
+
+.modal .buttons{
+    text-align:center;
+}
+
+.modal button{
+    margin-right: 15px;
+}

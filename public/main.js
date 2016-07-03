@@ -21,7 +21,7 @@ function load_template(name){
     var el = qsa("template[name="+name+"]")[0];
 
     if(el == undefined){
-        console.error("Template "+name+"does not exist.");
+        console.error("Template "+name+" does not exist.");
     }
     
     var content = el.innerHTML;
@@ -334,8 +334,24 @@ function livecalc(root_el, namespace, user){
         if(chat != undefined){
             chat.die();
         }
+
+        var buttons = [
+            {
+                text: "Create a new sheet",
+                action: function(modal){
+                    window.location.href = "/new";
+                    console.log("/new");
+                }
+            },
+            {
+                text: "Go back to homepage",
+                action: function(modal){
+                    window.location.href = "/";
+                }
+            }
+        ];
         
-        alert(message);
+        modal(message, buttons);
     };
     
     exports.set_chat = function(c){
@@ -356,7 +372,7 @@ function livecalc(root_el, namespace, user){
 
     exports.on_sheet_locked = function(data){
         // data.initiator is normally sanited on server
-        alert( "Sheet was locked by \"" +
+        inform_modal( "Sheet was locked by \"" +
                data.initiator +
                "\". You can still open a copy."
              );
@@ -1308,4 +1324,78 @@ function landing_bg_anim(){
         };
         last = t;
     },33);
+}
+
+/** 
+    modal 
+    
+    Example: 
+    
+    var buttons = [
+        {
+            text: "Accept",
+            action: function(modal){
+                modal.close();
+            }
+        }
+    ];
+ */
+function modal(message, buttons){
+    var modal = render("modal-inform");
+    var overlay = render("modal-overlay");
+    var content = subqsa(modal, ".content p")[0];
+    var buttons_container = subqsa(modal, ".buttons")[0];
+    var buttons = buttons || [];
+    
+    content.textContent = message;
+    document.body.appendChild(overlay);
+    document.body.appendChild(modal);
+
+    var exports = {};
+
+    exports.close = function(){
+        modal.parentNode.removeChild(modal);
+        overlay.parentNode.removeChild(overlay);
+    }
+
+    for(var i = 0; i < buttons.length; i++){
+        var button = dom("<button></button>");
+        var callback = buttons[i].action || function(){};
+        var text = buttons[i].text || "No button text";
+
+        button.textContent = text;
+            
+        enable_click(button, callback);
+        
+        buttons_container.appendChild(button);
+    }
+
+    function enable_click(button, callback){
+        // Onclick: Call callback with modal as argument
+        button.addEventListener("click", function(){
+            callback(exports);
+        });
+    }
+    
+    return exports;
+}
+
+function inform_modal(message){
+    var buttons = [
+        {
+            text: "Accept",
+            action: function(modal){
+                modal.close();
+            }
+        }
+    ];
+    
+    return modal(message, buttons);
+}
+
+/**
+   callback(bool: answer) (true == yes)
+*/
+function yesno_modal(message, callback){
+    
 }
