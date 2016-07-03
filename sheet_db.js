@@ -4,9 +4,29 @@ var client = redis.createClient();
 
 module.exports = {};
 
+function gen_id(id){
+    var id = id.replace(/[^A-Za-z0-9]/g,"");
+    return "sheet:"+id;
+}
+
+test();
+
+function test(){
+    if(gen_id("*a*") != "sheet:a"){
+        console.log("Test failed "+gen_id("*a*"));
+    }
+}
+
 module.exports.store_sheet = function(id, data){
     var data = JSON.stringify(data);
-    client.set("sheet:"+id, data, function(err, reply){
+
+    var id = gen_id(id);
+
+    if(id.length == 0){
+        return;
+    }
+    
+    client.set(id, data, function(err, reply){
         if(err != null){
             console.log("err: " + err);
         }
@@ -19,7 +39,13 @@ module.exports.store_sheet = function(id, data){
   
 */
 module.exports.get_sheet = function(id, callback){
-    client.get("sheet:"+id, function(err, reply){
+    var id = gen_id(id);
+    
+    if(id.length == 0){
+        return;
+    }
+    
+    client.get(id, function(err, reply){
         if(err != null){
             console.log("err: " + err);
         }
@@ -33,7 +59,14 @@ module.exports.get_sheet = function(id, callback){
   
 */
 module.exports.exists = function(id, callback){
-    client.exists("sheet:"+id, function(err, exists){
+    var id = gen_id(id);
+    
+    if(id.length == 0){
+        callback();
+        return;
+    }
+    
+    client.exists(gen_id(id), function(err, exists){
         if(err != null){
             console.log("err: " + err);
         }
