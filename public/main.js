@@ -1204,27 +1204,18 @@ var href = window.location.href;
 
 if(href.match(/\/sheet\/(.*)/)){
     // In a sheet
+    var namespace = /\/sheet\/(.*)/g.exec(href)[1];
     
-    // Remove landing page
-    var landing = qsa(".only-landing")[0];
-    landing.parentNode.removeChild(landing);
-
-    // Avoid locking UI
-    // To allow time to remove node
-    setTimeout(function(){
-        var namespace = /\/sheet\/(.*)/g.exec(href)[1];
-
-        var user = User();
-        
-        // Start everything
-        // Start calculator
-        var calc = livecalc(qsa("livecalc")[0], namespace, user);
-        var chat = livechat(qsa("livechat")[0], namespace, calc.socket, user);
-        calc.set_chat(chat);
-        
-        // Start documentation
-        init_doc(calc);
-    },10);
+    var user = User();
+    
+    // Start everything
+    // Start calculator
+    var calc = livecalc(qsa("livecalc")[0], namespace, user);
+    var chat = livechat(qsa("livechat")[0], namespace, calc.socket, user);
+    calc.set_chat(chat);
+    
+    // Start documentation
+    init_doc(calc);
 } else {
     landing_bg_anim();
 }

@@ -3,8 +3,8 @@ var body_parser = require("body-parser");
 var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
-var cookie_session = require('cookie-session')
 var sheet_db = require("./sheet_db");
+var user_model = require("./user_model");
 var chat_db = require("./chat_db");
 var stats = require("./stats");
 
@@ -13,6 +13,8 @@ app.use(body_parser.json());
 // Serve static files
 app.use(express.static('public'));
 
+app.locals.pretty = true;
+
 // Views
 app.set('views', './views')
 app.set('view engine', 'pug');
@@ -20,7 +22,7 @@ app.set('view engine', 'pug');
 var namespaces = [];
 
 app.get('/', function (req, res) {
-    res.render('index');
+    res.render('base',{landing:true});
 });
 
 app.get("/sheet/:id",function (req, res) {
@@ -31,12 +33,12 @@ app.get("/sheet/:id",function (req, res) {
         new_namespace(sheet_id);
     }
 
-    res.render('index');
+    res.render('base');
 });
 
 app.get("/copy/:id",function (req, res) {
     var sheet_id = req.params.id;
-    var new_id = generate_token();
+    var new_id = require("./tokens").generate_token();
     
     sheet_db.get_sheet(sheet_id, function(data){
         data.params.locked = false;
@@ -46,7 +48,7 @@ app.get("/copy/:id",function (req, res) {
 });
 
 app.get("/new",function (req, res) {
-    res.redirect("/sheet/"+generate_token());
+    res.redirect("/sheet/"+(require("./tokens").generate_token()));
 });
 
 function new_namespace(namespace){
@@ -112,8 +114,8 @@ function livecalc(namespace, nsp){
         var users = {};
         
         nsp.on("connection", function(socket){
-            // Dumb and drastic rate limiting
-            if(user_count > 7){
+            // rate limiting
+            if(user_count >= 3){
                 socket.emit("too many users");
                 return;
             }
@@ -121,8 +123,9 @@ function livecalc(namespace, nsp){
             user_count++;
             console.log("connection - " + user_count + " users");
             nsp.emit("user count", user_count);
-            
-            var user_id = generate_token(6);
+
+            var user = user_model.create();
+            var user_id = user.get_id();
             
             users[user_id] = {focus:-1};
 
@@ -151,7 +154,10 @@ function livecalc(namespace, nsp){
                 if(!model.is_locked()){
                     for(var i in users){
                         var user = users[i];
-                        if(user.focus != -1){
+                        if(user == undefined){
+                            continue;
+                        }
+                        if( user.focus != -1 ){
                             fi[user.focus].push(user.nickname);
                         }
                     }
@@ -167,6 +173,7 @@ function livecalc(namespace, nsp){
                 // Prevent XSS
                 var nickname = data.nickname.replace(/[^A-Za-z0-9\-]/g,"");
                 users[user_id].nickname = nickname;
+                user.set_nickname(nickname);
                 send_focus_index();
             });
 
@@ -179,18 +186,29 @@ function livecalc(namespace, nsp){
             // When browser already has a user id
             socket.on("user id",function(data){
                 var new_id = data.user_id;
+                var old_id = user.get_id();
+                
+                user_model.exists(new_id, function(exists){
+                    if(exists){
+                        user = user_model.User(new_id);
+                        
+                        user.fetch(function(){
+                            user_id = user.get_id();
+                            users[user_id] = user.get_public_data();
+                            chat.set_user_id(user_id);
+                            send_user_data();
 
-                if(users[new_id] != undefined){
-                    // Delete old user in memory
-                    if(new_id != user_id){
-                        delete users[user_id];
+                            // Delete old temp user in memory
+                            if(new_id != old_id){
+                                delete users[old_id];
+                            }
+                        });
+                    } else {
+                        send_user_id();
                     }
-                    user_id = new_id;
-                    chat.set_user_id(new_id);
-                    send_user_data();
-                } else {
-                    send_user_id();
-                }
+                });
+                
+                
             });
 
             function send_user_id(){
@@ -201,7 +219,7 @@ function livecalc(namespace, nsp){
             
             function send_user_data(){
                 socket.emit("user data", {
-                    nickname: users[user_id].nickname
+                    nickname: user.get_nickname()
                 });
             }
             
@@ -253,7 +271,11 @@ function livecalc(namespace, nsp){
                 console.log("disconnection");
                 user_count--;
                 nsp.emit("user count", user_count);
-                //delete users[user_id];
+                // Save user in memory
+                user.save();
+                
+                // Delete user from memory
+                delete users[user_id];
                 send_focus_index();
             });
         });
@@ -268,12 +290,3 @@ function livecalc(namespace, nsp){
 }
 
 http.listen(3000);
-
-/*
-  Thank you, Stack Overflow:
-  http://stackoverflow.com/questions/8855687/secure-random-token-in-node-jse
-*/
-function generate_token(num){
-    var num = num || 10;
-    return require('crypto').randomBytes(num).toString('hex');
-}
