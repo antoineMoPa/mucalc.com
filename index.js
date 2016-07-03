@@ -3,14 +3,17 @@ var body_parser = require("body-parser");
 var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
+var cookie_session = require('cookie-session')
 var sheet_db = require("./sheet_db");
 var chat_db = require("./chat_db");
 var stats = require("./stats");
 
 app.use(body_parser.json());
 
+// Serve static files
 app.use(express.static('public'));
 
+// Views
 app.set('views', './views')
 app.set('view engine', 'pug');
 
@@ -55,7 +58,14 @@ function new_namespace(namespace){
 
 /* Sidebar chat */
 function livechat(namespace, nsp, socket, users, user_id){
+    var user_id = user_id;
 
+    var exports = {};
+
+    exports.set_user_id = function(new_id){
+        user_id = new_id;
+    };
+    
     socket.on("load more messages",function(last_sent){
         chat_db.get_conv(namespace,function(data){
             socket.emit("past messages", data);
@@ -65,14 +75,17 @@ function livechat(namespace, nsp, socket, users, user_id){
     socket.on("new message", function(data){
         var data = {
             message: data.message,
-            sender: users[user_id].nickname
+            sender: users[user_id].nickname,
+            user_id: user_id
         };
-        
+
         chat_db.add_message(namespace, data);
         
         socket.broadcast.emit("new message", data);
         socket.emit("own message", data);
     });
+
+    return exports;
 }
 
 function livecalc(namespace, nsp){
@@ -113,7 +126,7 @@ function livecalc(namespace, nsp){
             
             users[user_id] = {focus:-1};
 
-            livechat(namespace, nsp, socket, users, user_id);
+            var chat = livechat(namespace, nsp, socket, users, user_id);
             
             /*
               Build array containing array of nicknames
@@ -156,6 +169,41 @@ function livecalc(namespace, nsp){
                 users[user_id].nickname = nickname;
                 send_focus_index();
             });
+
+            // When browser asks user id
+            socket.on("give user id",function(){
+                // We send it
+                send_user_id()
+            });
+
+            // When browser already has a user id
+            socket.on("user id",function(data){
+                var new_id = data.user_id;
+
+                if(users[new_id] != undefined){
+                    // Delete old user in memory
+                    if(new_id != user_id){
+                        delete users[user_id];
+                    }
+                    user_id = new_id;
+                    chat.set_user_id(new_id);
+                    send_user_data();
+                } else {
+                    send_user_id();
+                }
+            });
+
+            function send_user_id(){
+                socket.emit("user id",{
+                    user_id: user_id
+                });
+            }
+            
+            function send_user_data(){
+                socket.emit("user data", {
+                    nickname: users[user_id].nickname
+                });
+            }
             
             socket.on("set focus",function(data){
                 if(model.is_locked()){
@@ -167,6 +215,7 @@ function livecalc(namespace, nsp){
                 
                 send_focus_index();
             });
+
             
             socket.on("lock sheet",function(data){
                 // Already locked?
@@ -204,7 +253,7 @@ function livecalc(namespace, nsp){
                 console.log("disconnection");
                 user_count--;
                 nsp.emit("user count", user_count);
-                delete users[user_id];
+                //delete users[user_id];
                 send_focus_index();
             });
         });

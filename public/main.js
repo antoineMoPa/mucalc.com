@@ -210,6 +210,10 @@ function lc_network_engine(socket, shell){
         shell.die("Too many users are editing this sheet right now."+
                   " Try again later or create a new sheet.");
     });
+
+    socket.on("user data",function(data){
+        shell.on_user_data(data);
+    });
     
     socket.on("sheet",function(sheet){
         shell.on_sheet(sheet);
@@ -233,6 +237,10 @@ function lc_network_engine(socket, shell){
 
     socket.on("delete cell",function(data){
         shell.on_delete_cell(data);
+    });
+
+    socket.on("user id",function(data){
+        shell.on_user_id(data);
     });
 
     exports.close = function(){
@@ -266,8 +274,18 @@ function lc_network_engine(socket, shell){
             number: index,
             content: value
         });
-    }
-        
+    };
+
+    exports.ask_user_id = function(){
+        socket.emit("give user id");
+    };
+
+    exports.send_user_id = function(id){
+        socket.emit("user id",{
+            user_id: id
+        });
+    };
+
     return exports;
 }
 
@@ -275,7 +293,7 @@ function mathjs_compute_engine(){
     
 }
 
-function livecalc(root_el, namespace){
+function livecalc(root_el, namespace, user){
     eeify_mathjs();
     var chat;
     var scope = {};
@@ -301,9 +319,15 @@ function livecalc(root_el, namespace){
     exports.on_sheet = function(sheet){
         load_json(sheet);
     };
-    
+
     var user_count = subqsa(root_el, ".user-count")[0];
 
+    if(user.has_id() == false){
+        net_engine.ask_user_id();
+    } else {
+        net_engine.send_user_id(user.get_id());
+    }
+        
     exports.die = function(message){
         render("livecalc-die",root_el);
 
@@ -313,7 +337,7 @@ function livecalc(root_el, namespace){
         
         alert(message);
     };
-
+    
     exports.set_chat = function(c){
         chat = c;
     };
@@ -364,40 +388,52 @@ function livecalc(root_el, namespace){
         var number = data.number;
         delete_cell(number, true);
     }
+
+    exports.on_user_id = function(data){
+        user.set_id(data.user_id);
+        exports.set_nickname("anonymous");
+        exports.send_nickname();
+    }
     
     window.addEventListener("beforeunload", net_engine.close);
 
     var nickname = "";
     
-    function init_nickname_field(){
-        var input = subqsa(root_el, ".nickname input")[0];
-        var button = subqsa(root_el, ".nickname button")[0];
+    function init_user_data(){
+        var nickname_input = subqsa(root_el, ".nickname input")[0];
+        var nickname_button = subqsa(root_el, ".nickname button")[0];
 
-        input.onkeydown = function(e){
+        exports.set_nickname = function(new_nickname){
+            nickname_input.value = new_nickname;
+            nickname = new_nickname;
+        };
+
+        exports.on_user_data = function(data){
+            exports.set_nickname(data.nickname);
+        };
+        
+        exports.send_nickname = function(){
+            net_engine.send_nickname(nickname);
+        }
+        
+        nickname_input.onkeydown = function(e){
             if(e.keyCode == 13){
                 submit();
             }
         }
         
-        button.addEventListener("click",function(){
+        nickname_button.addEventListener("click",function(){
             submit();
         });
 
         function submit(){
-            nickname = input.value;
-            flash(input,"#eee");
-            send_nickname(nickname);
-        }
-        
-        // Send it at page load
-        send_nickname("anonymous");
-        
-        function send_nickname(nickname){
-            net_engine.send_nickname(nickname);
+            nickname = nickname_input.value;
+            flash(nickname_input,"#eee");
+            exports.send_nickname();
         }
     }
     
-    init_nickname_field();
+    init_user_data();
 
     function init_sheet_panel(){
         var lock_sheet_button = subqsa(
@@ -1006,7 +1042,7 @@ function init_doc(calc){
     }
 }
 
-function livechat(root_el, namespace, socket){
+function livechat(root_el, namespace, socket, user){
     render("livechat", root_el);
 
     var log = subqsa(root_el, ".message-log")[0];
@@ -1088,11 +1124,16 @@ function livechat(root_el, namespace, socket){
 
     
     socket.on("past messages", function(messages){
+        var user_id = user.get_id();
         for(var i = messages.length - 1; i >= 0; i--){
             var data = JSON.parse(messages[i]);
-            var el = render_message(data);
-
-            el.innerHTML = el.innerHTML.replace(/\n/g,"<br>");
+            var own = false;
+            
+            if(data.user_id == user_id){
+                own = true;
+            }
+            
+            var el = render_message(data, own);
             
             // Children 0 is header
             // Children 1 is oldest loaded comment
@@ -1114,10 +1155,10 @@ function livechat(root_el, namespace, socket){
         var message = subqsa(el, ".content")[0];
         message.textContent = data.message;
 
-        if(!own){
-            var sender = subqsa(el, ".sender")[0];
-            sender.textContent = data.sender;
-        }
+        var sender = subqsa(el, ".sender")[0];
+        sender.textContent = data.sender;
+
+        el.innerHTML = el.innerHTML.replace(/\n/g,"<br>");
         
         return el;
     }
@@ -1134,6 +1175,31 @@ function livechat(root_el, namespace, socket){
     return exports;
 }
 
+function User(){
+    var exports = {};
+    var storage = localStorage;
+
+    exports.has_id = function(){
+        if(storage.user_id == undefined){
+            return false;
+        }
+        if(storage.user_id == ""){
+            return false;
+        }
+        return true;
+    }
+    
+    exports.get_id = function(){
+        return storage.user_id;
+    }
+
+    exports.set_id = function(id){
+        localStorage.setItem("user_id",id);
+    }
+    
+    return exports;
+}
+
 var href = window.location.href;
 
 if(href.match(/\/sheet\/(.*)/)){
@@ -1147,11 +1213,13 @@ if(href.match(/\/sheet\/(.*)/)){
     // To allow time to remove node
     setTimeout(function(){
         var namespace = /\/sheet\/(.*)/g.exec(href)[1];
+
+        var user = User();
         
         // Start everything
         // Start calculator
-        var calc = livecalc(qsa("livecalc")[0], namespace);
-        var chat = livechat(qsa("livechat")[0], namespace, calc.socket);
+        var calc = livecalc(qsa("livecalc")[0], namespace, user);
+        var chat = livechat(qsa("livechat")[0], namespace, calc.socket, user);
         calc.set_chat(chat);
         
         // Start documentation
@@ -1230,4 +1298,3 @@ function landing_bg_anim(){
         last = t;
     },33);
 }
-
