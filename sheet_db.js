@@ -5,7 +5,7 @@ var client = redis.createClient();
 module.exports = {};
 
 function gen_id(id){
-    var id = id.replace(/[^A-Za-z0-9]/g,"");
+    var id = id.replace(/[^A-Za-z0-9_]/g,"");
     return "sheet:"+id;
 }
 
@@ -21,7 +21,7 @@ module.exports.store_sheet = function(id, data){
     var data = JSON.stringify(data);
 
     var id = gen_id(id);
-
+    
     if(id.length == 0){
         return;
     }
@@ -62,15 +62,14 @@ module.exports.exists = function(id, callback){
     var id = gen_id(id);
     
     if(id.length == 0){
-        callback();
+        callback(false);
         return;
     }
     
-    client.exists(gen_id(id), function(err, exists){
+    client.exists(id, function(err, exists){
         if(err != null){
             console.log("err: " + err);
         }
-
         callback(exists);
     });
 };
