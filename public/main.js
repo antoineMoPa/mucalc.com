@@ -340,13 +340,14 @@ function livecalc(root_el, namespace, user){
                 text: "Create a new sheet",
                 action: function(modal){
                     window.location.href = "/new";
-                    console.log("/new");
+                    modal.close();
                 }
             },
             {
                 text: "Go back to homepage",
                 action: function(modal){
                     window.location.href = "/";
+                    modal.close();
                 }
             }
         ];
@@ -460,7 +461,16 @@ function livecalc(root_el, namespace, user){
         )[0];
 
         lock_sheet_button.onclick = function(){
-            net_engine.lock_sheet();
+            yesno_modal(
+                "This action cannot be undone. " +
+                    "Nobody will be able to modify this " +
+                    "sheet after you click \"yes\". " +
+                    "Do you really want to lock the sheet?",
+                function(yes){
+                    if(yes){
+                        net_engine.lock_sheet();
+                    }
+                });
         };
         
         var new_copy_button = subqsa(
@@ -1397,5 +1407,22 @@ function inform_modal(message){
    callback(bool: answer) (true == yes)
 */
 function yesno_modal(message, callback){
+    var buttons = [
+        {
+            text: "Yes",
+            action: function(modal){
+                callback(true);
+                modal.close();
+            }
+        },
+        {
+            text: "No",
+            action: function(modal){
+                callback(false);
+                modal.close();
+            }
+        }
+    ];
     
+    return modal(message, buttons);
 }
