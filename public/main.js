@@ -752,7 +752,7 @@ function livecalc(root_el, namespace, user){
                 return;
         }
         
-        flash(output,"#f45532","#ffffff");
+        flash(output,"#09bc8a","#ffffff");
     }
 
     /*
