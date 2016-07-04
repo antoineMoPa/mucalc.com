@@ -386,9 +386,10 @@ livecalc{
 .livechat-sent-message,
 .livechat-received-message{
     width:100%;
+    width:calc(100% - 20px); /* padding */
     margin-bottom:5px;
-    border-radius:3px;
-    padding:5px;
+    border-radius:10px;
+    padding:10px;
 }
 
 .livechat-received-message{
