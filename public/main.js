@@ -159,17 +159,20 @@ function animated_remove(el, callback){
 /*
   Make something flash
  */
-function flash(el,color){
-    var original_color;
+function flash(el,color,text_color){
+    var original_color, original_text;
     var options = {
         max: 2,
         time_step: 300,
         begin: function(el){
             original_color = el.style.backgroundColor;
+            original_text = el.style.color;
             el.style.backgroundColor = color;
+            el.style.color = text_color;
         },
         end: function(el){
             el.style.backgroundColor = original_color;
+            el.style.color = original_text;
         },
         step: function(el,step,max){
         }
@@ -447,7 +450,7 @@ function livecalc(root_el, namespace, user){
 
         function submit(){
             nickname = nickname_input.value;
-            flash(nickname_input,"#eee");
+            flash(nickname_input,"#eee","#333");
             exports.send_nickname();
         }
     }
@@ -749,7 +752,7 @@ function livecalc(root_el, namespace, user){
                 return;
         }
         
-        flash(output,"#c5ddf5");
+        flash(output,"#f45532","#ffffff");
     }
 
     /*
@@ -1074,7 +1077,6 @@ function livechat(root_el, namespace, socket, user){
     render("livechat", root_el);
 
     var log = subqsa(root_el, ".message-log")[0];
-    var header = subqsa(root_el, ".sheet-chat-header")[0];
     var textarea = subqsa(root_el, "textarea")[0];
     var button = subqsa(root_el, "button")[0];
     var exports = {};
@@ -1129,7 +1131,7 @@ function livechat(root_el, namespace, socket, user){
         var w = (parseInt(winw)/4);
         
         root_el.style.width = w+"px";
-        textarea.style.width = (w-20)+"px";
+        textarea.style.width = (w-10)+"px"; // 10 = margin
 
         var chat_header = 14;
         var input = 40;
@@ -1172,10 +1174,8 @@ function livechat(root_el, namespace, socket, user){
             
             var el = render_message(data, own);
             
-            // Children 0 is header
-            // Children 1 is oldest loaded comment
-            if(log.children[1] != undefined){
-                log.insertBefore(el, log.children[1]);
+            if(log.children[0] != undefined){
+                log.insertBefore(el, log.children[0]);
             } else {
                 log.appendChild(el);
             }
@@ -1269,8 +1269,7 @@ if(href.match(/\/sheet\/(.*)/)){
 function landing_bg_anim(){
     // Landing page
     // Nice background animation
-    var col = "rgba(130,140,255,0.2)";
-    var bg_col = "rgba(130,140,255,1.0)";
+    var bg_col = "#09bc8a";
     
     document.body.style.background = bg_col;
 
@@ -1283,7 +1282,7 @@ function landing_bg_anim(){
     var body = document.body;
     body.appendChild(can);
     can.style.position = "absolute";
-    can.style.top = 0;
+    can.style.top = "80px";
     can.style.left = 0;
     can.style.zIndex = -1;
     
@@ -1310,27 +1309,31 @@ function landing_bg_anim(){
     
     var x = 0;
     var last;
+
+    var constant = Math.random() * 40 + 10;
+
+    document.body.addEventListener("click",reset_constant);
+    document.body.addEventListener("mouseenter",reset_constant);
+
+    function reset_constant(){
+        ctx.fillStyle = bg_col;
+        ctx.fillRect(0,0,w,h);
+        constant = Math.random() * 40;
+        console.log(constant);
+    }
     
     setInterval(function(){
         var t = new Date().getTime()/1000;
         var deltat = t - last;
-        ctx.fillStyle = col;
-        ctx.fillRect(0,0,w,h);
         var iterations = 5;
         for(var i=0; i < iterations; i++){
-            x+=2;
+            x+=1;
             x %= w;
-            ctx.fillStyle = "rgba(225,225,255,0.8)";
+            ctx.fillStyle = "rgba(0,67,70,0.2)";
             // Don't ask me how I ended up with this
             var y = h/2 *
-                Math.sin(t + (i/iterations)*30) + h/2;
+                Math.sin(t + (i/iterations)*constant) + h/2;
             ctx.fillRect(x,y,4,4);
-
-            ctx.fillStyle = "rgba(225,225,255,0.1)";
-            
-            var y = h/2 *
-                Math.sin(t + (deltat*i/iterations)*10) + h/2;
-            ctx.fillRect(x,y,20,20);
         };
         last = t;
     },33);

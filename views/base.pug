@@ -22,8 +22,8 @@ html
           |           |
           |           Version 0.0.9
       col-md-2.text-right.mobile-center
-        p
-          a.new-sheet-button(href='/new', target='_blank') New Sheet
+        a.new-sheet-button(href='/new', target='_blank')
+          button New Sheet
     .main-page
       if landing
         include ./landing.pug
@@ -32,7 +32,7 @@ html
       col-md-3
         livechat
       br
-      p.text-right
+      p.text-center
         | Licence: 
         a(href='https://www.gnu.org/licenses/gpl-3.0.en.html', target='_blank')
           | GPLv3
@@ -46,7 +46,6 @@ html
         button Homepage
     template(name='livechat')
       .message-log
-        .sheet-chat-header Sheet Chat
       .message-input
         textarea
         button
@@ -165,10 +164,12 @@ html
           .user-count(title='(Including you)')
         .livecalc-cells
         template-instance(data-name='sheet-panel')
-        template-instance(data-name='single-field', data-label='Your nickname', data-class='nickname', data-default='anonymous')
+        br
+        .panel
+          template-instance(data-name='single-field', data-label='Your nickname', data-class='nickname', data-default='anonymous')
         template-instance(data-name='small-doc')
     template(name='sheet-panel')
-      .sheet-panel
+      .sheet-panel.panel
         h3 Sheet Panel
         col-md-3
           | Lock sheet from further editing

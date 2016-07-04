@@ -1,3 +1,13 @@
+/*
+  Colors Guidelines by A. Mongelos
+
+  #f45532 - orange
+  #172a3a - dark blue
+  #004346 - dark green
+  #16a48a - medium green, header
+  #09bc8a - green
+*/
+
 /* general stuff that should be everywhere */
 .text-right{
     text-align:right;
@@ -99,7 +109,7 @@ col-md-3{
     margin-left:-20px;
     margin-right:-25px;
     padding:20px;
-    border-bottom:5px solid #55e;
+    border-bottom:5px solid #16a48a;
 }
 
 .features h3{
@@ -115,13 +125,17 @@ col-md-3{
 
 /* page-related stuff */
 body{
-    background:#fff;
+    background:#16a48a;
     font-family: sans-serif;
     font-family: 'Fira Sans';
     padding:0;
     margin:0;
     width:100%;
     height:100%;
+}
+
+body a{
+    color:#004346;
 }
 
 body,
@@ -164,15 +178,14 @@ header h1 a{
 }
 
 header{
-    background:#88f;
+    background:#172a3a;
     color:#fff;
     width:100%;
     display:block;
     padding:15px;
     padding-top:4px;
     padding-bottom:4px;
-    box-shadow:0 0 7px rgba(0,0,0,0.3);
-    border-bottom:3px solid #33a;
+    border-bottom:3px solid #004346;
     margin-bottom:20px;
     margin-left:-15px;
     margin-right:-15px;
@@ -188,8 +201,17 @@ header{
 }
 
 header a{
-    color:#131;
+    color:#09bc8a;
     text-decoration:none;
+}
+
+header button{
+    margin:0;
+    padding:10px 12px;
+    margin-top:8px;
+    height:auto;
+    border-radius:3px;
+    border:2px solid #16a48a;
 }
 
 .new-sheet-button{
@@ -208,7 +230,7 @@ button{
     border-radius:0;
     border:none;
     padding:5px;
-    background:#55f;
+    background:#004346;
     font-size:14px;
     color:#fff;
     border-radius:2px;
@@ -233,7 +255,6 @@ h3{
     font-size:120%;
     margin-left:0;
     margin:5px 0;
-    text-shadow:1px 1px 0 #fff;
 }
 
 p{
@@ -245,7 +266,8 @@ p{
 }
 
 .doc code{
-    background:#fff;
+    background:#172a3a;
+    color:#eee;
     display:inline-block;
     margin:5px 0;
     padding:0 5px;
@@ -268,12 +290,12 @@ p{
 
 .livecalc-cell,
 .livecalc .livecalc-header{
-    background:#eee;
+    background:#efefef;
     padding-top:5px;
     padding-bottom:5px;
     margin-bottom:10px;
     border-radius:2px;
-    border-bottom:2px solid #aab;
+    border-bottom:3px solid #aab
 }
 
 .livecalc fieldset{
@@ -289,10 +311,11 @@ p{
     margin-left:10px;
     font-size:20px;
     margin-bottom:5px;
+    color:#444;
     border:none;
     background:#fff;
     box-shadow:none;
-    border-bottom:2px solid #aab;
+    border-bottom:2px solid #16a48a;
 }
 
 .livecalc .livecalc-output{
@@ -316,9 +339,9 @@ p{
     border-radius:0;
     border:none;
     padding:5px;
-    background:#fff;
-    color:#333;
-    border-bottom:2px solid #aab;
+    background:#172a3a;
+    color:#eee;
+    border-bottom:2px solid #16a48a;
 }
 
 .livecalc .users-info{
@@ -355,7 +378,7 @@ p{
 .livecalc-header{
     text-align:left;
     font-size:11px;
-    color:#333;
+    color:#004346;
 }
 
 .livecalc-header .sheet-state{
@@ -375,7 +398,7 @@ livecalc{
     overflow-x:hidden;
 }
 
-.sheet-panel{
+.panel{
     background:#efefef;
     padding:10px;
     border-bottom:3px solid #aab
@@ -388,41 +411,48 @@ livecalc{
     width:100%;
     width:calc(100% - 20px); /* padding */
     margin-bottom:5px;
-    border-radius:10px;
+    margin-top:5px;
     padding:10px;
+    border-radius:10px;
 }
 
 .livechat-received-message{
-    color:#333;
+    color:#172a3a;
     background:#eee;
+    border-top-left-radius:0;
 }
 
 .livechat-sent-message{
-    color:#fff;
-    background:#3af;
+    color:#172a3a;
+    background:#09bc8a;
+    border-bottom-right-radius:0;
 }
 
 livechat{
     position:fixed;
     bottom:80px;
     right:10px;
+    background:#fff;
 }
 
 livechat button{
     position:fixed;
-    bottom:0px;
+    bottom:12px;
     right:20px;
 }
 
 livechat textarea{
     position:fixed;
-    bottom:10px;
+    bottom:20px;
     right:10px;
     height:40px;
     max-height:40px;
     padding:5px;
     border:none;
-    border-bottom:2px solid #55e;
+    border-radius:5px;
+    border-top-left-radius:0;
+    border-top-right-radius:0;
+    border-bottom:2px solid #09bc8a;
     background:#fafafa;
     resize:none;
 }
