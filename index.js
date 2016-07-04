@@ -119,6 +119,12 @@ function livecalc(namespace, nsp){
                 socket.emit("too many users");
                 return;
             }
+
+            stats.new_sheet_visit(namespace);
+
+            stats.get_sheet_visits(namespace, function(num){
+                nsp.emit("sheet visit count", num);
+            });
             
             user_count++;
             console.log("connection - " + user_count + " users");

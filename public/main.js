@@ -304,7 +304,7 @@ function lc_network_engine(socket, shell){
     });
 
     socket.on("user count",function(count){
-        shell.on_count(count);
+        shell.on_user_count(count);
     });
 
     socket.on("edit cell",function(data){
@@ -370,6 +370,14 @@ function lc_network_engine(socket, shell){
         });
     };
 
+    /* Less essential functionnality after this point */
+
+    // stats
+
+    socket.on("sheet visit count", function(num){
+        shell.on_visit_count(num);
+    });
+    
     return exports;
 }
 
@@ -443,7 +451,7 @@ function livecalc(root_el, namespace, user){
         chat = c;
     };
     
-    exports.on_count = function(count){
+    exports.on_user_count = function(count){
         var plural = count > 1;
         var count = parseInt(count);
         user_count.innerHTML = count + " user" + (plural? "s": "");
@@ -539,6 +547,7 @@ function livecalc(root_el, namespace, user){
     init_user_data();
 
     function init_sheet_panel(){
+        var panel = qsa(".sheet-panel")[0];
         var lock_sheet_button = subqsa(
             root_el,
             "button[name='lock-sheet']"
@@ -565,6 +574,12 @@ function livecalc(root_el, namespace, user){
         new_copy_button.onclick = function(){
             window.location.href = "/copy/"+namespace;
         }
+
+        var visit_count = subqsa(panel, ".visit-count")[0];
+        
+        exports.on_visit_count = function(count){
+            visit_count.textContent = count;
+        };
     }
 
     init_sheet_panel();

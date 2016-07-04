@@ -12,3 +12,21 @@ module.exports.new_sheet = function(){
         }
     });
 }
+
+module.exports.new_sheet_visit = function(id){
+    client.incr("visit_sheet:"+id, function(err, msg){
+        if(err != null){
+            console.log(err);
+        }
+    });
+}
+
+module.exports.get_sheet_visits = function(id, callback){
+    var callback = callback || function(){};
+    client.get("visit_sheet:"+id, function(err, msg){
+        if(err != null){
+            console.log(err);
+        }
+        callback(msg);
+    });
+}
