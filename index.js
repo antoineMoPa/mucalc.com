@@ -93,7 +93,6 @@ function livechat(namespace, nsp, socket, user){
 function livecalc(namespace, nsp){
     var model = require("./sheet_model").create();
     var user_count = 0;
-    stats.new_sheet();
 
     namespaces.push(namespace);
 
@@ -106,6 +105,8 @@ function livecalc(namespace, nsp){
                 listen();
             })
         } else {
+            // Nope, new sheet
+            stats.new_sheet();
             listen();
         }
     });
