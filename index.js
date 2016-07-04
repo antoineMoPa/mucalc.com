@@ -179,6 +179,8 @@ function livecalc(namespace, nsp){
                 var nickname = data.nickname.replace(/[^A-Za-z0-9\-]/g,"");
                 users[user_id].nickname = nickname;
                 user.set_nickname(nickname);
+                // At this point, we can store in db
+                user.save();
                 send_focus_index();
             });
 
@@ -275,6 +277,7 @@ function livecalc(namespace, nsp){
             socket.on("delete cell", function(data){
                 if(!model.is_locked()){
                     model.remove(data);
+
                     save();
                     socket.broadcast.emit("delete cell", data);
                 }
