@@ -746,7 +746,11 @@ function livecalc(root_el, namespace, user){
         if(text == ""){
             return;
         } else if(result != undefined){
-            output.textContent = result;
+            if(typeof result == "function"){
+                output.textContent = "[function]";
+            } else {
+                output.textContent = result;
+            }
         } else {
             output.textContent = result;
                 return;
