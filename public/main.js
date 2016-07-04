@@ -13,6 +13,29 @@ function subqsa(el,sel){
 }
 
 /*
+  Hide an element
+*/
+function hide(el){
+    el.classList.add("hidden");
+}
+
+/* 
+   Determine if hidden
+ */
+function hidden(el){
+    return el.classList.contains("hidden");
+}
+
+
+/*
+  Show an element
+ */
+function show(el){
+    el.classList.remove("hidden");
+}
+
+
+/*
   Load a template
   
   returns the HTML
@@ -112,23 +135,50 @@ function dom(html){
 /*
   Make something appear "smoothly"
  */
-function appear(el){
-    var options = {
-        max: 6,
-        begin: function(el){
-            el.style.transform = "scale(0.0)";
+function appear(el, effect){
+    var effect = effect || "scale up";
+    
+    var effects = {
+        "scale up": {
+            max: 6,
+            begin: function(el){
+                el.style.transform = "scale(0.0)";
+            },
+            end: function(el){
+                el.style.transform = "";
+            },
+            step: function(el,step,max){
+                var ratio = step / max;
+                el.style.opacity = "0.0";
+                el.style.opacity = 1.0 - ratio;
+                el.style.transform = "scale("+(1.0 - ratio)+")";
+            }
         },
-        end: function(el){
-            el.style.transform = "";
-        },
-        step: function(el,step,max){
-            var ratio = step / max;
-            el.style.opacity = "0.0";
-            el.style.opacity = 1.0 - ratio;
-            el.style.transform = "scale("+(1.0 - ratio)+")";
+        "from top": {
+            max: 6,
+            begin: function(el){
+                el.style.transform = "scale(1,0)";
+            },
+            end: function(el){
+                el.style.transform = "";
+            },
+            step: function(el,step,max){
+                var ratio = step / max;
+                el.style.opacity = "0.0";
+                el.style.opacity = 1.0 - ratio;
+                el.style.transformOrigin = "top";
+                el.style.transform =
+                    "scale(1,"+(1.0 - ratio)+")";
+            }
         }
     };
-    animate(el,options);
+
+    if(effects[effect] == undefined){
+        console.error("Animation '" + effect + "' does not exist.");
+        return;
+    }
+    
+    animate(el, effects[effect]);
 }
 
 /*
@@ -317,7 +367,7 @@ function livecalc(root_el, namespace, user){
 
     exports.socket = socket;
     
-    new_cell("", true);
+    new_cell("", true, true);
     
     exports.on_sheet = function(sheet){
         load_json(sheet);
@@ -541,7 +591,7 @@ function livecalc(root_el, namespace, user){
         delete_all();
         
         for(var i = 0; i < cells.length; i++){
-            new_cell(cells[i], true);
+            new_cell(cells[i], true, false);
         }
         re_run();
         focus(0);
@@ -600,6 +650,8 @@ function livecalc(root_el, namespace, user){
             input: subqsa(el, ".livecalc-input")[0],
             output: subqsa(el,".livecalc-output")[0],
             usersinfo: subqsa(el,".users-info")[0],
+            text_part: subqsa(el,".text-part")[0],
+            math_part: subqsa(el,".math-part")[0],
             plot: subqsa(el,".plot")[0]
         };
     }
@@ -628,11 +680,11 @@ function livecalc(root_el, namespace, user){
         var to = number;
 
         for(i = from; i <= to; i++){
-            new_cell("",false);
+            new_cell("", false, false);
         }
     }
-    
-    function new_cell(content, send_data){
+
+    function new_cell(content, send_data, animate){
         var exports = {};
         var content = content || "";
 
@@ -641,12 +693,31 @@ function livecalc(root_el, namespace, user){
         cells.appendChild(cell);
         update_indices();
 
-        var input = subqsa(cell,".livecalc-input")[0];
-        var button = subqsa(cell,".livecalc-go-button")[0];
-        var output = subqsa(cell,".livecalc-output")[0];
+        /* TODO: use find_cell instead */
+        var input = subqsa(cell, ".livecalc-input")[0];
+        var button = subqsa(cell, ".livecalc-go-button")[0];
+        var output = subqsa(cell, ".livecalc-output")[0];
+        var text_part = subqsa(cell, ".text-part")[0];
+        var math_part = subqsa(cell, ".math-part")[0];
         
-        //appear(cell);
-        input.setAttribute("value",content);
+        if(animate == true){
+            appear(cell);
+        }
+        
+        input.setAttribute("value", content);
+
+        /* Make sure inputs are shown on mouse click */
+        text_part.addEventListener("click",function(){
+            if(hidden(math_part)){
+                // Show math part for edition
+                show(math_part);
+                appear(math_part,"from top");
+                input.focus();
+            } else {
+                // Hide
+                hide(math_part);
+            }
+        });
         
         function get_index(){
             return parseInt(cell.getAttribute("data-index"));
@@ -671,7 +742,7 @@ function livecalc(root_el, namespace, user){
                 e.preventDefault();
                 if(get_value() != ""){
                     send_value(get_index());
-                    calculate_and_next();
+                    go();
                 }
             } else if (e.keyCode == 38) {
                 focus(get_index()-1);
@@ -685,23 +756,22 @@ function livecalc(root_el, namespace, user){
             }
         }
 
-        function calculate_and_next(){
+        function go(){
             calculate();
             
             var index = get_index();
             
             // If last cell, add new cell
             if(index == cell_count - 1){
-                new_cell("", true);
+                new_cell("", true, true);
             }
         }
         
         button.onclick = function(){
             send_value(get_index());
-            calculate_and_next();
+            go();
         };
-
-        exports.calculate_and_next = calculate_and_next;
+        
         exports.calculate = calculate;
 
         input.focus();
@@ -728,14 +798,40 @@ function livecalc(root_el, namespace, user){
         var cell_data = find_cell(index);
         currently_calculated_cell = cell_data;
         var cell = cell_data.element;
+        var text_part = cell_data.text_part;
+        var math_part = cell_data.math_part;
         var input = cell_data.input;
         var output = cell_data.output;
+        var value = input.value;
+        var value_no_comment = value;
+        var text_comment = "";
 
-        function get_value(){
-            return input.value;
+        show(math_part);
+        
+        // Extract comment
+        var comment_pos = value.indexOf("//");
+
+        if(comment_pos != -1){
+            text_comment = value.substr(comment_pos+2,value.length);
+            value_no_comment = value.substr(0,comment_pos);
+        }
+
+        if(text_comment != ""){
+            text_part.textContent = text_comment;
+            show(text_part);
+        } else {
+            text_part.textContent = "";
+            hide(text_part);
         }
         
-        var text = ee_parse(get_value());
+        if(value_no_comment == ""){
+            hide(math_part);
+            return;
+        }
+        
+        var text = ee_parse(value_no_comment);
+
+        // Evaluate and display errors/result
         try{
             var result = math.eval(text, scope);
         } catch (exception){
@@ -1071,7 +1167,7 @@ function init_doc(calc){
 
     function init_click(el, code){
         el.onclick = function(){
-            var cell = calc.new_cell(code, true);
+            var cell = calc.new_cell(code, true, true);
             cell.calculate();
         };
     }

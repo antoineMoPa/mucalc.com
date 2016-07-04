@@ -74,6 +74,10 @@ col-md-3{
     }
 }
 
+.hidden{
+    display:none;
+}
+
 /* landing page */
 
 .landing{
@@ -306,12 +310,24 @@ p{
     margin-right:10px;
 }
 
-.livecalc-cell,
+.livecalc-cell{
+    margin-top:10px;
+}
+
+.livecalc-cell .text-part{
+    background:#fff;
+    color:#000;
+    padding:10px;
+    font-family:monospace;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.livecalc-cell .math-part,
 .livecalc .livecalc-header{
     background:#efefef;
     padding-top:5px;
     padding-bottom:5px;
-    margin-bottom:10px;
     border-bottom:3px solid #aab
 }
 

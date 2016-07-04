@@ -195,16 +195,19 @@ html
           
     template(name='livecalc-cell')
       .livecalc-cell
-        fieldset
-          div
-            input.inline-block.livecalc-input(
-              type='text', 
-              placeholder='Type math')
-            button.inline-block.livecalc-go-button
-              | Go
-            pre.livecalc-output.
-        p.users-info
-        .plot
+        .text-part
+          
+        .math-part
+          fieldset
+            div
+              input.inline-block.livecalc-input(
+                type='text', 
+                placeholder='Type math')
+              button.inline-block.livecalc-go-button
+                | Go
+              pre.livecalc-output.
+          p.users-info
+          .plot
     template(name='modal-overlay')
       .modal-overlay
     template(name='modal-inform')
