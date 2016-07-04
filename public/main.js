@@ -766,6 +766,8 @@ function livecalc(root_el, namespace, user){
                 hide(math_part);
             }
         });
+
+        hide(text_part);
         
         function get_index(){
             return parseInt(cell.getAttribute("data-index"));
