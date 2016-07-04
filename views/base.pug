@@ -64,9 +64,9 @@ html
     template(name='small-doc')
       .doc
         include ./doc.pug
-    template(name='single-field', data-params='label,class,default')
+    template(name='single-field', data-params='class,default,info')
       .single-field(class='{{class}}')
-        h3 {{label}}
+        p {{info}}
         input(value='{{default}}')
         button Confirm
     template(name='livecalc-wait-click')
@@ -82,8 +82,9 @@ html
         template-instance(data-name='sheet-panel')
         br
         .panel
+          h3 Settings
           template-instance(data-name='single-field',
-                            data-label='Your nickname', 
+                            data-info='This name is used in the chat: '
                             data-class='nickname', 
                             data-default='anonymous')
         template-instance(data-name='small-doc')

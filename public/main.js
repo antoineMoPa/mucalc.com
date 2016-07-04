@@ -87,7 +87,7 @@ function instanciator(el){
             var value = instance.getAttribute(attr);
             
             // Sanitize value to avoid XSS
-            value = value.replace(/[^A-Za-z0-9\- ]/g,"");
+            value = value.replace(/[^A-Za-z0-9\-\.\_\: ]/g,"");
             var attr = attr.replace(/^data-/,"")
             var handle = "{{"+attr+"}}";
             
