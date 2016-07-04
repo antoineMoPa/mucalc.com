@@ -133,14 +133,22 @@ function dom(html){
 }
 
 /*
+  Make something disappear "smoothly"
+ */
+function disappear(el, effect){
+    appear(el, effect, true);
+}
+
+/*
   Make something appear "smoothly"
  */
-function appear(el, effect){
+function appear(el, effect, reverse){
+    var reverse = reverse || false;
     var effect = effect || "scale up";
     
     var effects = {
         "scale up": {
-            max: 6,
+            max: 3,
             begin: function(el){
                 el.style.transform = "scale(0.0)";
             },
@@ -149,6 +157,11 @@ function appear(el, effect){
             },
             step: function(el,step,max){
                 var ratio = step / max;
+
+                if(reverse){
+                    ratio = 1 - ratio;
+                }
+                
                 el.style.opacity = "0.0";
                 el.style.opacity = 1.0 - ratio;
                 el.style.transform = "scale("+(1.0 - ratio)+")";
@@ -164,6 +177,11 @@ function appear(el, effect){
             },
             step: function(el,step,max){
                 var ratio = step / max;
+
+                if(reverse){
+                    ratio = 1 - ratio;
+                }
+                
                 el.style.opacity = "0.0";
                 el.style.opacity = 1.0 - ratio;
                 el.style.transformOrigin = "top";
@@ -177,8 +195,21 @@ function appear(el, effect){
         console.error("Animation '" + effect + "' does not exist.");
         return;
     }
+
+    var effect = effects[effect];
+
+    /* reverse begin and end */
+    if(reverse == true){
+        var tmp = effect.begin;
+        effect.begin = effect.end;
+        effect.end = function(el){
+            // Hide before to prevent visual glitch
+            hide(el);
+            tmp(el);
+        };
+    }
     
-    animate(el, effects[effect]);
+    animate(el, effect);
 }
 
 /*
@@ -760,7 +791,7 @@ function livecalc(root_el, namespace, user){
             calculate();
             
             var index = get_index();
-            
+
             // If last cell, add new cell
             if(index == cell_count - 1){
                 new_cell("", true, true);
@@ -803,7 +834,7 @@ function livecalc(root_el, namespace, user){
         var input = cell_data.input;
         var output = cell_data.output;
         var value = input.value;
-        var value_no_comment = value;
+        var math_value = value;
         var text_comment = "";
 
         show(math_part);
@@ -813,23 +844,36 @@ function livecalc(root_el, namespace, user){
 
         if(comment_pos != -1){
             text_comment = value.substr(comment_pos+2,value.length);
-            value_no_comment = value.substr(0,comment_pos);
-        }
-
-        if(text_comment != ""){
-            text_part.textContent = text_comment;
-            show(text_part);
-        } else {
-            text_part.textContent = "";
-            hide(text_part);
+            math_value = value.substr(0,comment_pos);
         }
         
-        if(value_no_comment == ""){
+        if(text_comment != "" && math_value == ""){
+            // Has comment but no math
+            // Show only text part
+            text_part.textContent = text_comment;
+            show(text_part);
             hide(math_part);
+            return;
+        } else if (math_value != "" && text_comment == ""){
+            // Has math but no comment
+            // Show only math part
+            text_part.textContent = "";
+            hide(text_part);
+            show(math_part);
+        } else if (math_value != "" && text_comment != ""){
+            // Has math and comment
+            // Show math (includes comment anyway)
+            show(math_part);
+            hide(text_part);
+        } else {
+            // No value, no comment
+            // Show only math
+            show(math_part);
+            hide(text_part);
             return;
         }
         
-        var text = ee_parse(value_no_comment);
+        var text = ee_parse(math_value);
 
         // Evaluate and display errors/result
         try{
@@ -1418,8 +1462,7 @@ function landing_bg_anim(){
     function reset_constant(){
         ctx.fillStyle = bg_col;
         ctx.fillRect(0,0,w,h);
-        constant = Math.random() * 40;
-        console.log(constant);
+        constant = Math.random() * 40 + 10;
     }
     
     setInterval(function(){
