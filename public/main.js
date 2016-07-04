@@ -687,6 +687,8 @@ function livecalc(root_el, namespace, user){
         };
     }
 
+    exports.find_cell = find_cell;
+    
     function update_indices(){
         var i = 0;
         for(i = 0; i < cells.children.length; i++){
@@ -754,6 +756,8 @@ function livecalc(root_el, namespace, user){
             return parseInt(cell.getAttribute("data-index"));
         }
 
+        exports.get_index = get_index;
+        
         function get_value(){
             return input.value;
         }
@@ -1213,6 +1217,8 @@ function init_doc(calc){
         el.onclick = function(){
             var cell = calc.new_cell(code, true, true);
             cell.calculate();
+            var dom_data = calc.find_cell(cell.get_index());
+            show(dom_data.math_part);
         };
     }
 }
