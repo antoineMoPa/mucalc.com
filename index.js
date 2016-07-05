@@ -268,6 +268,11 @@ function livecalc(namespace, nsp){
 
             
             socket.on("lock sheet",function(data){
+                // Don't lock demo
+                if(namespace == "demo"){
+                    return;
+                }
+                
                 // Already locked?
                 if(model.is_locked()){
                     return;

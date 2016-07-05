@@ -544,12 +544,18 @@ function livecalc(root_el, namespace, user){
 
     function init_sheet_panel(){
         var panel = qsa(".sheet-panel")[0];
+
         var lock_sheet_button = subqsa(
             root_el,
             "button[name='lock-sheet']"
         )[0];
 
         lock_sheet_button.onclick = function(){
+            if(namespace == "demo"){
+                inform_modal("This sheet is the public demo, it can't be locked.");
+                return;
+            }
+            
             yesno_modal(
                 "This action cannot be undone. " +
                     "Nobody will be able to modify this " +
