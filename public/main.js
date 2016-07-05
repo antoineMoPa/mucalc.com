@@ -697,6 +697,7 @@ function livecalc(root_el, namespace, user){
             element: el,
             input: subqsa(el, ".livecalc-input")[0],
             output: subqsa(el,".livecalc-output")[0],
+            secondary_output: subqsa(el,".livecalc-secondary-output")[0],
             usersinfo: subqsa(el,".users-info")[0],
             text_part: subqsa(el,".text-part")[0],
             math_part: subqsa(el,".math-part")[0],
@@ -856,6 +857,7 @@ function livecalc(root_el, namespace, user){
         var math_part = cell_data.math_part;
         var input = cell_data.input;
         var output = cell_data.output;
+        var secondary_output = cell_data.secondary_output;
         var value = input.value;
         var math_value = value;
         var text_comment = "";
@@ -905,18 +907,39 @@ function livecalc(root_el, namespace, user){
             output.textContent = exception;
             return;
         }
+
+        secondary_output.innerHTML = "";
+        hide(secondary_output);
         
         if(text == ""){
             return;
         } else if(result != undefined){
             if(typeof result == "function"){
                 output.textContent = "[function]";
+            } else if (typeof result == "number"){
+                // Here, we will round values if needed
+                var rounded = parseFloat(result.toPrecision(10));
+                var final_output = "";
+
+                // If we display a rounding, inform the user
+                // and also show the non-rounded value.
+                if(result != rounded){
+                    final_output = rounded;
+                    secondary_output.textContent = 
+                        "Raw float value: " +
+                        result;
+                    show(secondary_output);
+                } else {
+                    final_output = result;
+                }
+                
+                output.textContent = final_output;
             } else {
                 output.textContent = result;
             }
         } else {
             output.textContent = result;
-                return;
+            return;
         }
         
         flash(output,"#09bc8a","#ffffff");
