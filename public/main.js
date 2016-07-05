@@ -1460,12 +1460,17 @@ function livechat(root_el, namespace, socket, user){
         return el;
     }
     
-    
-    
+    // Send chat message
     function submit(){
         var val = get_value();
-
+        
         if(val != ""){
+
+            // Only whitespace?
+            if(val.match(/[^\s\n]/) == null){
+                return;
+            }
+            
             socket.emit("new message",{
                 message: val
             });
