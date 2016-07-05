@@ -1343,6 +1343,9 @@ function livechat(root_el, namespace, socket, user){
                 log.appendChild(el);
             }
         }
+
+        // While this is used only at page load:
+        scroll_bottom();
     });
     
     function render_message(data, own){
