@@ -15,7 +15,7 @@ app.use(body_parser.json());
 app.use(sass_middleware({
     src: "./sass",
     dest: "./public/css",
-    debug: true,
+    debug: false,
     outputStyle: "compressed",
     prefix: "/css"
 }));
