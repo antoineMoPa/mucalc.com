@@ -143,7 +143,7 @@ function livecalc(namespace, nsp){
             site_user_count++;
             
             console.log(
-                "disconnection - " +
+                "connection - " +
                     site_user_count +
                     " users in site, " +
                     sheet_user_count +
@@ -317,7 +317,10 @@ function livecalc(namespace, nsp){
                 }
             });
             
-            socket.on("disconnect",function(socket){
+            socket.on("disconnect",function(socket){                
+                sheet_user_count--;
+                site_user_count--;
+
                 console.log(
                     "disconnection - " +
                         site_user_count +
@@ -326,9 +329,6 @@ function livecalc(namespace, nsp){
                         " users in sheet " +
                         namespace
                 );
-                
-                sheet_user_count--;
-                site_user_count--;
                 
                 nsp.emit("user count", sheet_user_count);
                 // Save user in memory
