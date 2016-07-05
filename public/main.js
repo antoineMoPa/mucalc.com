@@ -863,6 +863,7 @@ function livecalc(root_el, namespace, user){
         var text_comment = "";
 
         show(math_part);
+        hide(secondary_output);
         
         // Extract comment
         var comment_pos = value.indexOf("//");
@@ -909,7 +910,6 @@ function livecalc(root_el, namespace, user){
         }
 
         secondary_output.innerHTML = "";
-        hide(secondary_output);
         
         if(text == ""){
             return;
