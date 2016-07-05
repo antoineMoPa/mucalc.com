@@ -246,14 +246,10 @@ function flash(el,color,text_color){
         max: 2,
         time_step: 300,
         begin: function(el){
-            original_color = el.style.backgroundColor;
-            original_text = el.style.color;
-            el.style.backgroundColor = color;
-            el.style.color = text_color;
+            el.classList.add("flashing");
         },
         end: function(el){
-            el.style.backgroundColor = original_color;
-            el.style.color = original_text;
+            el.classList.remove("flashing");
         },
         step: function(el,step,max){
         }

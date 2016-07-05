@@ -78,6 +78,11 @@ col-md-3{
     display:none;
 }
 
+.flashing{
+    background: $color_3 !important;
+    color: #fff;
+}
+
 /* landing page */
 
 .landing{
@@ -103,7 +108,7 @@ col-md-3{
 }
 
 .landing a{
-    color:#335;
+    color: $color_1;
 }
 
 .features{
