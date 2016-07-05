@@ -1001,6 +1001,8 @@ function livecalc(root_el, namespace, user){
      */
     function rule(plot_el, number){
         var number = parseInt(number);
+
+        plot_el.innerHTML = "";
         
         if(number < 0 || number > 255){
             throw "Number should be between 0 and 255";
@@ -1212,6 +1214,8 @@ function livecalc(root_el, namespace, user){
         var iterations = iterations || 10;
         var exp = math.compile(expression);
 
+        plot_el.innerHTML = "";
+        
         var div_width = plot_el.clientWidth;
         var pixel_ratio = 1;
         
