@@ -1434,7 +1434,11 @@ function livechat(root_el, namespace, socket, user){
         } else {
             el = render("livechat-received-message");
         }
+
+        // Set the content
         var message = subqsa(el, ".content")[0];
+
+        // Use textContent to avoid script injection
         message.textContent = data.message;
 
         // Clickable links
@@ -1442,13 +1446,16 @@ function livechat(root_el, namespace, socket, user){
             .replace(/(https?\:\/\/[^\n ]*)/g,"<a href='$1'>$1</a>");
         
         var sender = subqsa(el, ".sender")[0];
+
+        // Put sender nickname
         sender.textContent = data.sender;
 
         // Remove newline at begining and end of string
-        el.innerHTML = el.innerHTML.replace(/^[\n]*/g,"");
-        el.innerHTML = el.innerHTML.replace(/[\n]*$/g,"");
-        el.innerHTML = el.innerHTML.replace(/\n/g,"");
-        el.innerHTML = el.innerHTML.replace(/\n/g,"<br>");
+        message.innerHTML = message.innerHTML.replace(/^[\s\n]*/g,"");
+        // String end
+        message.innerHTML = message.innerHTML.replace(/[\s\n]*$/g,"");
+        // Replace newline inside message to <br>
+        message.innerHTML = message.innerHTML.replace(/\n/g,"<br/>");
 
         return el;
     }
