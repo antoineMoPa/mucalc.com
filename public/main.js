@@ -1436,7 +1436,7 @@ if(href.match(/\/sheet\/(.*)/)){
 function landing_bg_anim(){
     // Landing page
     // Nice background animation
-    var bg_col = "#09bc8a";
+    var bg_col = "#729b79";
     
     document.body.style.background = bg_col;
 
