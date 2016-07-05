@@ -461,7 +461,7 @@ function livecalc(root_el, namespace, user){
 
     exports.on_sheet_locked = function(data){
         // data.initiator is normally sanited on server
-        inform_modal( "Sheet was locked by \"" +
+        modal_inform( "Sheet was locked by \"" +
                data.initiator +
                "\". You can still open a copy."
              );
@@ -552,11 +552,11 @@ function livecalc(root_el, namespace, user){
 
         lock_sheet_button.onclick = function(){
             if(namespace == "demo"){
-                inform_modal("This sheet is the public demo, it can't be locked.");
+                modal_inform("This sheet is the public demo, it can't be locked.");
                 return;
             }
             
-            yesno_modal(
+            modal_yesno(
                 "This action cannot be undone. " +
                     "Nobody will be able to modify this " +
                     "sheet after you click \"yes\". " +
@@ -1568,7 +1568,7 @@ function modal(message, buttons){
     return exports;
 }
 
-function inform_modal(message){
+function modal_inform(message){
     var buttons = [
         {
             text: "Accept",
@@ -1584,7 +1584,7 @@ function inform_modal(message){
 /**
    callback(bool: answer) (true == yes)
 */
-function yesno_modal(message, callback){
+function modal_yesno(message, callback){
     var buttons = [
         {
             text: "Yes",
