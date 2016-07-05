@@ -9,6 +9,8 @@ var user_model = require("./user_model");
 var chat_db = require("./chat_db");
 var stats = require("./stats");
 
+var site_user_count = 0;
+
 app.use(body_parser.json());
 
 /* Stylesheets */
@@ -102,7 +104,7 @@ function livechat(namespace, nsp, socket, user){
 
 function livecalc(namespace, nsp){
     var model = require("./sheet_model").create();
-    var user_count = 0;
+    var sheet_user_count = 0;
 
     namespaces.push(namespace);
 
@@ -126,7 +128,7 @@ function livecalc(namespace, nsp){
         
         nsp.on("connection", function(socket){
             // rate limiting
-            if(user_count >= 3){
+            if(sheet_user_count >= 3){
                 socket.emit("too many users");
                 return;
             }
@@ -137,9 +139,19 @@ function livecalc(namespace, nsp){
                 nsp.emit("sheet visit count", num);
             });
             
-            user_count++;
-            console.log("connection - " + user_count + " users");
-            nsp.emit("user count", user_count);
+            sheet_user_count++;
+            site_user_count++;
+            
+            console.log(
+                "disconnection - " +
+                    site_user_count +
+                    " users in site, " +
+                    sheet_user_count +
+                    " users in sheet " +
+                    namespace
+            );
+
+            nsp.emit("user count", sheet_user_count);
 
             // Temporary user
             // Will be saved at disconnection
@@ -306,9 +318,19 @@ function livecalc(namespace, nsp){
             });
             
             socket.on("disconnect",function(socket){
-                console.log("disconnection");
-                user_count--;
-                nsp.emit("user count", user_count);
+                console.log(
+                    "disconnection - " +
+                        site_user_count +
+                        " users in site, " +
+                        sheet_user_count +
+                        " users in sheet " +
+                        namespace
+                );
+                
+                sheet_user_count--;
+                site_user_count--;
+                
+                nsp.emit("user count", sheet_user_count);
                 // Save user in memory
                 user.save();
                 
