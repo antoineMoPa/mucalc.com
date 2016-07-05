@@ -1,11 +1,14 @@
 /*
   Colors Guidelines by A. Mongelos
 
-  #f45532 - orange
-  #172a3a - dark blue
-  #004346 - dark green
-  #16a48a - medium green, header
-  #09bc8a - green
+  #f45532 -
+  #172a3a -
+  #729b79 .-
+  #f3e8ee .-
+  #bacdb0 .-
+  new: #475b63
+  new: #2e2c2f
+
 */
 
 /* general stuff that should be everywhere */
@@ -113,7 +116,7 @@ col-md-3{
     margin-left:-20px;
     margin-right:-25px;
     padding:20px;
-    border-bottom:5px solid #16a48a;
+    border-bottom:5px solid #f3e8ee;
 }
 
 .features h3{
@@ -129,7 +132,7 @@ col-md-3{
 
 /* page-related stuff */
 body{
-    background:#16a48a;
+    background:#f3e8ee;
     font-family: sans-serif;
     font-family: 'Fira Sans';
     padding:0;
@@ -139,7 +142,7 @@ body{
 }
 
 body a{
-    color:#004346;
+    color:#729b79;
 }
 
 body,
@@ -189,7 +192,7 @@ header{
     padding:15px;
     padding-top:4px;
     padding-bottom:4px;
-    border-bottom:3px solid #004346;
+    border-bottom:3px solid #729b79;
     margin-bottom:20px;
     margin-left:-15px;
     margin-right:-15px;
@@ -205,7 +208,7 @@ header{
 }
 
 header a{
-    color:#09bc8a;
+    color:#bacdb0;
     text-decoration:none;
 }
 
@@ -215,7 +218,7 @@ header button{
     margin-top:8px;
     height:auto;
     border-radius:3px;
-    border:2px solid #16a48a;
+    border:2px solid #f3e8ee;
 }
 
 .new-sheet-button{
@@ -234,7 +237,7 @@ button{
     border-radius:0;
     border:none;
     padding:5px;
-    background:#004346;
+    background:#729b79;
     font-size:14px;
     color:#fff;
     border-radius:2px;
@@ -373,7 +376,7 @@ p{
     padding:5px;
     background:#172a3a;
     color:#eee;
-    border-bottom:2px solid #16a48a;
+    border-bottom:2px solid #f3e8ee;
 }
 
 .livecalc .users-info{
@@ -410,7 +413,7 @@ p{
 .livecalc-header{
     text-align:left;
     font-size:11px;
-    color:#004346;
+    color:#729b79;
 }
 
 .livecalc-header .sheet-state{
@@ -457,7 +460,7 @@ livecalc{
 
 .livechat-sent-message{
     color:#172a3a;
-    background:#09bc8a;
+    background:#bacdb0;
     border-bottom-right-radius:0;
 }
 
@@ -485,7 +488,7 @@ livechat textarea{
     border-radius:5px;
     border-top-left-radius:0;
     border-top-right-radius:0;
-    border-bottom:2px solid #09bc8a;
+    border-bottom:2px solid #bacdb0;
     background:#fafafa;
     resize:none;
 }

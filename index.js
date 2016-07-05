@@ -3,12 +3,22 @@ var body_parser = require("body-parser");
 var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
+var sass_middleware = require("node-sass-middleware");
 var sheet_db = require("./sheet_db");
 var user_model = require("./user_model");
 var chat_db = require("./chat_db");
 var stats = require("./stats");
 
 app.use(body_parser.json());
+
+/* Stylesheets */
+app.use(sass_middleware({
+    src: "./sass",
+    dest: "./public/css",
+    debug: true,
+    outputStyle: "compressed",
+    prefix: "/css"
+}));
 
 // Serve static files
 app.use(express.static('public'));
