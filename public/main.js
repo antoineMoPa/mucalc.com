@@ -1358,6 +1358,10 @@ function livechat(root_el, namespace, socket, user){
         var message = subqsa(el, ".content")[0];
         message.textContent = data.message;
 
+        // Clickable links
+        message.innerHTML = message.innerHTML
+            .replace(/(https?\:\/\/[^\n ]*)/g,"<a href='$1'>$1</a>");
+        
         var sender = subqsa(el, ".sender")[0];
         sender.textContent = data.sender;
 
