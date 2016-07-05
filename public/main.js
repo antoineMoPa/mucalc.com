@@ -93,7 +93,7 @@ function instanciator(el){
             
             content = content.replace(handle,value);
         }
-        
+
         instance.innerHTML = content;
     }
 }
@@ -108,6 +108,7 @@ function render(template_name, to_el){
     var template = load_template(template_name).content;
     
     var to_el = to_el || dom("<div></div>");
+
     to_el.innerHTML = template;
     instanciator(to_el);
     
@@ -855,6 +856,7 @@ function livecalc(root_el, namespace, user){
         var cell = cell_data.element;
         var text_part = cell_data.text_part;
         var math_part = cell_data.math_part;
+        var plot_el = cell_data.plot;
         var input = cell_data.input;
         var output = cell_data.output;
         var secondary_output = cell_data.secondary_output;
@@ -862,6 +864,7 @@ function livecalc(root_el, namespace, user){
         var math_value = value;
         var text_comment = "";
 
+        plot_el.innerHTML = "";
         show(math_part);
         hide(secondary_output);
         
@@ -999,8 +1002,7 @@ function livecalc(root_el, namespace, user){
         if(number < 0 || number > 255){
             throw "Number should be between 0 and 255";
         }
-        
-        plot_el.innerHTML = "";
+
         var div_width = plot_el.clientWidth;
         
         var grid_size = 100;
@@ -1136,7 +1138,7 @@ function livecalc(root_el, namespace, user){
     
     function plot(expression){
         var plot_el = currently_calculated_cell.plot;
-        
+        var fullscreen_button = render("plot-interact-button");
         var div_width = plot_el.clientWidth;
         
         // For most screens: keep this width
@@ -1159,8 +1161,46 @@ function livecalc(root_el, namespace, user){
                 fn: expression
             }],
             grid: true
-        })
+        });
+        
+        plot_el.appendChild(fullscreen_button);
+        
+        fullscreen_button.onclick = function(){
+            fullscreen(expression, function(content){
+                functionPlot({
+                    target: content,
+                    width: window.innerWidth,
+                    height: window.innerHeight - 100,
+                    disableZoom: false,
+                    data: [{
+                        sampler: 'builtIn', /* To use math.js */
+                        graphType: 'polyline', /* To use math.js */
+                        fn: expression
+                    }],
+                    grid: true
+                });
+            });
 
+            /*
+              callback(content_dom_element)
+             */
+            function fullscreen(title_text, callback){
+                var fullscreen_el = render("fullscreen");
+                var close_button = subqsa(fullscreen_el, ".close-button")[0];
+                var content = subqsa(fullscreen_el, ".content")[0];
+                var title = subqsa(fullscreen_el, ".fullscreen-title")[0];
+                
+                title.textContent = title_text;
+                
+                close_button.onclick = function(){
+                    fullscreen_el.parentNode.removeChild(fullscreen_el);
+                };
+                
+                document.body.appendChild(fullscreen_el);
+                callback(content);
+            }
+        }
+        
         // We must return a value
         return "";
     }
@@ -1168,7 +1208,7 @@ function livecalc(root_el, namespace, user){
     function zfractal(plot_el, expression, iterations, size){
         var iterations = iterations || 10;
         var exp = math.compile(expression);
-        plot_el.innerHTML = "";
+
         var div_width = plot_el.clientWidth;
         var pixel_ratio = 1;
         
