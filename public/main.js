@@ -751,6 +751,7 @@ function livecalc(root_el, namespace, user){
         var output = subqsa(cell, ".livecalc-output")[0];
         var text_part = subqsa(cell, ".text-part")[0];
         var math_part = subqsa(cell, ".math-part")[0];
+        var secondary_output = subqsa(cell, ".livecalc-secondary-output")[0];
         
         if(animate == true){
             appear(cell);
@@ -771,7 +772,9 @@ function livecalc(root_el, namespace, user){
             }
         });
 
+        // Hide these at beginning
         hide(text_part);
+        hide(secondary_output);
         
         function get_index(){
             return parseInt(cell.getAttribute("data-index"));
