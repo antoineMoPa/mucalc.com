@@ -1325,8 +1325,8 @@ function livechat(root_el, namespace, socket, user){
         var button_width = button.clientWidth;
         
         root_el.style.width = w+"px";
-        textarea.style.width = (w-20-button_width)+"px"; // 10 = margin
-        textarea.style.paddingRight = (button_width+15)+"px";
+        textarea.style.width = (w-25-button_width)+"px"; // 10 = margin
+        textarea.style.paddingRight = (button_width+20)+"px";
         
         var chat_header = 14;
         var input = 40;
