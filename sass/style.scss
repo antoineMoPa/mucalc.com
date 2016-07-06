@@ -116,6 +116,21 @@ col-md-3{
     font-size:13px;
 }
 
+@media all and (max-width:768px) {
+    .pricing-table{
+        font-size:10px;
+    }
+    .pricing .coming-soon{
+        font-size:8px;
+    }
+    .pricing-table td{
+        padding:2px;
+    }
+    .pricing-table th{
+        padding: 0px 3px;
+    }
+}
+
 /* landing page */
 
 .landing{
