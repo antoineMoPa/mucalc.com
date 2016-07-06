@@ -83,6 +83,39 @@ col-md-3{
     color: #fff;
 }
 
+/* pricing page */
+
+.pricing-table{
+    margin:auto;
+    font-size: 18px;
+}
+
+.pricing-table .col-feature{
+    text-align: left;
+}
+
+.pricing-table td{
+    padding:5px;
+}
+
+.pricing-table th{
+    padding: 0px 30px;
+}
+
+.pricing-table .yes{
+    background: lighten($color_3,20%);
+}
+
+.pricing h1{
+    font-size:35px;
+    line-height:50px;
+}
+
+.pricing .coming-soon{
+    font-weight:300;
+    font-size:13px;
+}
+
 /* landing page */
 
 .landing{

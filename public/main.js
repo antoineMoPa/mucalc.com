@@ -1509,7 +1509,10 @@ function User(){
 
 var href = window.location.href;
 
-if(href.match(/\/sheet\/(.*)/)){
+var is_sheet = href.match(/\/sheet\/(.*)/);
+var is_landing = qsa(".landing").length > 0? true: false;
+
+if(is_sheet){
     // In a sheet
     var namespace = /\/sheet\/(.*)/g.exec(href)[1];
     
@@ -1523,7 +1526,7 @@ if(href.match(/\/sheet\/(.*)/)){
     
     // Start documentation
     init_doc(calc);
-} else {
+} else if (is_landing){
     landing_bg_anim();
 }
 

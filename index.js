@@ -37,6 +37,10 @@ app.get('/', function (req, res) {
     res.render('base',{landing:true});
 });
 
+app.get('/pricing', function (req, res) {
+    res.render('base',{pricing:true});
+});
+
 app.get("/sheet/:id",function (req, res) {
     var sheet_id = req.params.id;
 
