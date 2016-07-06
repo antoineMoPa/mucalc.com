@@ -454,7 +454,7 @@ livecalc{
 .livechat-sent-message,
 .livechat-received-message{
     width:100%;
-    width:calc(100% - 20px); /* padding */
+    width:calc(100% - 15px); /* padding */
     word-wrap: break-word;
     margin-bottom:5px;
     margin-top:5px;
@@ -476,31 +476,36 @@ livecalc{
 
 livechat{
     position:fixed;
-    bottom:80px;
+    top:85px;
     right:10px;
     background:#fff;
 }
 
+livechat .header{
+    padding:5px;
+    background: $color_3;
+}
+
+livechat .header h3{
+    color:#fff;
+}
+
 livechat button{
-    position:fixed;
-    bottom:12px;
-    right:30px;
+    position:absolute;
+    bottom:-5px;
+    right:10px;
 }
 
 livechat textarea{
-    position:fixed;
-    bottom:20px;
-    right:10px;
+    margin-top:10px;
+    margin-left:5px;
+    margin-bottom:5px;
     height:40px;
     max-height:40px;
     padding:5px;
     border:none;
     font-size:13px;
-    border-radius:5px;
-    border-top-left-radius:0;
-    border-top-right-radius:0;
-    border-bottom:2px solid $color_5;
-    background:#fafafa;
+    background:#eee;
     resize:none;
 }
 

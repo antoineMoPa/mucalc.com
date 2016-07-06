@@ -1357,27 +1357,30 @@ function livechat(root_el, namespace, socket, user){
         var winh = window.innerHeight;
         var header = 82;
         var scroll = window.scrollY || 0;
+        
+        /* set with to one column + margin */
+        var w = (parseInt(winw)/4);
+        
+        var button_width = button.clientWidth;
 
+        root_el.style.width = w+"px";
+        textarea.style.width = (w-40-button_width)+"px"; // 10 = margin
+        
+        var chat_header = 55;
+        var input = 40;
+        var header = 82;
+                
         /*
           If scrolled enough, take space left by header
           Allow a 10 px margin
          */
         if(scroll > header){
+            root_el.style.top = "10px";
             header = 10;
+        } else {
+            root_el.style.top = header+"px";
         }
-        
-        /* set with to one column + margin */
-        var w = (parseInt(winw)/4);
 
-        var button_width = button.clientWidth;
-        
-        root_el.style.width = w+"px";
-        textarea.style.width = (w-25-button_width)+"px"; // 10 = margin
-        textarea.style.paddingRight = (button_width+20)+"px";
-        
-        var chat_header = 14;
-        var input = 40;
-        
         log.style.height = (
             parseInt(winh)-
                 header - input - chat_header - 30
@@ -1689,3 +1692,6 @@ function modal_yesno(message, callback){
     
     return modal(message, buttons);
 }
+
+console.log("Hello!");
+console.log("Fork me on http://github.com/antoineMoPa/livecalc !");
