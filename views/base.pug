@@ -29,10 +29,14 @@ html
     .main-page
       if landing
         include ./landing.pug
-      col-md-9
-        livecalc
-      col-md-3
-        livechat
+      else if pricing
+        .pricing
+          include ./pricing.pug
+      else
+        col-md-9
+          livecalc
+        col-md-3
+          livechat
       br
       p.text-center
         | Licence: 
@@ -95,6 +99,7 @@ html
         h3 Sheet Panel
         col-md-3
           | Lock sheet from further editing
+          br
           button(name='lock-sheet')
             | Lock Sheet
         col-md-3
