@@ -570,14 +570,19 @@ livechat .sender{
     position:fixed;
     top:0;
     left:0;
-    z-index:1;
+    z-index:1000;
     text-align:center;
 }
 
+.fullscreen-header{
+    background:#eee;
+    margin-bottom:5px;
+}
+
 .fullscreen-title{
-    margin-top:20px;
+    margin-top:25px;
     text-align:left;
-    margin-left:20px;
+    margin-left:30px;
 }
   
 .fullscreen .close-button{
