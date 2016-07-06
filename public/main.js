@@ -1446,7 +1446,7 @@ function livechat(root_el, namespace, socket, user){
 
         // Clickable links
         message.innerHTML = message.innerHTML
-            .replace(/(https?\:\/\/[^\n ]*)/g,"<a href='$1'>$1</a>");
+            .replace(/(https?\:\/\/[^\n ]*)/g,"<a href='$1' target='_blank'>$1</a>");
         
         var sender = subqsa(el, ".sender")[0];
 
