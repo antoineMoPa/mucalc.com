@@ -1,4 +1,4 @@
-h2 Get started with livecalc.xyz
+h2 livecalc.xyz Quick Reference
 col-md-6
   h3 Basics
   p
@@ -17,16 +17,6 @@ col-md-6
     code a = 1; b=2; sin(a+b)
     br
     |           Navigation: Tab/Shift+tab
-  h3 Comments
-  p 
-    | Create text cells with this syntax:
-    code // Comments can be used to describe what's next
-    br
-    | Once created, click a comment to edit it.
-    br
-    | Use comments at the end the line to describe 
-    | what you are doing: 
-    code 1+1 // Here is a simple addition
   h3 Numbers
   p
     | You can use the electrical engineering 
@@ -60,20 +50,22 @@ col-md-6
     code plot("sin(x+0.5)")
     br
     code plot("e**x")
+    br
+    | Plot more than one function at once: 
+    br
+    code plot("e**x","sin(x)")
   h3 Fractals
   p
-    | (warning: cpu intensive)
+    | For 10 iterations
+    | and a size of 140 pixels:
     br
-    |           For this expression with 10 iteration 
-    |           and a size of 140 pixels:
-    br
-    |           Julia: 
+    | Julia: 
     code zfractal("z**2+0.4-0.05i",10,140)
     br
-    |           Mandelbrot: 
+    | Mandelbrot: 
     code zfractal("z**2+c",10,140)
     br
-    |           Cellular automaton: 
+    | Cellular automaton: 
     code rule(45)
 col-md-6
   h3 Math
@@ -102,6 +94,18 @@ col-md-6
     code 4 bytes in bits
     br
     br
+  h3 Comments
+  p 
+    | Comments exist to let you explain what you are doing.
+    br
+    | Create text cells with this syntax:
+    code // Comments can be used to describe what's next
+    br
+    | Once created, click a comment to edit it.
+    br
+    | Use comments at the end the line to describe 
+    | what you are doing: 
+    code 1+1 // Here is a simple addition
   h3 Bonus
   p
     code a=1K; b=2K; LL(a,b)
