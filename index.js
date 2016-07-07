@@ -49,7 +49,7 @@ app.post('/marketing/newsletter_signup', function (req, res) {
 
     if(validator.validate(email)){
         stats.newaccounts_newsletter_signup(email);
-        
+        console.log("newsletter signup: ", email);
         res.render('base',{
             pricing:true,
             positive_message:true,
