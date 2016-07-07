@@ -1185,11 +1185,7 @@ function livecalc(root_el, namespace, user){
                     width: window.innerWidth,
                     height: window.innerHeight - 100,
                     disableZoom: false,
-                    data: [{
-                        sampler: 'builtIn', /* To use math.js */
-                        graphType: 'polyline', /* To use math.js */
-                        fn: expression
-                    }],
+                    data: functions_data,
                     grid: true
                 });
             });
