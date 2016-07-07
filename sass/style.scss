@@ -21,6 +21,18 @@ $body_bg: #f3e8ee;
     text-align:center;
 }
 
+.strong{
+    font-weight:600;
+}
+
+.bigger{
+    font-size:150%;
+}
+
+.smaller{
+    font-size:80%;
+}
+
 @media (max-width:768px){
     .mobile-center{
         text-align:center;
