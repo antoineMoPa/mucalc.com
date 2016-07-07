@@ -1141,10 +1141,22 @@ function livecalc(root_el, namespace, user){
         return "";
     }
     
-    function plot(expression){
+    function plot(){
         var plot_el = currently_calculated_cell.plot;
         var fullscreen_button = render("plot-interact-button");
         var div_width = plot_el.clientWidth;
+
+        var functions_data = [];
+
+        for(i in arguments){
+            var expression = arguments[i];
+            functions_data.push({
+                sampler: 'builtIn', /* To use math.js */
+                graphType: 'polyline', /* To use math.js */
+                fn: expression
+            });
+        }
+        
         
         // For most screens: keep this width
         // To optimize vertical space used +
@@ -1160,11 +1172,7 @@ function livecalc(root_el, namespace, user){
             target: plot_el,
             width: width,
             disableZoom: true,
-            data: [{
-                sampler: 'builtIn', /* To use math.js */
-                graphType: 'polyline', /* To use math.js */
-                fn: expression
-            }],
+            data: functions_data,
             grid: true
         });
         
