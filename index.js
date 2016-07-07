@@ -43,13 +43,23 @@ app.get('/pricing', function (req, res) {
 
 app.get("/sheet/:id",function (req, res) {
     var sheet_id = req.params.id;
-
+    
     // See if namespace is already in memory
+    // Else we check in DB
     if(namespaces.indexOf(sheet_id) <= -1){
-        new_namespace(sheet_id);
+        sheet_db.exists(sheet_id, function(exists){
+            if(exists){
+                new_namespace(sheet_id);
+                res.render('base');
+            } else {
+                // Else, sheet not found
+                res.status(404).send('Not Found');
+            }
+        });
+    } else {
+        // Sheet exists
+        res.render('base');
     }
-
-    res.render('base');
 });
 
 app.get("/copy/:id",function (req, res) {
@@ -64,14 +74,27 @@ app.get("/copy/:id",function (req, res) {
 });
 
 app.get("/new",function (req, res) {
-    res.redirect("/sheet/"+(require("./tokens").generate_token()));
+    // Todo: verify if a sheet already has same token
+    // Not so probable...
+    // Nope, new sheet
+    stats.new_sheet();
+    
+    var token = require("./tokens").generate_token();
+
+    var model = require("./sheet_model").create();
+    
+    sheet_db.store_sheet(token, model.get_sheet());
+    
+    res.redirect("/sheet/"+token);
 });
 
+/**
+   Callback is supposed to render page
+ */
 function new_namespace(namespace){
     var nsp = io.of("/"+namespace);
     
     livecalc(namespace, nsp);
-    
 }
 
 /* Sidebar chat */
@@ -106,6 +129,9 @@ function livechat(namespace, nsp, socket, user){
     return exports;
 }
 
+/*
+  callback(success)
+ */
 function livecalc(namespace, nsp){
     var model = require("./sheet_model").create();
     var sheet_user_count = 0;
@@ -121,9 +147,8 @@ function livecalc(namespace, nsp){
                 listen();
             })
         } else {
-            // Nope, new sheet
-            stats.new_sheet();
-            listen();
+            console.log("Someone tries to access namespace: "+namespace+
+                        " but it does not exist. This should not happen.");
         }
     });
     
