@@ -27,6 +27,10 @@ I was too hipster for browserify. So I decided to create a makefile to download 
 
     make download
 
+If you want to use the fira firefox font:
+
+    make fira
+
 Run
 
     nodejs index.js
