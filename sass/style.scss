@@ -32,7 +32,7 @@ $error_color: #733;
 }
 
 .smaller{
-    font-size:80%;
+    font-size:80%!important;
 }
 
 @media (max-width:768px){
@@ -43,40 +43,51 @@ $error_color: #733;
 
 col-md-10,
 col-md-9,
-col-md-2,
-col-md-3,
+col-md-8,
 col-md-6,
-col-sm-10,
-col-sm-9,
-col-sm-2,
-col-sm-3,
-col-sm-6{
+col-md-3,
+col-md-2,
+col-md-1,
+col-md-10,
+col-md-9,
+col-md-8,
+col-md-6,
+col-md-3,
+col-md-2{
     display:inline-block;
     vertical-align:top;
 }
 
-col-md-6{
-    width:49.5%;
-}
-
-col-sm-6{
-    width:49%;
-}
-
-col-md-10{
-    width:82%;
+col-md-1{
+    width:8%;
 }
 
 col-md-2{
     width:16%;
 }
 
+col-md-3{
+    width:24%;
+}
+
+col-md-6{
+    width:49.5%;
+}
+
+col-md-8{
+    width:65%;
+}
+
 col-md-9{
     width:74%;
 }
 
-col-md-3{
-    width:24%;
+col-md-10{
+    width:82%;
+}
+
+col-sm-6{
+    width:49%;
 }
 
 @media (max-width:768px){
@@ -136,6 +147,11 @@ col-md-3{
 .pricing h1{
     font-size:35px;
     line-height:50px;
+}
+
+.pricing p{
+    font-size:120%;
+    font-weight:300;
 }
 
 .pricing .coming-soon{
@@ -334,6 +350,26 @@ header button{
 .new-sheet-button{
     color:#fff;
     margin-right:20px;
+}
+
+@media (max-width:1250px){
+    .new-sheet-button button{
+        font-size:11px;
+        margin-top:8px
+    }
+}
+
+.new-sheet-button button{
+    word-wrap: nowrap;
+}
+
+@media (max-width:768px){
+    .new-sheet-button{
+        margin-right:0;
+    }
+    header{
+        padding-bottom:20px;
+    }
 }
 
 template{
