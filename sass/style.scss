@@ -705,6 +705,17 @@ livechat .sender{
     border-radius:3px;
 }
 
+@media all and (max-width:768px){
+    .modal{
+        width:90%;
+        padding:10px;
+        border:none;
+        left:0;
+        top:0;
+        z-index:1000;
+    }
+}
+
 .modal .buttons{
     text-align:center;
 }
