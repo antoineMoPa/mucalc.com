@@ -218,7 +218,6 @@ td.receive-alert{
 
 .features{
     background:#eee;
-    background:linear-gradient(to top,#ddd,#fff);
     color:#333;
     margin-left:-20px;
     margin-right:-25px;
@@ -684,6 +683,7 @@ livechat .sender{
 
 .modal-overlay{
     position:fixed;
+    z-index:1000;
     top:0;
     left:0;
     width:100%;
@@ -694,24 +694,28 @@ livechat .sender{
 
 .modal{
     width:400px;
+    display:block;
+    margin:auto;
+    margin-top:100px;
     min-height:100px;
     background:#fff;
     color:#000;
-    position:fixed;
-    top:40%;
-    left:40%;
     padding:20px;
     border:10px solid #eee;
     border-radius:3px;
+    position:relative;
+    z-index:1100;
 }
 
 @media all and (max-width:768px){
     .modal{
         width:90%;
+        margin-top:20px;
         padding:10px;
+        margin-left:0;
+        margin-right:0;
         border:none;
-        left:0;
-        top:0;
+        position:relative;
         z-index:1000;
     }
 }

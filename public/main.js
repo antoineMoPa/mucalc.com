@@ -1624,15 +1624,15 @@ function landing_bg_anim(){
     ];
  */
 function modal(message, buttons){
-    var modal = render("modal-inform");
-    var overlay = render("modal-overlay");
+    var modal = render("modal-inform").children[0];
+    var overlay = render("modal-overlay").children[0];
     var content = subqsa(modal, ".content p")[0];
     var buttons_container = subqsa(modal, ".buttons")[0];
     var buttons = buttons || [];
     
     content.textContent = message;
     document.body.appendChild(overlay);
-    document.body.appendChild(modal);
+    overlay.appendChild(modal);
 
     var exports = {};
 
