@@ -8,6 +8,8 @@ $color_7: #2e2c2f;
 
 $body_bg: #f3e8ee;
 
+$error_color: #733;
+
 /* general stuff that should be everywhere */
 .text-right{
     text-align:right;
@@ -231,6 +233,12 @@ td.receive-alert{
     background:$color_3;
     color:#fff;
 }
+
+.server-message.negative{
+    background:$error_color;
+    color:#fff;
+}
+
 
 /* page-related stuff */
 body{

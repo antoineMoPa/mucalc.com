@@ -31,6 +31,11 @@ html
         .server-message.positive
           p
             = message
+      if negative_message
+        .server-message.negative
+          p
+            = message
+
       if landing
         include ./landing.pug
       else if pricing

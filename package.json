@@ -13,6 +13,7 @@
     "cookie-session": "^2.0.0-alpha.1",
     "crypto": "0.0.3",
     "deepcopy": "^0.6.3",
+    "email-validator": "^1.0.4",
     "express": "^4.14.0",
     "multer": "^1.1.0",
     "node-sass-middleware": "^0.9.8",

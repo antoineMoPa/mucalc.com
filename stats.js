@@ -30,3 +30,13 @@ module.exports.get_sheet_visits = function(id, callback){
         callback(msg);
     });
 }
+
+/* Marketing */
+
+module.exports.newaccounts_newsletter_signup = function(email){
+    client.lpush("newsaccounts_newsletter",email, function(err, msg){
+        if(err != null){
+            console.log(err);
+        }
+    });
+}
