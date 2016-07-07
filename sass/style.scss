@@ -97,6 +97,8 @@ col-md-3{
 .pricing-table{
     margin:auto;
     font-size: 18px;
+    background:#fff;
+    padding:30px;
 }
 
 .pricing-table .col-feature{
@@ -104,11 +106,11 @@ col-md-3{
 }
 
 .pricing-table td{
-    padding:5px;
+    padding:10px;
 }
 
 .pricing-table th{
-    padding: 0px 30px;
+    padding: 20px 30px;
 }
 
 .pricing-table .yes{
@@ -128,6 +130,10 @@ col-md-3{
 @media all and (max-width:768px) {
     .pricing-table{
         font-size:10px;
+        padding:5px;
+    }
+    .pricing-table tr{
+        margin:0;
     }
     .pricing .coming-soon{
         font-size:8px;
