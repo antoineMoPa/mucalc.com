@@ -1583,6 +1583,7 @@ function landing_bg_anim(){
 
     var constant = Math.random() * 40 + 10;
 
+    setInterval(reset_constant,20000);
     document.body.addEventListener("click",reset_constant);
     document.body.addEventListener("mouseenter",reset_constant);
 
