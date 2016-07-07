@@ -27,6 +27,10 @@ html
         a.new-sheet-button(href='/new', target='_blank')
           button New Sheet
     .main-page
+      if positive_message
+        .server-message.positive
+          p
+            = message
       if landing
         include ./landing.pug
       else if pricing

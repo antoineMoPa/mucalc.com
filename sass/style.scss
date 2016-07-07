@@ -141,6 +141,10 @@ col-md-3{
     font-size:13px;
 }
 
+td.receive-alert{
+    padding:30px;
+}
+
 @media all and (max-width:768px) {
     .pricing-table{
         font-size:10px;
@@ -157,6 +161,12 @@ col-md-3{
     }
     .pricing-table th{
         padding: 0px 3px;
+    }
+    .pricing-table input{
+        width:100px;
+    }
+    .pricing-table button{
+        font-size:10px;
     }
 }
 
@@ -207,6 +217,19 @@ col-md-3{
         width:40%;
         margin:auto;
     }
+}
+
+/* server messages */
+
+.server-message{
+    width:80%;
+    margin:auto;
+    padding:20px;
+}
+
+.server-message.positive{
+    background:$color_3;
+    color:#fff;
 }
 
 /* page-related stuff */
@@ -310,7 +333,7 @@ template{
 }
 
 button{
-    height:32px;
+    min-height:32px;
     margin-bottom:20px;
     margin-top:5px;
     border-radius:0;
@@ -321,6 +344,7 @@ button{
     color:#fff;
     border-radius:2px;
     cursor:pointer;
+    word-wrap: break-word;
 }
 
 button:first-child{
@@ -679,3 +703,4 @@ livechat .sender{
 .plot-interact{
     margin-top: 30px;
 }
+

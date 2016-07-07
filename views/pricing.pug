@@ -196,3 +196,19 @@
       td
         span.bigger.strong $12
         | /month
+    tr
+      td.col-feature
+        | 
+      td
+        a(href="/new") 
+          button
+            | Create a new sheet!
+      td.receive-alert(colspan=3)
+        | Subscribe to the newsletter and receive 
+        | alerts when these become available:
+        br
+        br
+        form(action="/marketing/newsletter_signup", method="post")
+          input(type="email", name="email", placeholder="email@email.com")
+          button(type="submit" value="submit")
+            | Sign up

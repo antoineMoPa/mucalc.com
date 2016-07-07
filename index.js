@@ -12,6 +12,7 @@ var stats = require("./stats");
 var site_user_count = 0;
 
 app.use(body_parser.json());
+app.use(body_parser.urlencoded());
 
 /* Stylesheets */
 app.use(sass_middleware({
@@ -39,6 +40,17 @@ app.get('/', function (req, res) {
 
 app.get('/pricing', function (req, res) {
     res.render('base',{pricing:true});
+});
+
+app.post('/marketing/newsletter_signup', function (req, res) {
+    var email = req.body.email;
+    res.render('base',{
+        pricing:true,
+        positive_message:true,
+        message:
+        "Thank you for signing up to our newsletter! "+
+            "You will be informed when new user accounts are made available."
+    });
 });
 
 app.get("/sheet/:id",function (req, res) {
