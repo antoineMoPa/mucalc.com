@@ -101,12 +101,14 @@ col-md-3{
     padding:30px;
 }
 
-.pricing-table .col-feature{
-    text-align: left;
-}
-
 .pricing-table td{
     padding:10px;
+    background:#efefef;
+}
+
+.pricing-table .col-feature{
+    text-align: left;
+    background: lighten($color_1,80%);
 }
 
 .pricing-table th{
