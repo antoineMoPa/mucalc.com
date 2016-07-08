@@ -45,6 +45,48 @@ app.get('/signup', function (req, res) {
     res.render('base',{page: "signup"});
 });
 
+app.get('/login', function (req, res) {
+    res.render('base',{page: "login"});
+});
+
+app.post('/login', function (req, res) {
+    var email = req.body.email || "";
+    var password = req.body.password || "";
+    var user_db = user_model.db;
+    
+    // Check email
+    user_db.exists_email(email, function(exists, user){
+        if(!exists){
+            // Nope!
+            render(false);
+        } else {
+            if(user.verify_password(password)){
+                // User exists, has good password
+                render(true);
+            } else {
+                // User exists, but wrong password
+                render(false);
+            }
+        }
+    });
+    
+    function render(success){
+        if(success){
+            res.render('base',{
+                page: "dashboard",
+                positive_message: true,
+                message: "Success!"
+            });
+        } else {
+            res.render('base',{
+                page: "login",
+                negative_message: true,
+                message: "Wrong username/password combination."
+            });
+        }
+    }
+});
+  
 app.get('/dashboard', function (req, res) {
     res.render('base',{page: "dashboard"});
 });
@@ -71,6 +113,18 @@ app.post('/signup', function (req, res) {
     if(username.length < 6){
         success = false;
         errors.push("Username is too short.");
+    }
+
+    // Username length
+    if(username.length > 40){
+        success = false;
+        errors.push("Username is too long.");
+    }
+    
+    // Username format
+    if(!username.match(/^[A-Za-z0-9]*$/)){
+        success = false;
+        errors.push("Username contains invalid characters.");
     }
 
     // Password length
@@ -110,7 +164,6 @@ app.post('/signup', function (req, res) {
     });
     
     function render(success, errors){
-        // Render
         if(success){
             res.render('base',{
                 page: "dashboard",

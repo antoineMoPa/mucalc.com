@@ -1,0 +1,27 @@
+h1.text-center Login
+.auth.login-form
+  col-md-6
+    .basic-auth.login-block
+      p
+        | Don't have an account? 
+        a(href="/signup").go-to-signup
+          button
+            | sign up!
+      form(action="/login", method="post")
+        fieldset
+          label Your email address
+          br
+          input(type="email", name="email", placeholder="email@email.com")
+        fieldset
+          label Password
+          br
+          input(type="password", name="password", placeholder="Password")
+        br
+        .text-center
+          button(type="submit" value="submit")
+            | Login
+  col-md-6
+    .facebook-login.login-block
+      //h3
+      //  | Login with Facebook
+      //p Not yet

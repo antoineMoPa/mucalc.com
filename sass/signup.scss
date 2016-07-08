@@ -5,21 +5,25 @@
     font-weight:300;
 }
 
-.signup-form{
+.auth{
     max-width:800px;
     background:#fff;
     margin:auto;
 }
 
-.signup-form fieldset{
+.auth fieldset{
     border:none;
     padding:10px 0px;
 }
 
-.signup-form{
+.auth input{
     width:100%;
 }
 
-.signup-form .login-block{
+.auth .login-block{
     padding:20px;
+}
+
+.go-to-signup{
+    margin-left:30px;
 }

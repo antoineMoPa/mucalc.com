@@ -16,13 +16,9 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
     // we're connected!
     console.log("connection");
-    
-    /*
-    
-    */
 });
 
-var User = mongoose.model('User',{
+var UserSchema = new mongoose.Schema({
     name: String,
     username: String,
     password: String,
@@ -30,6 +26,16 @@ var User = mongoose.model('User',{
     nickname: String,
     sheets: Array
 });
+
+UserSchema.methods.verify_password = function(given_password){
+    if(password_hash.verify(given_password, this.password)){
+        return true;
+    }
+    
+    return false;
+};
+
+var User = mongoose.model('User',UserSchema);
 
 /**
    This is supposed to hash passwords
@@ -71,16 +77,17 @@ module.exports.exists_email = exists_email;
 
 /* 
    Exists in mongo ?
-   callback(exists: true | false)   
+   (Also gives the user if it exists)
+   callback(exists: true | false, [user])
  */
 function exists_email(email, callback){
     User.find({ email: email }, function(err, user){
         if(err){console.log(err)};
         
         if(user.length > 0){
-            callback(true);
+            callback(true, user[0]);
         } else {
-            callback(false);
+            callback(false, user[0]);
         }
     });
 }
