@@ -1,0 +1,65 @@
+/* pricing page */
+
+.pricing-table{
+    margin:auto;
+    font-size: 18px;
+    background:#fff;
+    padding:30px;
+}
+
+.pricing-table td{
+    padding:10px;
+    background:#efefef;
+}
+
+.pricing-table .col-feature{
+    text-align: left;
+    background: lighten($color_1,80%);
+}
+
+.pricing-table th{
+    padding: 20px 30px;
+}
+
+.pricing-table .yes{
+    background: lighten($color_3,20%);
+}
+
+.pricing p{
+    font-size:120%;
+    font-weight:300;
+}
+
+.pricing .coming-soon{
+    font-weight:300;
+    font-size:13px;
+}
+
+td.receive-alert{
+    padding:30px;
+}
+
+@media all and (max-width:768px) {
+    .pricing-table{
+        font-size:10px;
+        padding:5px;
+    }
+    .pricing-table tr{
+        margin:0;
+    }
+    .pricing .coming-soon{
+        font-size:8px;
+    }
+    .pricing-table td{
+        padding:2px;
+    }
+    .pricing-table th{
+        padding: 0px 3px;
+    }
+    .pricing-table input{
+        width:100px;
+    }
+    .pricing-table button{
+        font-size:10px;
+    }
+}

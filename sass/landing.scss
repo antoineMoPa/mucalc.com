@@ -1,0 +1,48 @@
+/* landing page */
+
+.landing{
+    max-width:100%;
+    word-wrap: break-word;
+}
+
+.landing h1{
+    line-height:80px;
+    color:#fff;
+    font-size:30px;
+    font-family: 'Fira Sans';
+    font-weight:300;
+}
+
+.landing p{
+    line-height:150%;
+    color:#fff;
+    font-size:24px;
+    font-family:sans-serif;
+    font-family: 'Fira Sans';
+    font-weight:300;
+}
+
+.landing a{
+    color: $color_2;
+}
+
+.features{
+    background:#eee;
+    color:#333;
+    margin-left:-20px;
+    margin-right:-25px;
+    padding:20px;
+    border-bottom:5px solid $body_bg;
+}
+
+.features h3{
+    text-shadow:none;
+}
+
+@media (min-width:1000px){
+    .features .block-center{
+        width:40%;
+        margin:auto;
+    }
+}
+

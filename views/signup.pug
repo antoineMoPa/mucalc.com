@@ -1,0 +1,33 @@
+h1.text-center Create your account
+
+.why-account
+  ul
+    li Keep track of your sheets,  lock and unlock them
+    li Store up to 5 private sheets
+    li Invite up to 5 people in a sheet at the same time
+
+.signup-form
+  col-md-6
+    .basic-auth.login-block
+      form(action="/account/new", method="post")
+        fieldset
+          label User name
+          br
+          input(type="text", name="name", placeholder="John π. ζmith")
+        fieldset 
+          label Your email address
+          br
+          input(type="email", name="email", placeholder="email@email.com")
+        fieldset
+          label Create a password
+          br
+          input(type="password", name="password", placeholder="Password")
+        br
+        .text-center
+          button(type="submit" value="submit")
+            | Create my account
+  col-md-6
+    .facebook-login.login-block
+      //h3
+      //  | Login with Facebook
+      //p Not yet

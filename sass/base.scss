@@ -1,0 +1,106 @@
+/* general stuff that should be everywhere */
+.text-right{
+    text-align:right;
+}
+
+.text-left{
+    text-align:left;
+}
+
+.text-center{
+    text-align:center;
+}
+
+.strong{
+    font-weight:600;
+}
+
+.bigger{
+    font-size:150%;
+}
+
+.smaller{
+    font-size:80%!important;
+}
+
+@media (max-width:768px){
+    .mobile-center{
+        text-align:center;
+    }
+}
+
+col-md-10,
+col-md-9,
+col-md-8,
+col-md-6,
+col-md-3,
+col-md-2,
+col-md-1,
+col-md-10,
+col-md-9,
+col-md-8,
+col-md-6,
+col-md-3,
+col-md-2{
+    display:inline-block;
+    vertical-align:top;
+}
+
+col-md-1{
+    width:8%;
+}
+
+col-md-2{
+    width:16%;
+}
+
+col-md-3{
+    width:24%;
+}
+
+col-md-6{
+    width:49.5%;
+}
+
+col-md-8{
+    width:65%;
+}
+
+col-md-9{
+    width:74%;
+}
+
+col-md-10{
+    width:82%;
+}
+
+col-sm-6{
+    width:49%;
+}
+
+@media (max-width:768px){
+    col-md-1,
+    col-md-2,
+    col-md-3,
+    col-md-4,
+    col-md-5,
+    col-md-6,
+    col-md-7,
+    col-md-8,
+    col-md-9,
+    col-md-10,
+    col-md-11,
+    col-md-12{
+        display:block;
+        width:100%;
+    }
+}
+
+.hidden{
+    display:none;
+}
+
+.flashing{
+    background: $color_3 !important;
+    color: #fff;
+}

@@ -4,6 +4,47 @@ var client = redis.createClient();
 
 module.exports = {};
 
+var mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/test');
+
+var db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
+
+db.once('open', function() {
+    // we're connected!
+    console.log("connection");
+
+
+    var User = mongoose.model('User',{
+        name: String,
+        email: String,
+        nickname: String
+    });
+    
+    var user = new User({
+        name: "Antoine",
+        email: "a@b.c",
+        nickname: "toine"
+    });
+    /*
+    user.save(function(err){
+        if(err){
+            console.log(err);
+        } else {
+            console.log("User saved to mongodb");
+            console.log(user);
+        }
+    });
+
+    User.find({ name: "Antoine" }, function(err, user){
+        console.log("found user");
+        console.log(user);
+    });
+    */
+});
+
 function gen_id(id){
     var id = id.replace(/[^A-Za-z0-9]/g,"");
     return "user:"+id;

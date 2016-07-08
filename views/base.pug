@@ -40,11 +40,16 @@ html
           p
             = message
 
-      if landing
-        include ./landing.pug
-      else if pricing
-        .pricing
-          include ./pricing.pug
+      if page != undefined
+        .static
+          if page == "landing"
+            include ./landing.pug
+          else if page == "pricing"
+            .pricing
+              include ./pricing.pug
+          else if page == "signup"
+            .signup
+              include ./signup.pug
       else
         p To get started, scroll down and see the quick reference.
         col-md-9

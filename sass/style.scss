@@ -10,231 +10,21 @@ $body_bg: #f3e8ee;
 
 $error_color: #733;
 
-/* general stuff that should be everywhere */
-.text-right{
-    text-align:right;
-}
+@import 'base.scss';
 
-.text-left{
-    text-align:left;
-}
+@import 'pricing.scss';
 
-.text-center{
-    text-align:center;
-}
+@import 'landing.scss';
 
-.strong{
-    font-weight:600;
-}
+@import 'signup.scss';
 
-.bigger{
-    font-size:150%;
-}
+/* static pages */
 
-.smaller{
-    font-size:80%!important;
-}
-
-@media (max-width:768px){
-    .mobile-center{
-        text-align:center;
-    }
-}
-
-col-md-10,
-col-md-9,
-col-md-8,
-col-md-6,
-col-md-3,
-col-md-2,
-col-md-1,
-col-md-10,
-col-md-9,
-col-md-8,
-col-md-6,
-col-md-3,
-col-md-2{
-    display:inline-block;
-    vertical-align:top;
-}
-
-col-md-1{
-    width:8%;
-}
-
-col-md-2{
-    width:16%;
-}
-
-col-md-3{
-    width:24%;
-}
-
-col-md-6{
-    width:49.5%;
-}
-
-col-md-8{
-    width:65%;
-}
-
-col-md-9{
-    width:74%;
-}
-
-col-md-10{
-    width:82%;
-}
-
-col-sm-6{
-    width:49%;
-}
-
-@media (max-width:768px){
-    col-md-1,
-    col-md-2,
-    col-md-3,
-    col-md-4,
-    col-md-5,
-    col-md-6,
-    col-md-7,
-    col-md-8,
-    col-md-9,
-    col-md-10,
-    col-md-11,
-    col-md-12{
-        display:block;
-        width:100%;
-    }
-}
-
-.hidden{
-    display:none;
-}
-
-.flashing{
-    background: $color_3 !important;
-    color: #fff;
-}
-
-/* pricing page */
-
-.pricing-table{
-    margin:auto;
-    font-size: 18px;
-    background:#fff;
-    padding:30px;
-}
-
-.pricing-table td{
-    padding:10px;
-    background:#efefef;
-}
-
-.pricing-table .col-feature{
-    text-align: left;
-    background: lighten($color_1,80%);
-}
-
-.pricing-table th{
-    padding: 20px 30px;
-}
-
-.pricing-table .yes{
-    background: lighten($color_3,20%);
-}
-
-.pricing h1{
+.static h1{
     font-size:35px;
     line-height:50px;
 }
 
-.pricing p{
-    font-size:120%;
-    font-weight:300;
-}
-
-.pricing .coming-soon{
-    font-weight:300;
-    font-size:13px;
-}
-
-td.receive-alert{
-    padding:30px;
-}
-
-@media all and (max-width:768px) {
-    .pricing-table{
-        font-size:10px;
-        padding:5px;
-    }
-    .pricing-table tr{
-        margin:0;
-    }
-    .pricing .coming-soon{
-        font-size:8px;
-    }
-    .pricing-table td{
-        padding:2px;
-    }
-    .pricing-table th{
-        padding: 0px 3px;
-    }
-    .pricing-table input{
-        width:100px;
-    }
-    .pricing-table button{
-        font-size:10px;
-    }
-}
-
-/* landing page */
-
-.landing{
-    max-width:100%;
-    word-wrap: break-word;
-}
-
-.landing h1{
-    line-height:80px;
-    color:#fff;
-    font-size:30px;
-    font-family: 'Fira Sans';
-    font-weight:300;
-}
-
-.landing p{
-    line-height:150%;
-    color:#fff;
-    font-size:24px;
-    font-family:sans-serif;
-    font-family: 'Fira Sans';
-    font-weight:300;
-}
-
-.landing a{
-    color: $color_2;
-}
-
-.features{
-    background:#eee;
-    color:#333;
-    margin-left:-20px;
-    margin-right:-25px;
-    padding:20px;
-    border-bottom:5px solid $body_bg;
-}
-
-.features h3{
-    text-shadow:none;
-}
-
-@media (min-width:1000px){
-    .features .block-center{
-        width:40%;
-        margin:auto;
-    }
-}
 
 /* server messages */
 
@@ -314,13 +104,10 @@ header{
     color:#fff;
     width:100%;
     display:block;
-    padding:15px;
     padding-top:4px;
     padding-bottom:4px;
     border-bottom:3px solid $color_3;
     margin-bottom:20px;
-    margin-left:-15px;
-    margin-right:-15px;
     position:relative;
     z-index:100;
 }
