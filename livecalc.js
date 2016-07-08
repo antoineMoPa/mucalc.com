@@ -125,15 +125,13 @@ function livecalc(namespace, nsp){
             
             function temp_user(){
                 // Temporary user
-                // Will be saved at disconnection
-                // To keep nickname and other info
                 user = cache_user_model.create();
                 public_id = user.get_public_id();
-
+                
                 // Generate a temporary session id
-                // (That will not be saved, even to redis
+                // (That will not be saved, even to redis)
                 session_id = user.get_session_id();
-                users[session_id] = user;
+                users[session_id] = user.get_public_data();
             }
             
             if(session_id != ""){
@@ -143,7 +141,7 @@ function livecalc(namespace, nsp){
                     if(exists){
                         // User actually logged in
                         registered = true;
-                        user = cache_user_model.User(session_id);
+                        user = cache_user_model.cached_user(session_id);
                         user.fetch(function(){
                             public_id = user.get_public_id();
                             users[session_id] = user.get_public_data();
@@ -198,8 +196,10 @@ function livecalc(namespace, nsp){
             );
 
             nsp.emit("user count", sheet_user_count);
-            
-            users[session_id] = {focus:-1};
+
+            if(users[session_id] != undefined){
+                users[session_id].focus = -1;
+            }
             
             var chat = livechat(namespace, nsp, socket, user);
             
@@ -218,7 +218,7 @@ function livecalc(namespace, nsp){
             */
             function send_focus_index(){
                 var fi = [];
-                
+
                 for(var i = 0; i < model.get_length(); i++){
                     fi.push([]);
                 }

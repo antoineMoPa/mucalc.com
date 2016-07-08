@@ -8,7 +8,9 @@ module.exports = {};
 
 module.exports.db = db;
 
-module.exports.User = function(session_id, public_id){
+module.exports.cached_user = cached_user;
+
+function cached_user(session_id, public_id){
     var exports = {};
 
     var data = {
@@ -123,7 +125,7 @@ module.exports.User = function(session_id, public_id){
 module.exports.create = function(){
     var session_id = require("./tokens").generate_token(6);
     var public_id = require("./tokens").generate_token(6);
-    return module.exports.User(session_id, public_id);
+    return cached_user(session_id, public_id);
 };
 
 module.exports.temp_exists = function(id, callback){

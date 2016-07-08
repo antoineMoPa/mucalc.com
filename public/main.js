@@ -382,7 +382,8 @@ function livecalc(root_el, namespace, user){
     eeify_mathjs();
     var chat;
     var scope = {};
-
+    var current_focus = -1;
+    
     // Create template
     render("livecalc", root_el);
     
@@ -674,6 +675,7 @@ function livecalc(root_el, namespace, user){
         if(index == null){
             index = -1;
         }
+        current_focus = index;
         net_engine.send_focus(index);
     }
     
@@ -782,6 +784,11 @@ function livecalc(root_el, namespace, user){
 
         input.addEventListener("click",function(){
             send_focus(get_index());
+        });
+        
+        /* lost focus */
+        input.addEventListener("blur",function(){
+            send_focus(-1);
         });
         
         cell.calculate = calculate;
