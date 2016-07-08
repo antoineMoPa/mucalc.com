@@ -4,13 +4,29 @@ module.exports = {};
 
 module.exports.db = db;
 
-module.exports.User = function(id){
+module.exports.User = function(p_id){
     var exports = {};
 
     var data = {
-        public_id:id,
-        nickname:"anonymous",
-        password:""
+        public_id: p_id,
+        session_id: "",
+        nickname: "anonymous",
+        password: ""
+    };
+
+    var permanent_user = null;
+
+    exports.get_permanent_user = function(){
+        return permanent_user;
+    };
+
+    exports.set_permanent_user = function(new_permanent_user){
+        permanent_user = new_permanent_user;
+        data.nickname = permanent_user.nickname;
+    };
+    
+    exports.save_permanent = function(){
+        permanent_user.save();
     };
     
     exports.save = function(){
@@ -21,7 +37,7 @@ module.exports.User = function(id){
       callback()
      */
     exports.fetch = function(callback){
-        db.get_user(id, function(from_db){
+        db.get_user(p_id, function(from_db){
             data = from_db;
             callback();
         });
@@ -35,22 +51,34 @@ module.exports.User = function(id){
         }
     };
     
-    exports.get_id = function(){
+    exports.get_public_id = function(){
         return data.public_id;
     };
     
-    exports.set_id = function(new_id){
+    exports.set_public_id = function(new_id){
         data.public_id = new_id;
+    };
+
+    exports.get_session_id = function(){
+        return data.session_id;
+    };
+    
+    exports.set_session_id = function(new_id){
+        data.session_id = new_id;
     };
     
     exports.set_nickname = function(new_nickname){
+        if(permanent_user != null){
+            permanent_user.nickname = new_nickname;
+            permanent_user.save();
+        }
         data.nickname = new_nickname;
     };
 
     exports.get_nickname = function(){
         return data.nickname;
     };
-    
+
     return exports;
 }
 

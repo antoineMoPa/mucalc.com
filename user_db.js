@@ -44,19 +44,28 @@ UserSchema.methods.verify_password = function(given_password){
     return false;
 };
 
-UserSchema.methods.login = function(cache_user_model){
+/*
+  
+  Fetches data from mongodb
+  Puts it in redis
+  
+ */
+UserSchema.methods.login = function(cache_user_model, session_id){
     var user = cache_user_model.create();
-    var public_id = user.get_id();
-
+    var public_id = user.get_public_id();
+    
     /* Set public id for the first time  */
     if(this.public_id == undefined || this.public_id == ""){
         this.public_id = public_id;
         this.save();
     } else {
-        user.set_id(user.public_id);
+        user.set_public_id(public_id);
+        user.set_permanent_user(user);
     }
     
     user.set_nickname(this.nickname);
+    user.set_session_id(session_id);
+    user.save();
     
     return public_id;
 };
@@ -68,7 +77,6 @@ var User = mongoose.model('User', UserSchema);
  */
 function hash_password(password){
     var hashed =  password_hash.generate(password);
-    console.log(hashed);
     return hashed;
 }
 

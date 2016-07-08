@@ -1,5 +1,7 @@
 /* livecalc.js */
 
+var cookie = require('cookie');
+
 var site_user_count = 0;
 
 /* old globals */
@@ -61,7 +63,7 @@ function livechat(namespace, nsp, socket, user){
         var data = {
             message: data.message,
             sender: user.get_nickname(),
-            public_id: user.get_id()
+            public_id: user.get_public_id()
         };
 
         chat_db.add_message(namespace, data);
@@ -101,6 +103,9 @@ function livecalc(namespace, nsp){
         var users = {};
         
         nsp.on("connection", function(socket){
+            var cookie_val = socket.handshake.headers['cookie'];
+            session_id = cookie.parse(cookie_val || '').session_id;
+
             // rate limiting
             if(sheet_user_count >= 3){
                 socket.emit("too many users");
@@ -127,13 +132,21 @@ function livecalc(namespace, nsp){
 
             nsp.emit("user count", sheet_user_count);
 
-            // Temporary user
-            // Will be saved at disconnection
-            // To keep nickname and other info
-            var user = cache_user_model.create();
-            var public_id = user.get_id();
+            var user;
+            var public_id;
             
-            users[public_id] = {focus:-1};
+            if(session_id != ""){
+                user = cache_user_model.create();
+                public_id = user.get_public_id();
+            } else {
+                // Temporary user
+                // Will be saved at disconnection
+                // To keep nickname and other info
+                user = cache_user_model.create();
+                public_id = user.get_public_id();
+            }
+            
+            users[session_id] = {focus:-1};
             
             var chat = livechat(namespace, nsp, socket, user);
             
@@ -177,7 +190,7 @@ function livecalc(namespace, nsp){
             socket.on("set nickname",function(data){
                 // Prevent XSS
                 var nickname = data.nickname.replace(/[^A-Za-z0-9\-]/g,"");
-                users[public_id].nickname = nickname;
+                users[session_id].nickname = nickname;
                 user.set_nickname(nickname);
                 // At this point, we can store in db
                 user.save();
@@ -201,7 +214,7 @@ function livecalc(namespace, nsp){
                 }
                 
                 var index = data.index;
-                users[public_id].focus = index;
+                users[session_id].focus = index;
                 
                 send_focus_index();
             });
@@ -224,7 +237,7 @@ function livecalc(namespace, nsp){
                 send_focus_index();
                 
                 socket.emit("sheet locked", {
-                    initiator: users[public_id].nickname
+                    initiator: users[session_id].nickname
                 });
             });
             
@@ -263,7 +276,9 @@ function livecalc(namespace, nsp){
                 user.save();
                 
                 // Delete user from memory
-                delete users[public_id];
+                // BUG:
+                // TODO: what if user was logged in many times
+                delete users[session_id];
                 send_focus_index();
             });
         });

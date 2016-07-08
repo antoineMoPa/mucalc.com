@@ -60,7 +60,7 @@ function cookie_send_id(res, id){
 }
 
 function cookie_get_id(req){
-    cookie.parse(req.headers.cookie || '').session_id;
+    return cookie.parse(req.headers.cookie || '').session_id;
 }
 
 app.post('/login', function (req, res) {
@@ -76,8 +76,10 @@ app.post('/login', function (req, res) {
         } else {
             if(user.verify_password(password)){
                 // User exists, has good password
-                var public_id = user.login(cache_user_model);
-                cookie_send_id(res, public_id);
+                var session_id = require("./tokens").generate_token(20);
+                user.login(cache_user_model, session_id);
+                
+                cookie_send_id(res, session_id);
                 render(true);
             } else {
                 // User exists, but wrong password
