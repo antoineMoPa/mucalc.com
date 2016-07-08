@@ -1,3 +1,5 @@
+Code Status: Some features are broken today since I am working on login. Not production ready yet.
+
 # livecalc.xyz
 
 livecalc.xyz is a multi-user math web app. The math is parsed & computed in the browser by [math.js](http://mathjs.org/).
