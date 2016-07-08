@@ -76,8 +76,8 @@ app.post('/login', function (req, res) {
         } else {
             if(user.verify_password(password)){
                 // User exists, has good password
-                var user_id = user.login(cache_user_model);
-                cookie_send_id(res, user_id);
+                var public_id = user.login(cache_user_model);
+                cookie_send_id(res, public_id);
                 render(true);
             } else {
                 // User exists, but wrong password

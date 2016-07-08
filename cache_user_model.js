@@ -8,13 +8,13 @@ module.exports.User = function(id){
     var exports = {};
 
     var data = {
-        user_id:id,
+        public_id:id,
         nickname:"anonymous",
         password:""
     };
     
     exports.save = function(){
-        db.store_user(data.user_id, data);
+        db.store_user(data.public_id, data);
     };
 
     /*
@@ -29,18 +29,18 @@ module.exports.User = function(id){
 
     exports.get_public_data = function(){
         return {
-            user_id: data.user_id,
+            public_id: data.public_id,
             nickname: data.nickname,
             focus: -1
         }
     };
     
     exports.get_id = function(){
-        return data.user_id;
+        return data.public_id;
     };
     
     exports.set_id = function(new_id){
-        data.user_id = new_id;
+        data.public_id = new_id;
     };
     
     exports.set_nickname = function(new_nickname){

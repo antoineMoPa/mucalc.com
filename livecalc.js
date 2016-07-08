@@ -61,7 +61,7 @@ function livechat(namespace, nsp, socket, user){
         var data = {
             message: data.message,
             sender: user.get_nickname(),
-            user_id: user.get_id()
+            public_id: user.get_id()
         };
 
         chat_db.add_message(namespace, data);
@@ -131,9 +131,9 @@ function livecalc(namespace, nsp){
             // Will be saved at disconnection
             // To keep nickname and other info
             var user = cache_user_model.create();
-            var user_id = user.get_id();
+            var public_id = user.get_id();
             
-            users[user_id] = {focus:-1};
+            users[public_id] = {focus:-1};
             
             var chat = livechat(namespace, nsp, socket, user);
             
@@ -177,7 +177,7 @@ function livecalc(namespace, nsp){
             socket.on("set nickname",function(data){
                 // Prevent XSS
                 var nickname = data.nickname.replace(/[^A-Za-z0-9\-]/g,"");
-                users[user_id].nickname = nickname;
+                users[public_id].nickname = nickname;
                 user.set_nickname(nickname);
                 // At this point, we can store in db
                 user.save();
@@ -186,7 +186,7 @@ function livecalc(namespace, nsp){
 
             // Send public user id
             socket.emit("user id",{
-                user_id: user_id
+                public_id: public_id
             });
             
             function send_user_data(){
@@ -201,7 +201,7 @@ function livecalc(namespace, nsp){
                 }
                 
                 var index = data.index;
-                users[user_id].focus = index;
+                users[public_id].focus = index;
                 
                 send_focus_index();
             });
@@ -224,7 +224,7 @@ function livecalc(namespace, nsp){
                 send_focus_index();
                 
                 socket.emit("sheet locked", {
-                    initiator: users[user_id].nickname
+                    initiator: users[public_id].nickname
                 });
             });
             
@@ -263,7 +263,7 @@ function livecalc(namespace, nsp){
                 user.save();
                 
                 // Delete user from memory
-                delete users[user_id];
+                delete users[public_id];
                 send_focus_index();
             });
         });

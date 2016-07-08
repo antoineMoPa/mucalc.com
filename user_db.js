@@ -46,11 +46,11 @@ UserSchema.methods.verify_password = function(given_password){
 
 UserSchema.methods.login = function(cache_user_model){
     var user = cache_user_model.create();
-    var user_id = user.get_id();
+    var public_id = user.get_id();
 
     /* Set public id for the first time  */
     if(this.public_id == undefined || this.public_id == ""){
-        this.public_id = user_id;
+        this.public_id = public_id;
         this.save();
     } else {
         user.set_id(user.public_id);
@@ -58,7 +58,7 @@ UserSchema.methods.login = function(cache_user_model){
     
     user.set_nickname(this.nickname);
     
-    return user_id;
+    return public_id;
 };
 
 var User = mongoose.model('User', UserSchema);
