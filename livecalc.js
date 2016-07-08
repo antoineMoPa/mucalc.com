@@ -130,9 +130,6 @@ function livecalc(namespace, nsp){
             // Temporary user
             // Will be saved at disconnection
             // To keep nickname and other info
-            // Will be changed immediatly with socket.io
-            // if the browser already contains a user_id
-            // in localStorage
             var user = cache_user_model.create();
             var user_id = user.get_id();
             
@@ -187,53 +184,10 @@ function livecalc(namespace, nsp){
                 send_focus_index();
             });
 
-            // When browser asks user id
-            socket.on("give user id",function(){
-                // We send it
-                send_user_id()
+            // Send public user id
+            socket.emit("user id",{
+                user_id: user_id
             });
-
-            // When browser already has a user id
-            socket.on("user id",function(data){
-                var new_id = data.user_id;
-                var old_id = user.get_id();
-                
-                cache_user_model.temp_exists(new_id, function(exists){
-                    if(exists){
-                        // This ID is effectively in database
-                        // Todo: prevent session hijacking
-                        // with tokens or something
-                        // (everybody can se user ids now)
-                        // Not a priority now because it does not
-                        // give access to anything
-                        user = cache_user_model.User(new_id);
-                        
-                        user.fetch(function(){
-                            user_id = user.get_id();
-                            users[user_id] = user.get_public_data();
-                            chat.set_user(user);
-                            send_user_data();
-
-                            // Delete old temp user in memory
-                            if(new_id != old_id){
-                                delete users[old_id];
-                            }
-                        });
-                    } else {
-                        // Nope, we don't have this id
-                        // Here is your new one
-                        send_user_id();
-                    }
-                });
-                
-                
-            });
-
-            function send_user_id(){
-                socket.emit("user id",{
-                    user_id: user_id
-                });
-            }
             
             function send_user_data(){
                 socket.emit("user data", {

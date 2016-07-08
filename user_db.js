@@ -25,6 +25,10 @@ db.once('open', function() {
 
 var UserSchema = new mongoose.Schema({
     name: String,
+    public_id: String, /* to know who sent what message, for example.
+                          Since it is visible to everybody, it must not
+                          allow to do dangerous things.
+                        */
     username: String,
     password: String,
     email: String,
@@ -41,11 +45,20 @@ UserSchema.methods.verify_password = function(given_password){
 };
 
 UserSchema.methods.login = function(cache_user_model){
-    var session = require("./tokens").generate_token(6);
+    var user = cache_user_model.create();
+    var user_id = user.get_id();
 
+    /* Set public id for the first time  */
+    if(this.public_id == undefined || this.public_id == ""){
+        this.public_id = user_id;
+        this.save();
+    } else {
+        user.set_id(user.public_id);
+    }
     
+    user.set_nickname(this.nickname);
     
-    return false;
+    return user_id;
 };
 
 var User = mongoose.model('User', UserSchema);

@@ -3,6 +3,7 @@ var body_parser = require("body-parser");
 var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
+var cookie = require('cookie');
 var sass_middleware = require("node-sass-middleware");
 var livecalc = require("./livecalc");
 var sheet_db = require("./sheet_db");
@@ -13,7 +14,7 @@ var stats = require("./stats");
 livecalc.set_globals(io, sheet_db, chat_db, stats, cache_user_model);
 
 app.use(body_parser.json());
-app.use(body_parser.urlencoded());
+app.use(body_parser.urlencoded({extended: true}));
 
 /* Stylesheets */
 app.use(sass_middleware({
@@ -49,6 +50,19 @@ app.get('/login', function (req, res) {
     res.render('base',{page: "login"});
 });
 
+function cookie_send_id(res, id){
+    res.setHeader(
+        'Set-Cookie',
+        cookie.serialize('session_id', id, {
+            httpOnly: true,
+            maxAge: 60 * 60 * 24 // 1 days
+        }));
+}
+
+function cookie_get_id(req){
+    cookie.parse(req.headers.cookie || '').session_id;
+}
+
 app.post('/login', function (req, res) {
     var email = req.body.email || "";
     var password = req.body.password || "";
@@ -62,7 +76,8 @@ app.post('/login', function (req, res) {
         } else {
             if(user.verify_password(password)){
                 // User exists, has good password
-                user.login(cache_user_model);
+                var user_id = user.login(cache_user_model);
+                cookie_send_id(res, user_id);
                 render(true);
             } else {
                 // User exists, but wrong password
