@@ -3,7 +3,7 @@
 var site_user_count = 0;
 
 /* old globals */
-var io, sheet_db, chat_db, stats, user_model;
+var io, sheet_db, chat_db, stats, cache_user_model;
 
 var namespaces = [];
 
@@ -17,13 +17,13 @@ module.exports.set_globals = function (
     new_sheet_db,
     new_chat_db,
     new_stats,
-    new_user_model ){
+    new_cache_user_model ){
     
     io = new_io;
     sheet_db = new_sheet_db;
     chat_db = new_chat_db;
     stats = new_stats;
-    user_model = new_user_model;
+    cache_user_model = new_cache_user_model;
 };
 
 
@@ -133,7 +133,7 @@ function livecalc(namespace, nsp){
             // Will be changed immediatly with socket.io
             // if the browser already contains a user_id
             // in localStorage
-            var user = user_model.create();
+            var user = cache_user_model.create();
             var user_id = user.get_id();
             
             users[user_id] = {focus:-1};
@@ -198,7 +198,7 @@ function livecalc(namespace, nsp){
                 var new_id = data.user_id;
                 var old_id = user.get_id();
                 
-                user_model.temp_exists(new_id, function(exists){
+                cache_user_model.temp_exists(new_id, function(exists){
                     if(exists){
                         // This ID is effectively in database
                         // Todo: prevent session hijacking
@@ -206,7 +206,7 @@ function livecalc(namespace, nsp){
                         // (everybody can se user ids now)
                         // Not a priority now because it does not
                         // give access to anything
-                        user = user_model.User(new_id);
+                        user = cache_user_model.User(new_id);
                         
                         user.fetch(function(){
                             user_id = user.get_id();

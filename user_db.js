@@ -1,3 +1,9 @@
+/* user_db.js */
+/* 
+   For the moment, this deals with both redis and mongo,
+   this could be changed.
+ */
+
 var redis = require("redis");
 var password_hash = require("password-hash");
 
@@ -14,8 +20,7 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 
 db.once('open', function() {
-    // we're connected!
-    console.log("connection");
+    console.log("mongo connection");
 });
 
 var UserSchema = new mongoose.Schema({
@@ -35,7 +40,15 @@ UserSchema.methods.verify_password = function(given_password){
     return false;
 };
 
-var User = mongoose.model('User',UserSchema);
+UserSchema.methods.login = function(cache_user_model){
+    var session = require("./tokens").generate_token(6);
+
+    
+    
+    return false;
+};
+
+var User = mongoose.model('User', UserSchema);
 
 /**
    This is supposed to hash passwords

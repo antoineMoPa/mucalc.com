@@ -6,11 +6,11 @@ var io = require("socket.io")(http);
 var sass_middleware = require("node-sass-middleware");
 var livecalc = require("./livecalc");
 var sheet_db = require("./sheet_db");
-var user_model = require("./user_model");
+var cache_user_model = require("./cache_user_model");
 var chat_db = require("./chat_db");
 var stats = require("./stats");
 
-livecalc.set_globals(io, sheet_db, chat_db, stats, user_model);
+livecalc.set_globals(io, sheet_db, chat_db, stats, cache_user_model);
 
 app.use(body_parser.json());
 app.use(body_parser.urlencoded());
@@ -52,7 +52,7 @@ app.get('/login', function (req, res) {
 app.post('/login', function (req, res) {
     var email = req.body.email || "";
     var password = req.body.password || "";
-    var user_db = user_model.db;
+    var user_db = cache_user_model.db;
     
     // Check email
     user_db.exists_email(email, function(exists, user){
@@ -62,6 +62,7 @@ app.post('/login', function (req, res) {
         } else {
             if(user.verify_password(password)){
                 // User exists, has good password
+                user.login(cache_user_model);
                 render(true);
             } else {
                 // User exists, but wrong password
@@ -101,7 +102,7 @@ app.post('/signup', function (req, res) {
     var username = req.body.username || "";
     var email = req.body.email || "";
     var password = req.body.password || "";
-    var user_db = user_model.db;
+    var user_db = cache_user_model.db;
     
     // Until not true,
     var success = true;
