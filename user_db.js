@@ -1,4 +1,5 @@
 var redis = require("redis");
+var password_hash = require("password-hash");
 
 var client = redis.createClient();
 
@@ -6,7 +7,7 @@ module.exports = {};
 
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://localhost/livecalc');
 
 var db = mongoose.connection;
 
@@ -15,35 +16,92 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
     // we're connected!
     console.log("connection");
+    
+    /*
+    
+    */
+});
 
+var User = mongoose.model('User',{
+    name: String,
+    username: String,
+    password: String,
+    email: String,
+    nickname: String,
+    sheets: Array
+});
 
-    var User = mongoose.model('User',{
-        name: String,
-        email: String,
-        nickname: String
-    });
+/**
+   This is supposed to hash passwords
+ */
+function hash_password(password){
+    var hashed =  password_hash.generate(password);
+    console.log(hashed);
+    return hashed;
+}
+
+module.exports.create = create;
+
+function create(data,callback){
+
+    if(data.password == ""){
+        console.log("Error: empty password got to user_db.create.");
+    }
     
     var user = new User({
-        name: "Antoine",
-        email: "a@b.c",
-        nickname: "toine"
+        name: data.name || "",
+        username: data.username || "",
+        email: data.email || "",
+        nickname: data.nickname || "",
+        password: hash_password(data.password)
     });
-    /*
+    
     user.save(function(err){
         if(err){
             console.log(err);
         } else {
-            console.log("User saved to mongodb");
-            console.log(user);
+            console.log("New user saved to mongo: " + user.username);
+        }
+        callback();
+    });
+}
+
+
+module.exports.exists_email = exists_email;
+
+/* 
+   Exists in mongo ?
+   callback(exists: true | false)   
+ */
+function exists_email(email, callback){
+    User.find({ email: email }, function(err, user){
+        if(err){console.log(err)};
+        
+        if(user.length > 0){
+            callback(true);
+        } else {
+            callback(false);
         }
     });
+}
 
-    User.find({ name: "Antoine" }, function(err, user){
-        console.log("found user");
-        console.log(user);
+module.exports.exists_username = exists_username;
+
+/* 
+   Exists in mongo ?
+   callback(exists: true | false)   
+ */
+function exists_username(username, callback){
+    User.find({ username: username }, function(err, user){
+        if(err){console.log(err)};
+        if(user.length > 0){
+            callback(true);
+        } else {
+            callback(false);
+        }
     });
-    */
-});
+}
+
 
 function gen_id(id){
     var id = id.replace(/[^A-Za-z0-9]/g,"");
@@ -88,10 +146,12 @@ module.exports.get_user = function(id, callback){
 
 /*
   
+  Does a temp user exist in redis?
+  
   callback(bool: exists)
   
 */
-module.exports.exists = function(id, callback){
+module.exports.temp_exists = function(id, callback){
     var id = gen_id(id);
     
     if(id.length == 0){

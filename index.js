@@ -45,8 +45,86 @@ app.get('/signup', function (req, res) {
     res.render('base',{page: "signup"});
 });
 
-app.post('/marketing/newsletter_signup', function (req, res) {
-    var email = req.body.email;
+app.get('/dashboard', function (req, res) {
+    res.render('base',{page: "dashboard"});
+});
+
+app.post('/signup', function (req, res) {
+    var username = req.body.username || "";
+    var email = req.body.email || "";
+    var password = req.body.password || "";
+    var user_db = user_model.db;
+    
+    // Until not true,
+    var success = true;
+    var errors = [];
+    
+    var validator = require("email-validator");
+
+    // Email validation
+    if(!validator.validate(email)){
+        success = false;
+        errors.push("Email address is not valid.");
+    }
+
+    // Username length
+    if(username.length < 6){
+        success = false;
+        errors.push("Username is too short.");
+    }
+
+    // Password length
+    if(username.length < 6){
+        success = false;
+        errors.push("Password is too short.");
+    }
+
+    // Check email
+    user_db.exists_email(email, function(exists){
+        if(exists){
+            success = false;
+            errors.push("This email is already in use.");
+        }
+        
+        // Check username
+        user_db.exists_username(username, function(exists){
+            if(exists){
+                success = false;
+                errors.push("This username is already used by someone.");
+            }
+
+            // If still successful
+            if(success == true){
+                // Save user to mongo db
+                user_db.create({
+                    username: username,
+                    email: email,
+                    password: password
+                }, function(){
+                    render(success, errors);
+                });
+            } else {
+                render(success, errors);
+            }
+        });
+    });
+    
+    function render(success, errors){
+        // Render
+        if(success){
+            res.render('base',{
+                page: "dashboard",
+                positive_message: true,
+                message: "Your account was created!"
+            });
+        } else {
+            res.render('base',{
+                page: "signup",
+                negative_message: true,
+                message: errors.join(" ")
+            });
+        }
+    }
 });
 
 app.post('/marketing/newsletter_signup', function (req, res) {

@@ -2,6 +2,8 @@ var db = require("./user_db");
 
 module.exports = {};
 
+module.exports.db = db;
+
 module.exports.User = function(id){
     var exports = {};
 
@@ -57,6 +59,6 @@ module.exports.create = function(){
     return module.exports.User(id);
 };
 
-module.exports.exists = function(id, callback){
-    db.exists(id, callback);
+module.exports.temp_exists = function(id, callback){
+    db.temp_exists(id, callback);
 };

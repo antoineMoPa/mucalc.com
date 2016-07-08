@@ -198,7 +198,7 @@ function livecalc(namespace, nsp){
                 var new_id = data.user_id;
                 var old_id = user.get_id();
                 
-                user_model.exists(new_id, function(exists){
+                user_model.temp_exists(new_id, function(exists){
                     if(exists){
                         // This ID is effectively in database
                         // Todo: prevent session hijacking
