@@ -78,6 +78,12 @@ app.post('/login', function (req, res) {
                 message: "Success!"
             });
         } else {
+            // http://stackoverflow.com/questions/10849687/express-js-how-to-get-remote-client-address
+            var ip = req.headers['x-forwarded-for'] ||
+                req.connection.remoteAddress;
+            
+            console.log("unsuccessful login attempt: " + ip);
+            
             res.render('base',{
                 page: "login",
                 negative_message: true,
@@ -171,6 +177,14 @@ app.post('/signup', function (req, res) {
                 message: "Your account was created!"
             });
         } else {
+
+            // http://stackoverflow.com/questions/10849687/express-js-how-to-get-remote-client-address
+            var ip = req.headers['x-forwarded-for'] ||
+                req.connection.remoteAddress;
+            
+            console.log("unsuccessful account creation attempt: " + ip);
+
+            
             res.render('base',{
                 page: "signup",
                 negative_message: true,
