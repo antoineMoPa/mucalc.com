@@ -53,18 +53,21 @@ UserSchema.methods.verify_password = function(given_password){
 UserSchema.methods.login = function(cache_user_model, session_id){
     var user = cache_user_model.create();
     var public_id = user.get_public_id();
-    
-    /* Set public id for the first time  */
+
     if(this.public_id == undefined || this.public_id == ""){
+        // Set public id for the first time
         this.public_id = public_id;
         this.save();
     } else {
+        // Use public id from db
+        public_id = this.public_id;
         user.set_public_id(public_id);
-        user.set_permanent_user(user);
     }
     
+    user.set_permanent_user(this);
     user.set_nickname(this.nickname);
     user.set_session_id(session_id);
+    user.set_public_id(public_id);
     user.save();
     
     return public_id;
@@ -82,7 +85,7 @@ function hash_password(password){
 
 module.exports.create = create;
 
-function create(data,callback){
+function create(data, callback){
 
     if(data.password == ""){
         console.log("Error: empty password got to user_db.create.");
@@ -143,16 +146,28 @@ function exists_username(username, callback){
     });
 }
 
+module.exports.get_user_by_id = get_user_by_id;
 
-function gen_id(id){
+function get_user_by_id(id, callback){
+    User.findById(id, function(err, user){
+        if(err){console.log(err)};
+        if(user != null){
+            callback(user);
+        } else {
+            callback(null);
+        }
+    });
+}
+
+function session_db_id(id){
     var id = id.replace(/[^A-Za-z0-9]/g,"");
-    return "user:"+id;
+    return "user_session:"+id;
 }
 
 module.exports.store_user = function(id, data){
     var data = JSON.stringify(data);
 
-    var id = gen_id(id);
+    var id = session_db_id(id);
     
     if(id.length == 0){
         return;
@@ -167,11 +182,12 @@ module.exports.store_user = function(id, data){
 
 /*
   
+  Gets user from temp db
   callback(data)
   
 */
 module.exports.get_user = function(id, callback){
-    var id = gen_id(id);
+    var id = session_db_id(id);
     
     if(id.length == 0){
         return;
@@ -193,8 +209,12 @@ module.exports.get_user = function(id, callback){
   
 */
 module.exports.temp_exists = function(id, callback){
-    var id = gen_id(id);
+    if(id == undefined || id == ""){
+        return false;
+    }
     
+    var id = session_db_id(id);
+
     if(id.length == 0){
         callback(false);
         return;

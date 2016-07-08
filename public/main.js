@@ -292,7 +292,7 @@ function lc_network_engine(socket, shell){
                   " Try again later or create a new sheet.");
     });
 
-    socket.on("user data",function(data){
+    socket.on("user data", function(data){
         shell.on_user_data(data);
     });
     
@@ -318,10 +318,6 @@ function lc_network_engine(socket, shell){
 
     socket.on("delete cell",function(data){
         shell.on_delete_cell(data);
-    });
-
-    socket.on("user id",function(data){
-        shell.on_user_id(data);
     });
 
     exports.close = function(){
@@ -414,7 +410,7 @@ function livecalc(root_el, namespace, user){
     if(user.has_id() == false){
         net_engine.ask_user_id();
     } else {
-        net_engine.send_user_id(user.get_id());
+        net_engine.send_user_id(user.get_public_id());
     }
         
     exports.die = function(message){
@@ -495,13 +491,6 @@ function livecalc(root_el, namespace, user){
         delete_cell(number, true);
     }
 
-    exports.on_user_id = function(data){
-        user.set_id(data.user_id);
-        exports.set_nickname("anonymous");
-        exports.send_nickname();
-        chat.on_user_ready();
-    }
-    
     window.addEventListener("beforeunload", net_engine.close);
 
     var nickname = "";
@@ -516,6 +505,7 @@ function livecalc(root_el, namespace, user){
         };
 
         exports.on_user_data = function(data){
+            user.set_public_id(data.public_id);
             exports.set_nickname(data.nickname);
             chat.on_user_ready();
         };
@@ -1411,13 +1401,13 @@ function livechat(root_el, namespace, socket, user){
     });
     
     socket.on("past messages", function(messages){
-        var user_id = user.get_id();
+        var user_id = user.get_public_id();
 
         for(var i = messages.length - 1; i >= 0; i--){
             var data = JSON.parse(messages[i]);
             var own = false;
-
-            if(data.user_id == user_id){
+            
+            if(data.public_id == user_id){
                 own = true;
             }
             
@@ -1491,24 +1481,25 @@ function livechat(root_el, namespace, socket, user){
 
 function User(){
     var exports = {};
-    var storage = localStorage;
 
+    var public_id = "";
+    
     exports.has_id = function(){
-        if(storage.user_id == undefined){
+        if(public_id == ""){
             return false;
         }
-        if(storage.user_id == ""){
+        if(public_id == ""){
             return false;
         }
         return true;
     }
     
-    exports.get_id = function(){
-        return storage.user_id;
+    exports.get_public_id = function(){
+        return public_id;
     }
 
-    exports.set_id = function(id){
-        localStorage.setItem("user_id",id);
+    exports.set_public_id = function(id){
+        public_id = id;
     }
     
     return exports;

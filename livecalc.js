@@ -60,12 +60,16 @@ function livechat(namespace, nsp, socket, user){
     });
     
     socket.on("new message", function(data){
+        if(user == undefined){
+            return;
+        }
+
         var data = {
             message: data.message,
             sender: user.get_nickname(),
             public_id: user.get_public_id()
         };
-
+        
         chat_db.add_message(namespace, data);
         
         socket.broadcast.emit("new message", data);
@@ -100,12 +104,75 @@ function livecalc(namespace, nsp){
     });
     
     function listen(){
+        /*
+         Array of users used to create focus index
+         
+         note: don't rely on a value being in there.
+         
+         for(i in users) == ok
+         users[my_id] == not ok, don't do that!
+         (it might not exist)
+         
+        */
         var users = {};
         
         nsp.on("connection", function(socket){
             var cookie_val = socket.handshake.headers['cookie'];
-            session_id = cookie.parse(cookie_val || '').session_id;
+            var session_id = cookie.parse(cookie_val || '').session_id || "";
+            var registered = false;
+            var user;
+            var public_id;
+            
+            function temp_user(){
+                // Temporary user
+                // Will be saved at disconnection
+                // To keep nickname and other info
+                user = cache_user_model.create();
+                public_id = user.get_public_id();
 
+                // Generate a temporary session id
+                // (That will not be saved, even to redis
+                session_id = user.get_session_id();
+                users[session_id] = user;
+            }
+            
+            if(session_id != ""){
+                // User says "im logged in"
+                // See if the user is actually in redis
+                cache_user_model.temp_exists(session_id, function(exists){
+                    if(exists){
+                        // User actually logged in
+                        registered = true;
+                        user = cache_user_model.User(session_id);
+                        user.fetch(function(){
+                            public_id = user.get_public_id();
+                            users[session_id] = user.get_public_data();
+                            chat.set_user(user);
+                            send_user_data();
+                        });
+                    } else {
+                        // User had a session_id, but it
+                        // is not in db. (expired/never existed)
+                        // TODO: inform user he is not connected.
+                        console.log(
+                            "Attempt to login with bad cookie token."
+                        );
+                        
+                        temp_user();
+                        
+                        // Send temp data
+                        send_user_data();
+                    }
+                });
+            } else {
+                // User is not logged in
+                temp_user();
+                // Still send temp data
+                send_user_data();
+            }
+
+            send_focus_index();
+            
             // rate limiting
             if(sheet_user_count >= 3){
                 socket.emit("too many users");
@@ -131,20 +198,6 @@ function livecalc(namespace, nsp){
             );
 
             nsp.emit("user count", sheet_user_count);
-
-            var user;
-            var public_id;
-            
-            if(session_id != ""){
-                user = cache_user_model.create();
-                public_id = user.get_public_id();
-            } else {
-                // Temporary user
-                // Will be saved at disconnection
-                // To keep nickname and other info
-                user = cache_user_model.create();
-                public_id = user.get_public_id();
-            }
             
             users[session_id] = {focus:-1};
             
@@ -176,7 +229,7 @@ function livecalc(namespace, nsp){
                         if(user == undefined){
                             continue;
                         }
-                        if( user.focus != -1 ){
+                        if(user.focus != undefined && user.focus != -1){
                             fi[user.focus].push(user.nickname);
                         }
                     }
@@ -189,23 +242,29 @@ function livecalc(namespace, nsp){
             
             socket.on("set nickname",function(data){
                 // Prevent XSS
+                // Prevent injection of whatever dom element here
+                // by allowing only certain characters
                 var nickname = data.nickname.replace(/[^A-Za-z0-9\-]/g,"");
+                
+                if(registered){
+                    user.fetch_permanent_user(function(){
+                        user.set_nickname(nickname);
+                        // Store in redis
+                        user.save();
+                        // And in mongo
+                        user.save_permanent();
+                    });
+                } else {
+                    user.set_nickname(nickname);
+                }
+                
                 users[session_id].nickname = nickname;
-                user.set_nickname(nickname);
-                // At this point, we can store in db
-                user.save();
+                
                 send_focus_index();
-            });
-
-            // Send public user id
-            socket.emit("user id",{
-                public_id: public_id
             });
             
             function send_user_data(){
-                socket.emit("user data", {
-                    nickname: user.get_nickname()
-                });
+                socket.emit("user data", user.get_public_data());
             }
             
             socket.on("set focus",function(data){
@@ -272,12 +331,23 @@ function livecalc(namespace, nsp){
                 );
                 
                 nsp.emit("user count", sheet_user_count);
-                // Save user in memory
-                user.save();
                 
-                // Delete user from memory
-                // BUG:
-                // TODO: what if user was logged in many times
+                if(registered){
+                    // Save user in memory
+                    user.save();
+                }
+                
+                /*
+                  Delete user from memory.
+
+                  What if user is in 2 tabs: 
+                  If the user is there 2 times in 2 tabs,
+                  it will be recreated after the user sends back it's
+                  focus. So there is no problem in deleting.
+                  
+                  This is necessary to avoid ending up with enormous
+                  amounts of users in this array.
+                 */
                 delete users[session_id];
                 send_focus_index();
             });
