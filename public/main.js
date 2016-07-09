@@ -1356,42 +1356,30 @@ function livechat(root_el, namespace, socket, user){
     function resize(){
         var winw = window.innerWidth;
         var winh = window.innerHeight;
-        var header = 82;
         var scroll = window.scrollY || 0;
         
         /* set with to one column + margin */
-        var w = (parseInt(winw)/4);
+        var w = (parseInt(winw)/4) - 10;
         
         var button_width = button.clientWidth;
-
-        root_el.style.width = w+"px";
-        textarea.style.width = (w-40-button_width)+"px"; // 10 = margin
-        
-        var chat_header = 55;
-        var input = 40;
-        var header = 82;
                 
-        /*
-          If scrolled enough, take space left by header
-          Allow a 10 px margin
-         */
-        if(scroll > header){
-            root_el.style.top = "10px";
-            header = 10;
-        } else {
-            root_el.style.top = header+"px";
-        }
-
-        log.style.height = (
-            parseInt(winh)-
-                header - input - chat_header - 30
+        var chat_header = 55;
+        var input_height = 40;
+        var input_width = w - button_width - 60;
+        var chat_height = winh - input_height - 100;
+        
+        root_el.style.width = w+"px";
+        root_el.style.height = chat_height+"px";
+        textarea.style.width = (input_width)+"px"; // 10 = margin
+        
+        log.style.maxHeight = (
+            chat_height - input_height - chat_header - 10
         ) + "px";
     }
 
     resize();
     
     window.addEventListener("resize", resize);
-    window.addEventListener("scroll", resize);
     
     button.addEventListener("click",submit);
     
