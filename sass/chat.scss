@@ -1,16 +1,10 @@
 /* Chat */
 
-.sticky-sidebar{
-    position:fixed;
-    position:sticky;
-    top:10px;
-}
-
 livechat{
-    position:relative;
-    margin-left:10px;
-    display:block;
     background:#fff;
+    position:relative;
+    height:50%;
+    display:block;
 }
 
 .livechat-sent-message,
@@ -43,6 +37,7 @@ livechat .header{
 
 livechat .header h3{
     color:#fff;
+    font-size:15px;
 }
 
 livechat button{
@@ -53,7 +48,7 @@ livechat button{
 
 livechat textarea{
     position:absolute;
-    bottom:5px;
+    bottom:0px;
     left:5px;
     height:40px;
     max-height:40px;
@@ -75,14 +70,6 @@ livechat .message-log{
 livechat .sender{
     font-size:10px;
     text-align:right;
-}
-
-.sheet-chat-header{
-    font-size:12px;
-    margin-left:4px;
-    margin-bottom:6px;
-    color:#666;
-    text-align:center;
 }
 
 @media (max-width:768px){

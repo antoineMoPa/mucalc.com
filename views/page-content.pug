@@ -1,0 +1,36 @@
+.main-page
+  if positive_message
+    .server-message.positive
+      p
+        = message
+  if negative_message
+    .server-message.negative
+      p
+        = message
+
+  if page != undefined
+    .static
+      if page == "landing"
+        include ./landing.pug
+      else if page == "pricing"
+        .pricing
+          include ./pricing.pug
+      else if page == "signup"
+        .signup
+          include ./signup.pug
+      else if page == "login"
+        .login
+          include ./login.pug
+      else if page == "dashboard"
+        .dashboard
+          include ./dashboard.pug
+  else
+    p To get started, scroll down and see the quick reference.
+    livecalc
+  br
+  p.text-center
+    | Licence: 
+    a(href='https://www.gnu.org/licenses/gpl-3.0.en.html',
+      target='_blank')
+      | GPLv3
+  br

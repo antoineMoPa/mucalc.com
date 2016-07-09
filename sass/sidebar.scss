@@ -1,0 +1,24 @@
+.sticky-sidebar{
+    position:fixed;
+    background:#f2f2f2;
+    height:100%;
+    top:0;
+    right:0;
+    bottom:0;
+    z-index:1000;
+    box-shadow:0 0 3px rgba(0,0,0,0.15);
+}
+
+.sidebar-header{
+    background:$color_6;
+    font-size:12px;
+    padding:3px;
+    text-align:left;
+}
+
+.sidebar-header h3{
+    color:#fff;
+}
+
+@import "palette.scss";
+

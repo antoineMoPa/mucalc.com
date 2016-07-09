@@ -18,6 +18,8 @@ $error_color: #733;
 
 @import 'signup.scss';
 
+@import 'sidebar.scss';
+
 @import 'chat.scss';
 
 @import 'livecalc.scss';
@@ -111,7 +113,6 @@ header{
     padding-top:4px;
     padding-bottom:4px;
     border-bottom:3px solid $color_3;
-    margin-bottom:20px;
     position:relative;
     z-index:100;
 }

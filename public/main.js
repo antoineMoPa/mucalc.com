@@ -665,6 +665,7 @@ function livecalc(root_el, namespace, user){
         if(index >= cell_count || index < 0){
             return;
         }
+
         find_cell(index).input.focus();
         send_focus(index);
     }
@@ -973,7 +974,8 @@ function livecalc(root_el, namespace, user){
                     zfractal(cell.plot, e, i, s);
                 });
                 return "";
-            }
+            },
+            "π": math.pi
         });
     }
     
@@ -1273,6 +1275,33 @@ function livecalc(root_el, namespace, user){
             );
         }
     }
+
+    var palette_el = qsa(".palette")[0];
+    
+    if(palette_el){
+        init_palette(palette_el);
+    }
+
+    function init_palette(palette){
+        palette_el.addEventListener("mousedown",function(event){
+            // Prevent focus loss to input
+            event.preventDefault();
+            
+            var el = event.target;
+            
+            // Is it a button ?
+            if(el.tagName.toLowerCase() == "button"){
+                var input = find_cell(current_focus).input;
+                on_click(el, input);
+            }
+        });
+
+        function on_click(button, input){
+            var value = button.innerText;
+
+            input.value += value;
+        }
+    }
     
     return exports;
 }
@@ -1363,16 +1392,14 @@ function livechat(root_el, namespace, socket, user){
         
         var button_width = button.clientWidth;
                 
-        var chat_header = 55;
+        var chat_header = 15;
         var input_height = 40;
         var input_width = w - button_width - 60;
-        var chat_height = winh - input_height - 100;
+        var chat_height = parseInt(winh/2 - input_height);
         
-        root_el.style.width = w+"px";
-        root_el.style.height = chat_height+"px";
-        textarea.style.width = (input_width)+"px"; // 10 = margin
+        textarea.style.width = (input_width)+"px";
         
-        log.style.maxHeight = (
+        log.style.height = (
             chat_height - input_height - chat_header - 10
         ) + "px";
     }

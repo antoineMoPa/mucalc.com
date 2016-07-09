@@ -248,7 +248,7 @@ app.get("/sheet/:id",function (req, res) {
         sheet_db.exists(sheet_id, function(exists){
             if(exists){
                 livecalc.new_namespace(sheet_id);
-                res.render('base');
+                res.render('base',{in_sheet: true});
             } else {
                 // Else, sheet not found
                 res.status(404).send('Not Found');
@@ -256,7 +256,7 @@ app.get("/sheet/:id",function (req, res) {
         });
     } else {
         // Sheet exists
-        res.render('base');
+        res.render('base',{in_sheet: true});
     }
 });
 
