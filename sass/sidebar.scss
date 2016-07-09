@@ -20,5 +20,17 @@
     color:#fff;
 }
 
+@media all and (min-width:768px){
+    header.in-sheet{
+        width: 75%;
+    }
+}
+
+@media (max-width:768px){
+    .sticky-sidebar{
+        display:none;
+    }
+}
+
 @import "palette.scss";
 

@@ -2,11 +2,16 @@
 .palette{
     height:50%;
     background:#eee;
-    overflow-y: scroll;
 }
 
 .palette .content{
     margin:5px;
+    max-height:100%;
+    overflow-y: scroll;
+}
+
+.palette-bottom-spacer{
+    height:60px;
 }
 
 .palette button{

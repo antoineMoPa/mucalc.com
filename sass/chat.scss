@@ -42,13 +42,13 @@ livechat .header h3{
 
 livechat button{
     position:absolute;
-    bottom:-5px;
+    bottom:0px;
     right:10px;
 }
 
 livechat textarea{
     position:absolute;
-    bottom:0px;
+    bottom:10px;
     left:5px;
     height:40px;
     max-height:40px;
@@ -70,10 +70,4 @@ livechat .message-log{
 livechat .sender{
     font-size:10px;
     text-align:right;
-}
-
-@media (max-width:768px){
-    livechat{
-        display:none;
-    }
 }
