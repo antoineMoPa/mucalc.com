@@ -1,0 +1,85 @@
+/* Chat */
+
+.livechat-sent-message,
+.livechat-received-message{
+    width:100%;
+    width:calc(100% - 15px); /* padding */
+    word-wrap: break-word;
+    margin-bottom:5px;
+    margin-top:5px;
+    padding:10px;
+    border-radius:10px;
+}
+
+.livechat-received-message{
+    color:$color_2;
+    background:#eee;
+    border-top-left-radius:0;
+}
+
+.livechat-sent-message{
+    color:$color_2;
+    background:$color_5;
+    border-bottom-right-radius:0;
+}
+
+livechat{
+    position:fixed;
+    top:85px;
+    right:10px;
+    background:#fff;
+}
+
+livechat .header{
+    padding:5px;
+    background: $color_3;
+}
+
+livechat .header h3{
+    color:#fff;
+}
+
+livechat button{
+    position:absolute;
+    bottom:-5px;
+    right:10px;
+}
+
+livechat textarea{
+    margin-top:10px;
+    margin-left:5px;
+    margin-bottom:5px;
+    height:40px;
+    max-height:40px;
+    padding:5px;
+    border:none;
+    font-size:13px;
+    background:#eee;
+    resize:none;
+}
+
+livechat .message-log{
+    overflow-y: scroll;
+    overflow-x:hidden;
+    padding-left:5px;
+    padding-right:15px;
+}
+
+livechat .sender{
+    font-size:10px;
+    text-align:right;
+}
+
+.sheet-chat-header{
+    font-size:12px;
+    margin-left:4px;
+    margin-bottom:6px;
+    color:#666;
+    text-align:center;
+}
+
+@media (max-width:768px){
+    livechat{
+        display:none;
+    }
+}
