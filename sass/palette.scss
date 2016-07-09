@@ -2,6 +2,7 @@
 .palette{
     height:50%;
     background:#eee;
+    overflow-y: scroll;
 }
 
 .palette .content{
@@ -21,5 +22,12 @@
 .palette h4{
     line-height:20px;
     margin:0;
+    margin-top:10px;
     padding:4px;
+}
+
+.palette p{
+    line-height:15px;
+    margin-top:8px;
+    margin-bottom:0;
 }
