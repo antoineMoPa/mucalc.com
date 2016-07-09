@@ -1286,6 +1286,7 @@ function livecalc(root_el, namespace, user){
         palette_el.addEventListener("mousedown",function(event){
             // Prevent focus loss to input
             event.preventDefault();
+            event.stopPropagation();
             
             var el = event.target;
             
@@ -1298,8 +1299,54 @@ function livecalc(root_el, namespace, user){
 
         function on_click(button, input){
             var value = button.innerText;
+            
+            if(input.selectionStart != undefined){
+                var offset = input.selectionStart;
+                
+                var curr_val = input.value; // Current input value
+                var input_begin = curr_val.substr(0,offset);
+                var input_end = curr_val.substr(offset,curr_val.length);
 
-            input.value += value;
+                if(offset != input.selectionEnd){
+                    // If some text is selected, we'll replace it
+                    // So erase that part
+                    
+                    input_end = curr_val.substr(
+                        input.selectionEnd,
+                        curr_val.length
+                    );
+                }
+                
+                input.value =
+                    input_begin +
+                    value +
+                    input_end;
+
+                // Remove variable and place
+                // user cursor
+                var replace_var =
+                    button.getAttribute("data-replace-var") || "";
+                
+                if(replace_var != ""){
+                    var var_pos = value.indexOf(replace_var);
+                    var var_len = replace_var.length;
+
+                    // Select variable
+                    input.selectionStart =
+                        input_begin.length + var_pos;
+                    input.selectionEnd =
+                        input_begin.length + var_pos + var_len;
+                } else {
+                    // Place back mouse after what we inserted
+                    var new_offset = input_begin.length +
+                        value.length;
+
+                    input.selectionStart = new_offset;
+                    input.selectionEnd = new_offset;
+                }
+            } else {
+                input.value += value;
+            }
         }
     }
     
