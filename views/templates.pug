@@ -1,0 +1,105 @@
+template(name='livecalc-die')
+  h3 Create a new sheet
+  a(href='/new')
+    button Create a new sheet
+  h3 Go to homepage
+  a(href='/')
+    button Homepage
+template(name='livechat')
+  .header
+    h3
+      | Chat
+  .message-log
+  .message-input
+    textarea(placeholder='Join the conversation')
+    button
+      | Send
+template(name='livechat-received-message')
+  .livechat-received-message
+    .content
+    .sender
+template(name='livechat-sent-message')
+  .livechat-sent-message
+    .content
+    .sender
+template(name='small-doc')
+  .doc
+    include ./doc.pug
+template(name='single-field', data-params='class,default,info')
+  .single-field(class='{{class}}')
+    p {{info}}
+    input(value='{{default}}')
+    button Confirm
+template(name='livecalc-wait-click')
+  .livecalc-wait-click
+    button.livecalc-wait-click-button View
+    p This might take some time to compute.
+template(name='livecalc')
+  .livecalc
+    .livecalc-header
+      .sheet-state.text-left
+      .user-count(title='(Including you)')
+    .livecalc-cells
+    template-instance(data-name='sheet-panel')
+    .panel
+      h3 Settings
+      template-instance(data-name='single-field',
+                        data-info='This name is used in the chat: '
+                        data-class='nickname', 
+                        data-default='anonymous')
+    template-instance(data-name='small-doc')
+template(name='sheet-panel')
+  .sheet-panel.panel
+    h3 Sheet Panel
+    col-md-3
+      | Lock sheet from further editing
+      br
+      button(name='lock-sheet')
+        | Lock Sheet
+    col-md-3
+      | Open a copy
+      br
+      button(name='new-copy')
+        | New Copy
+    br
+    h3 Stats
+    p
+      span.visit-count
+        0
+      |  visits.
+template(name='plot-interact-button')
+  .text-center
+    button.plot-interact
+      |  Interact with this plot
+template(name='fullscreen')
+  .fullscreen
+    .fullscreen-header
+      col-sm-6
+        h3.fullscreen-title
+      col-sm-6
+        .text-right
+          button.close-button
+            |  Close
+    .content
+template(name='livecalc-cell')
+  .livecalc-cell
+    .text-part
+    .math-part
+      fieldset
+        div
+          input.inline-block.livecalc-input(
+            type='text', 
+            placeholder='Type math')
+          button.inline-block.livecalc-go-button
+            | Go
+          pre.livecalc-output.
+          pre.livecalc-secondary-output
+      p.users-info
+      .plot
+template(name='modal-overlay')
+  .modal-overlay
+template(name='modal-inform')
+  .modal
+    .content
+      p
+    .buttons
