@@ -172,8 +172,10 @@ function livecalc(namespace, nsp){
 
             send_focus_index();
             
-            // rate limiting
-            if(sheet_user_count >= 3){
+            // Rate limiting.
+            // while registered users are not managed,
+            // leave this to 5
+            if(sheet_user_count >= 5){
                 socket.emit("too many users");
                 return;
             }

@@ -1,19 +1,17 @@
 header(class=in_sheet? "in-sheet": "")
-  col-md-9
+  col-md-8
     h1.inline-block.mobile-center
       a(href='https://livecalc.xyz') livecalc.xyz
     p.inline-block.text-left.mobile-center
       | Github 
       a(href='https://github.com/antoineMoPa/livecalc', 
      target='_blank') project
-      |  | backend: math.js | syntax documentation: 
-      a(href='http://mathjs.org/docs/expressions/syntax.html',
-        target='_blank')
-        | mathjs docs
       |  |
       |  Version 0.0.10
-  col-md-3.text-right.mobile-center
+  col-md-4.text-right.mobile-center.links
     a.pricing-link(href='/pricing', target='_blank')
       | Pricing
+    a.login-in(href='/login')
+      | Log in
     a.new-sheet-button(href='/new', target='_blank')
       button New Sheet

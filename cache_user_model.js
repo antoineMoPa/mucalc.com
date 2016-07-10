@@ -29,14 +29,31 @@ function cached_user(session_id, public_id){
     };
 
     exports.set_permanent_user = set_permanent_user;
-
+    
     function set_permanent_user(new_permanent_user){
         permanent_user = new_permanent_user;
         data.nickname = permanent_user.nickname;
         data.permanent_id = permanent_user.id;
         data.recent_sheets = permanent_user.recent_sheets;
-    };
+    }
 
+    exports.visit_sheets = visit_sheets;
+
+    /*
+      Can be an array or a single element
+     */
+    function visit_sheets(sheet_ids){
+        user_cache.visit_sheet(data.permanent_id, sheet_ids);
+    }
+
+    exports.recently_visited_sheets = recently_visited_sheets;
+    
+    function recently_visited_sheets(callback){
+        user_cache.recently_visited_sheets(
+            data.permanent_id, callback
+        );
+    }
+    
     exports.fetch_permanent_user = fetch_permanent_user;
 
     /*

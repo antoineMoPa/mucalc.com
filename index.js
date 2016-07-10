@@ -79,6 +79,24 @@ function is_logged_in(req, callback){
     });
 }
 
+/*
+  Make sure user is logged in before calling this.
+*/
+function get_user_model(req, callback){
+    var session_id = cookie_get_id(req) || "";
+    
+    is_logged_in(req, function(logged_in){
+        if(logged_in){
+            user = cache_user_model.cached_user(session_id);
+            user.fetch(function(){
+                callback(user);
+            });
+        } else {
+            callback(null);
+        }
+    });
+}
+
 app.get('/logout', function (req, res){
     var session_id = cookie_get_id(req);
     cookie_send_id(res, "");
@@ -120,11 +138,7 @@ app.post('/login', function (req, res){
     
     function render(success){
         if(success){
-            res.render('base',{
-                page: "dashboard",
-                positive_message: true,
-                message: "You logged in successfully!"
-            });
+            res.redirect("/dashboard");
         } else {
             // http://stackoverflow.com/questions/10849687/express-js-how-to-get-remote-client-address
             var ip = req.headers['x-forwarded-for'] ||
@@ -142,7 +156,22 @@ app.post('/login', function (req, res){
 });
   
 app.get('/dashboard', function (req, res) {
-    res.render('base',{page: "dashboard"});
+    // Se if user is logged in and get data
+    get_user_model(req, function(user){
+        if(user == null){
+            // Not logged in
+            res.redirect("/login");
+        } else {
+            // Find recently visited sheets
+            user.recently_visited_sheets(function(sheets){
+                // Render page
+                res.render('base',{
+                    page: "dashboard",
+                    recent_sheets: sheets
+                });
+            });
+        }
+    });
 });
 
 app.post('/signup', function (req, res) {
@@ -271,8 +300,11 @@ app.post('/marketing/newsletter_signup', function (req, res) {
 
 app.get("/sheet/:id",function (req, res) {
     var sheet_id = req.params.id;
-    
-    is_logged_in(req, function(logged_in){
+
+    get_user_model(req, function(user){
+        // if user is null, we are not logged in
+        var logged_in = (user != null)? true: false;
+        
         // See if namespace is already in memory
         // Else we check in DB
         if(livecalc.namespaces.indexOf(sheet_id) <= -1){
@@ -284,6 +316,9 @@ app.get("/sheet/:id",function (req, res) {
                         in_sheet: true,
                         logged_in: logged_in
                     });
+
+                    // For "recently visited sheets"
+                    user.visit_sheets(sheet_id);
                 } else {
                     // Else, sheet not found
                     res.status(404).send('Not Found');

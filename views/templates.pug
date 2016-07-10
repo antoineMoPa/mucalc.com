@@ -37,12 +37,12 @@ template(name='livecalc-wait-click')
 template(name='livecalc')
   .livecalc
     .livecalc-header
-      col-md-4
-        .sheet-state.text-left
+      col-md-4.text-left.mobile-center
+        .sheet-state
       col-md-4.text-center
         .user-count(title='(Including you)')
       col-md-4.text-right
-        .user-info
+        .user-info.mobile-center
           span.user-name
             | Anonymous
           if logged_in
