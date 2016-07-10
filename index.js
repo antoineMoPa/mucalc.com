@@ -43,7 +43,15 @@ app.get('/pricing', function (req, res) {
 });
 
 app.get('/signup', function (req, res) {
-    res.render('base',{page: "signup"});
+    is_logged_in(req, function(logged_in){
+        if(!logged_in){
+            // If not logged in
+            res.render('base',{page: "signup"});
+        } else {
+            // If logged in, redirect to user dashboard
+            res.redirect("/dashboard");
+        }
+    });
 });
 
 app.get('/login', function (req, res) {
