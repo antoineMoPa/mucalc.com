@@ -17,7 +17,8 @@ function cached_user(session_id, public_id){
         public_id: public_id || "",
         session_id: session_id || "",
         nickname: "Anonymous",
-        permanent_id: null
+        permanent_id: null,
+        recent_sheets: []
     };
 
     var permanent_user = null;
@@ -32,6 +33,7 @@ function cached_user(session_id, public_id){
         permanent_user = new_permanent_user;
         data.nickname = permanent_user.nickname;
         data.permanent_id = permanent_user.id;
+        data.recent_sheets = permanent_user.recent_sheets;
     };
 
     exports.fetch_permanent_user = fetch_permanent_user;

@@ -47,6 +47,8 @@ template(name='livecalc')
             | Anonymous
           if logged_in
             |  - 
+            a(href="/dashboard", target="_blank") dashboard
+            |  - 
             a(href="/logout") Log out
           else
             |  - 

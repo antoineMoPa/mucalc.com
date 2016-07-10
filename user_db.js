@@ -33,7 +33,8 @@ var UserSchema = new mongoose.Schema({
     password: String,
     email: String,
     nickname: String,
-    sheets: Array
+    sheets: Array,
+    recent_sheets: Array
 });
 
 UserSchema.methods.verify_password = function(given_password){
