@@ -42,6 +42,8 @@ UserSchema.methods.verify_password = function(given_password){
     return false;
 };
 
+module.exports.create = create;
+
 function create(data, callback){
     if(data.password == ""){
         console.log("Error: empty password got to user_db.create.");
