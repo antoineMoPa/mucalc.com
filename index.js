@@ -275,11 +275,7 @@ app.post('/signup', function (req, res) {
     
     function render(success, errors){
         if(success){
-            res.render('base',{
-                page: "dashboard",
-                positive_message: true,
-                message: "Your account was created!"
-            });
+            res.redirect("/dashboard");
         } else {
 
             // http://stackoverflow.com/questions/10849687/express-js-how-to-get-remote-client-address
