@@ -345,7 +345,9 @@ app.get("/sheet/:id",function (req, res) {
                     });
 
                     // For "recently visited sheets"
-                    user.visit_sheets(sheet_id);
+                    if(user != null){
+                        user.visit_sheets(sheet_id);
+                    }
                 } else {
                     // Else, sheet not found
                     res.status(404).send('Not Found');
