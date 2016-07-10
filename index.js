@@ -47,7 +47,15 @@ app.get('/signup', function (req, res) {
 });
 
 app.get('/login', function (req, res) {
-    res.render('base',{page: "login"});
+    is_logged_in(req, function(logged_in){
+        if(!logged_in){
+            // If not logged in
+            res.render('base',{page: "login"});
+        } else {
+            // If logged in, redirect to user dashboard
+            res.redirect("/dashboard");
+        }
+    });
 });
 
 function cookie_send_id(res, id){
@@ -110,8 +118,19 @@ app.get('/logout', function (req, res){
     });
 });
 
-
 app.post('/login', function (req, res){
+    is_logged_in(req, function(logged_in){
+        if(!logged_in){
+            // If not logged in
+            post_login_form(req, res);
+        } else {
+            // If logged in, redirect to user dashboard
+            res.redirect("/dashboard");
+        }
+    });
+});
+
+function post_login_form(req, res){
     var email = req.body.email || "";
     var password = req.body.password || "";
     var user_db = cache_user_model.db;
@@ -153,7 +172,7 @@ app.post('/login', function (req, res){
             });
         }
     }
-});
+}
   
 app.get('/dashboard', function (req, res) {
     // Se if user is logged in and get data
