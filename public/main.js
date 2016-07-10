@@ -1461,7 +1461,7 @@ function livechat(root_el, namespace, socket, user){
         var chat_header = 15;
         var input_height = 40;
         var input_width = w - button_width - 60;
-        var chat_height = parseInt(winh/2 - input_height);
+        var chat_height = parseInt(2*winh/3 - input_height);
         
         textarea.style.width = (input_width)+"px";
         
