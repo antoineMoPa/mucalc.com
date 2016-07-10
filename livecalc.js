@@ -1,6 +1,7 @@
 /* livecalc.js */
 
 var cookie = require('cookie');
+var user_cache = require('./user_cache');
 
 var site_user_count = 0;
 

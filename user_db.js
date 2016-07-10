@@ -4,10 +4,7 @@
    this could be changed.
  */
 
-var redis = require("redis");
 var password_hash = require("password-hash");
-
-var client = redis.createClient();
 
 module.exports = {};
 
@@ -44,6 +41,29 @@ UserSchema.methods.verify_password = function(given_password){
     
     return false;
 };
+
+function create(data, callback){
+    if(data.password == ""){
+        console.log("Error: empty password got to user_db.create.");
+    }
+    
+    var user = new User({
+        name: data.name || "",
+        username: data.username || "",
+        email: data.email || "",
+        nickname: data.nickname || "",
+        password: hash_password(data.password)
+    });
+    
+    user.save(function(err){
+        if(err){
+            console.log(err);
+        } else {
+            console.log("New user saved to mongo: " + user.username);
+        }
+        callback();
+    });
+}
 
 /*
   
@@ -83,33 +103,6 @@ function hash_password(password){
     var hashed =  password_hash.generate(password);
     return hashed;
 }
-
-module.exports.create = create;
-
-function create(data, callback){
-
-    if(data.password == ""){
-        console.log("Error: empty password got to user_db.create.");
-    }
-    
-    var user = new User({
-        name: data.name || "",
-        username: data.username || "",
-        email: data.email || "",
-        nickname: data.nickname || "",
-        password: hash_password(data.password)
-    });
-    
-    user.save(function(err){
-        if(err){
-            console.log(err);
-        } else {
-            console.log("New user saved to mongo: " + user.username);
-        }
-        callback();
-    });
-}
-
 
 module.exports.exists_email = exists_email;
 
@@ -159,81 +152,3 @@ function get_user_by_id(id, callback){
         }
     });
 }
-
-function session_db_id(id){
-    var id = id.replace(/[^A-Za-z0-9]/g,"");
-    return "user_session:"+id;
-}
-
-module.exports.store_user = function(id, data){
-    var data = JSON.stringify(data);
-
-    var id = session_db_id(id);
-    
-    if(id.length == 0){
-        return;
-    }
-    
-    client.set(id, data, function(err, reply){
-        if(err != null){
-            console.log("err: " + err);
-        }
-    });
-};
-
-module.exports.logout = function(session_id){
-    var id = session_db_id(session_id);
-    client.del(id, function(err, reply){
-        if(err != null){
-            console.log("err: " + err);
-        }
-    });
-};
-
-/*
-  
-  Gets user from temp db
-  callback(data)
-  
-*/
-module.exports.get_user = function(id, callback){
-    var id = session_db_id(id);
-    
-    if(id.length == 0){
-        return;
-    }
-    
-    client.get(id, function(err, reply){
-        if(err != null){
-            console.log("err: " + err);
-        }
-        callback(JSON.parse(reply));
-    });
-};
-
-/*
-  
-  Does a temp user exist in redis?
-  
-  callback(bool: exists)
-  
-*/
-module.exports.temp_exists = function(id, callback){
-    if(id == undefined || id == ""){
-        return false;
-    }
-    
-    var id = session_db_id(id);
-
-    if(id.length == 0){
-        callback(false);
-        return;
-    }
-    
-    client.exists(id, function(err, exists){
-        if(err != null){
-            console.log("err: " + err);
-        }
-        callback(exists);
-    });
-};

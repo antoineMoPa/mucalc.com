@@ -3,6 +3,7 @@
 /* todo: untangle this and user_db.js */
 
 var db = require("./user_db");
+var user_cache = require("./user_cache");
 
 module.exports = {};
 
@@ -69,14 +70,15 @@ function cached_user(session_id, public_id){
       Save in cache
      */
     exports.save = function(){
-        db.store_user(data.session_id, data);
+        user_cache.store_user(data.session_id, data);
     };
 
     /*
+      Fetch from cache
       callback()
      */
     exports.fetch = function(callback){
-        db.get_user( data.session_id, function(from_cache){
+        user_cache.get_user( data.session_id, function(from_cache){
             data = from_cache;
             callback();
         });
@@ -131,9 +133,9 @@ module.exports.create = function(){
 };
 
 module.exports.temp_exists = function(id, callback){
-    db.temp_exists(id, callback);
+    user_cache.exists(id, callback);
 };
 
 module.exports.logout = function(session_id){
-    db.logout(session_id);
+    user_cache.logout(session_id);
 };
