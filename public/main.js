@@ -499,10 +499,12 @@ function livecalc(root_el, namespace, user){
     function init_user_data(){
         var nickname_input = subqsa(root_el, ".nickname input")[0];
         var nickname_button = subqsa(root_el, ".nickname button")[0];
+        var username_field = qsa(".user-name")[0];
 
         exports.set_nickname = function(new_nickname){
             nickname_input.value = new_nickname;
             nickname = new_nickname;
+            username_field.innerText = nickname;
         };
 
         exports.on_user_data = function(data){

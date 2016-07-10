@@ -63,7 +63,37 @@ function cookie_get_id(req){
     return cookie.parse(req.headers.cookie || '').session_id;
 }
 
-app.post('/login', function (req, res) {
+function is_logged_in(req, callback){
+    var session_id = cookie_get_id(req) || "";
+
+    if(session_id == ""){
+        callback(false);
+    }
+    
+    cache_user_model.temp_exists(session_id, function(exists){
+        if(exists){
+            return callback(true);
+        } else {
+            return callback(false);
+        }
+    });
+}
+
+app.get('/logout', function (req, res){
+    var session_id = cookie_get_id(req);
+    cookie_send_id(res, "");
+
+    cache_user_model.logout(session_id);
+    
+    res.render('base',{
+        page: "login",
+        positive_message: true,
+        message: "You successfully logged out. Come again soon!"
+    });
+});
+
+
+app.post('/login', function (req, res){
     var email = req.body.email || "";
     var password = req.body.password || "";
     var user_db = cache_user_model.db;
@@ -93,7 +123,7 @@ app.post('/login', function (req, res) {
             res.render('base',{
                 page: "dashboard",
                 positive_message: true,
-                message: "Success!"
+                message: "You logged in successfully!"
             });
         } else {
             // http://stackoverflow.com/questions/10849687/express-js-how-to-get-remote-client-address
@@ -242,22 +272,31 @@ app.post('/marketing/newsletter_signup', function (req, res) {
 app.get("/sheet/:id",function (req, res) {
     var sheet_id = req.params.id;
     
-    // See if namespace is already in memory
-    // Else we check in DB
-    if(livecalc.namespaces.indexOf(sheet_id) <= -1){
-        sheet_db.exists(sheet_id, function(exists){
-            if(exists){
-                livecalc.new_namespace(sheet_id);
-                res.render('base',{in_sheet: true});
-            } else {
-                // Else, sheet not found
-                res.status(404).send('Not Found');
-            }
-        });
-    } else {
-        // Sheet exists
-        res.render('base',{in_sheet: true});
-    }
+    is_logged_in(req, function(logged_in){
+        // See if namespace is already in memory
+        // Else we check in DB
+        if(livecalc.namespaces.indexOf(sheet_id) <= -1){
+            sheet_db.exists(sheet_id, function(exists){
+                // Maybe then it exists in redis
+                if(exists){
+                    livecalc.new_namespace(sheet_id);
+                    res.render('base',{
+                        in_sheet: true,
+                        logged_in: logged_in
+                    });
+                } else {
+                    // Else, sheet not found
+                    res.status(404).send('Not Found');
+                }
+            });
+        } else {
+            // Sheet exists
+            res.render('base',{
+                in_sheet: true,
+                logged_in: logged_in
+            });
+        }
+    });
 });
 
 app.get("/copy/:id",function (req, res) {

@@ -180,6 +180,15 @@ module.exports.store_user = function(id, data){
     });
 };
 
+module.exports.logout = function(session_id){
+    var id = session_db_id(session_id);
+    client.del(id, function(err, reply){
+        if(err != null){
+            console.log("err: " + err);
+        }
+    });
+};
+
 /*
   
   Gets user from temp db

@@ -55,7 +55,7 @@ function cached_user(session_id, public_id){
             callback();
         });
     }
-
+    
     /*
       Save in mongo
     */
@@ -79,7 +79,7 @@ function cached_user(session_id, public_id){
             callback();
         });
     };
-
+    
     /*
       Should be only data safe for frontend
      */
@@ -130,4 +130,8 @@ module.exports.create = function(){
 
 module.exports.temp_exists = function(id, callback){
     db.temp_exists(id, callback);
+};
+
+module.exports.logout = function(session_id){
+    db.logout(session_id);
 };

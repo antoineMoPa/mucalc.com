@@ -37,8 +37,20 @@ template(name='livecalc-wait-click')
 template(name='livecalc')
   .livecalc
     .livecalc-header
-      .sheet-state.text-left
-      .user-count(title='(Including you)')
+      col-md-4
+        .sheet-state.text-left
+      col-md-4.text-center
+        .user-count(title='(Including you)')
+      col-md-4.text-right
+        .user-info
+          span.user-name
+            | Anonymous
+          if logged_in
+            |  - 
+            a(href="/logout") Log out
+          else
+            |  - 
+            a(href="/login") Log in
     .livecalc-cells
     template-instance(data-name='sheet-panel')
     .panel

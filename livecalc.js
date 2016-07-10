@@ -259,7 +259,8 @@ function livecalc(namespace, nsp){
                 }
                 
                 users[session_id].nickname = nickname;
-                
+
+                send_user_data();
                 send_focus_index();
             });
             

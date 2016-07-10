@@ -105,7 +105,7 @@
 
 .livecalc-header{
     text-align:left;
-    font-size:11px;
+    font-size:14px;
     color:darken($color_3, 20%);
 }
 
@@ -115,11 +115,8 @@
     margin-left:10px;
 }
 
-.livecalc-header .user-count{
-    display: inline-block;
-    text-align: right;
-    width:150px;
-    margin-right:10px;
+.livecalc-header .user-info{
+    padding-right:10px;
 }
 
 livecalc{
