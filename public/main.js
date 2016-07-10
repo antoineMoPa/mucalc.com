@@ -1294,8 +1294,14 @@ function livecalc(root_el, namespace, user){
             
             // Is it a button ?
             if(el.tagName.toLowerCase() == "button"){
-                var input = find_cell(current_focus).input;
-                on_click(el, input);
+                var cell = find_cell(current_focus);
+
+                if(cell != null){
+                    var input = cell.input;
+                    on_click(el, input);
+                } else if (chat.has_focus){
+                    on_click(el, chat.textarea);
+                }
             }
         });
 
@@ -1393,14 +1399,25 @@ function init_doc(calc){
 
 function livechat(root_el, namespace, socket, user){
     render("livechat", root_el);
-
+    
     var log = subqsa(root_el, ".message-log")[0];
     var textarea = subqsa(root_el, "textarea")[0];
     var button = subqsa(root_el, "button")[0];
     var exports = {};
 
     textarea.value = "";
+
+    exports.has_focus = false;
+    exports.textarea = textarea;
     
+    textarea.addEventListener("focus",function(){
+        exports.has_focus = true;
+    });
+    
+    textarea.addEventListener("blur",function(){
+        exports.has_focus = false;
+    });
+
     exports.die = function(){
         root_el.innerHTML = "";
     };
