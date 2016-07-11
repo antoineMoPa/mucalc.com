@@ -334,6 +334,13 @@ app.get("/sheet/:id",function (req, res) {
     var sheet_id = req.params.id;
     var logged_in = res.locals.logged_in;
     var user = res.locals.user || null;
+
+    // Todo: unhardcode domain and protocol
+    var share_url =
+        "https://livecalc.xyz/sheet/" +
+        sheet_id;
+
+    res.locals.share_url = share_url;
     
     // See if namespace is already in memory
     // Else we check in DB

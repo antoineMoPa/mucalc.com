@@ -25,7 +25,12 @@
         .dashboard
           include ./dashboard.pug
   else
-    p To get started, scroll down and see the quick reference.
+    col-md-6
+      p To get started, scroll down and see the quick reference.
+    col-md-6
+      p.text-right
+          a(target="_blank", href=("https://twitter.com/intent/tweet?text=View%20this%20livecalc.xyz%20sheet:%20"+ share_url))
+            | Share sheet on twitter.
     livecalc
   br
   p.text-center
