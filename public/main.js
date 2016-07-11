@@ -1617,8 +1617,6 @@ if(is_sheet){
     init_doc(calc);
 } else if (is_landing){
     // TODO: create something nice but easy on CPU for background
-    var bg_col = "#729b79";
-    document.body.style.background = bg_col;
 }
 
 /** 
