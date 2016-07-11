@@ -1616,80 +1616,9 @@ if(is_sheet){
     // Start documentation
     init_doc(calc);
 } else if (is_landing){
-    landing_bg_anim();
-}
-
-function landing_bg_anim(){
-    // Landing page
-    // Nice background animation
+    // TODO: create something nice but easy on CPU for background
     var bg_col = "#729b79";
-    
     document.body.style.background = bg_col;
-
-    if(window.innerWidth < 768){
-        // Mobile: abort animation
-        return;
-    }
-
-    var can = dom("<canvas id='bg-canvas'></canvas>");
-    var body = document.body;
-    body.appendChild(can);
-    can.style.position = "absolute";
-    can.style.top = "80px";
-    can.style.left = 0;
-    can.style.zIndex = -1;
-    
-    var winh, winw;
-    var bodh;
-    
-    var w;
-    var h;
-    var ctx = can.getContext("2d");
-
-    function onresize(){
-        winh = window.innerHeight;
-        winw = window.innerWidth;
-        bodh = body.clientHeight;
-        w = window.innerWidth;
-        h = bodh > winh? bodh: winh;
-        can.width = w;
-        can.height = h;
-    }    
-    
-    onresize();
-    
-    window.addEventListener("resize",onresize);
-    
-    var x = 0;
-    var last;
-
-    var constant = Math.random() * 40 + 10;
-
-    setInterval(reset_constant,20000);
-    document.body.addEventListener("click",reset_constant);
-    document.body.addEventListener("mouseenter",reset_constant);
-
-    function reset_constant(){
-        ctx.fillStyle = bg_col;
-        ctx.fillRect(0,0,w,h);
-        constant = Math.random() * 40 + 10;
-    }
-    
-    setInterval(function(){
-        var t = new Date().getTime()/1000;
-        var deltat = t - last;
-        var iterations = 5;
-        for(var i=0; i < iterations; i++){
-            x+=1;
-            x %= w;
-            ctx.fillStyle = "rgba(0,67,70,0.2)";
-            // Don't ask me how I ended up with this
-            var y = h/2 *
-                Math.sin(t + (i/iterations)*constant) + h/2;
-            ctx.fillRect(x,y,4,4);
-        };
-        last = t;
-    },33);
 }
 
 /** 
