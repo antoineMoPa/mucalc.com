@@ -190,7 +190,7 @@ function livecalc(namespace, nsp){
             site_user_count++;
             
             console.log(
-                "connection - " +
+                "connection    - " +
                     site_user_count +
                     " users in site, " +
                     sheet_user_count +
