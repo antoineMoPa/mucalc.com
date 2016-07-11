@@ -967,7 +967,10 @@ function livecalc(root_el, namespace, user){
             },
             rule: function(number){
                 var cell = currently_calculated_cell;
-                return rule(cell.plot, number);
+                wait_for_click(cell, function(){
+                    rule(cell.plot, number)
+                });
+                return "";
             },
             plot: plot,
             zfractal: function(e,i,s){
