@@ -16,6 +16,21 @@ livecalc.set_globals(io, sheet_db, chat_db, stats, cache_user_model);
 app.use(body_parser.json());
 app.use(body_parser.urlencoded({extended: true}));
 
+// Add some user info for render
+app.use(function(req, res, next){
+    get_user_model(req, function(user){
+        res.locals.user = user || null;
+        if(user == null){
+            // not logged in
+            res.locals.logged_in = false;
+        } else {
+            // logged in
+            res.locals.logged_in = true;
+        }
+        next();
+    });
+});
+
 /* Stylesheets */
 app.use(sass_middleware({
     src: "./sass",
@@ -43,27 +58,23 @@ app.get('/pricing', function (req, res) {
 });
 
 app.get('/signup', function (req, res) {
-    is_logged_in(req, function(logged_in){
-        if(!logged_in){
-            // If not logged in
-            res.render('base',{page: "signup"});
-        } else {
-            // If logged in, redirect to user dashboard
-            res.redirect("/dashboard");
-        }
-    });
+    if(!res.locals.logged_in){
+        // If not logged in
+        res.render('base',{page: "signup"});
+    } else {
+        // If logged in, redirect to user dashboard
+        res.redirect("/dashboard");
+    }
 });
 
 app.get('/login', function (req, res) {
-    is_logged_in(req, function(logged_in){
-        if(!logged_in){
-            // If not logged in
-            res.render('base',{page: "login"});
-        } else {
-            // If logged in, redirect to user dashboard
-            res.redirect("/dashboard");
-        }
-    });
+    if(!res.locals.logged_in){
+        // If not logged in
+        res.render('base',{page: "login"});
+    } else {
+        // If logged in, redirect to user dashboard
+        res.redirect("/dashboard");
+    }
 });
 
 function cookie_send_id(res, id){
@@ -127,15 +138,13 @@ app.get('/logout', function (req, res){
 });
 
 app.post('/login', function (req, res){
-    is_logged_in(req, function(logged_in){
-        if(!logged_in){
-            // If not logged in
-            post_login_form(req, res);
-        } else {
-            // If logged in, redirect to user dashboard
-            res.redirect("/dashboard");
-        }
-    });
+    if(!res.locals.logged_in){
+        // If not logged in
+        post_login_form(req, res);
+    } else {
+        // If logged in, redirect to user dashboard
+        res.redirect("/dashboard");
+    }
 });
 
 function post_login_form(req, res){
@@ -181,24 +190,24 @@ function post_login_form(req, res){
         }
     }
 }
-  
+
 app.get('/dashboard', function (req, res) {
     // Se if user is logged in and get data
-    get_user_model(req, function(user){
-        if(user == null){
-            // Not logged in
-            res.redirect("/login");
-        } else {
-            // Find recently visited sheets
-            user.recently_visited_sheets(function(sheets){
-                // Render page
-                res.render('base',{
-                    page: "dashboard",
-                    recent_sheets: sheets
-                });
+    if(!res.locals.logged_in){
+        // Not logged in
+        res.redirect("/login");
+    } else {
+        var user = res.locals.user;
+        
+        // Find recently visited sheets
+        user.recently_visited_sheets(function(sheets){
+            // Render page
+            res.render('base',{
+                page: "dashboard",
+                recent_sheets: sheets
             });
-        }
-    });
+        });
+    }
 });
 
 app.post('/signup', function (req, res) {
@@ -323,40 +332,35 @@ app.post('/marketing/newsletter_signup', function (req, res) {
 
 app.get("/sheet/:id",function (req, res) {
     var sheet_id = req.params.id;
-
-    get_user_model(req, function(user){
-        // if user is null, we are not logged in
-        var logged_in = (user != null)? true: false;
-        
-        // See if namespace is already in memory
-        // Else we check in DB
-        if(livecalc.namespaces.indexOf(sheet_id) <= -1){
-            sheet_db.exists(sheet_id, function(exists){
-                // Maybe then it exists in redis
-                if(exists){
-                    livecalc.new_namespace(sheet_id);
-                    res.render('base',{
-                        in_sheet: true,
-                        logged_in: logged_in
-                    });
-
-                    // For "recently visited sheets"
-                    if(user != null){
-                        user.visit_sheets(sheet_id);
-                    }
-                } else {
-                    // Else, sheet not found
-                    res.status(404).send('Not Found');
+    var logged_in = res.locals.logged_in;
+    var user = res.locals.user || null;
+    
+    // See if namespace is already in memory
+    // Else we check in DB
+    if(livecalc.namespaces.indexOf(sheet_id) <= -1){
+        sheet_db.exists(sheet_id, function(exists){
+            // Maybe then it exists in redis
+            if(exists){
+                livecalc.new_namespace(sheet_id);
+                res.render('base',{
+                    in_sheet: true
+                });
+                
+                // For "recently visited sheets"
+                if(user != null){
+                    user.visit_sheets(sheet_id);
                 }
-            });
-        } else {
-            // Sheet exists
-            res.render('base',{
-                in_sheet: true,
-                logged_in: logged_in
-            });
-        }
-    });
+            } else {
+                // Else, sheet not found
+                res.status(404).send('Not Found');
+            }
+        });
+    } else {
+        // Sheet exists
+        res.render('base',{
+            in_sheet: true
+        });
+    }
 });
 
 app.get("/copy/:id",function (req, res) {

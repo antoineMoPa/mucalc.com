@@ -11,7 +11,11 @@ header(class=in_sheet? "in-sheet": "")
   col-md-4.text-right.mobile-center.links
     a.pricing-link(href='/pricing', target='_blank')
       | Pricing
-    a.login-in(href='/login')
-      | Log in
+    if !logged_in
+      a.login(href='/login')
+        | Log in
+    else
+      a.dashboard-link(href='/dashboard')
+        | Dashboard
     a.new-sheet-button(href='/new', target='_blank')
       button New Sheet
