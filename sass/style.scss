@@ -195,6 +195,8 @@ p{
 @media all and (max-width:768px){
     .modal{
         width:90%;
+        width:calc( 100% - 20px );
+        border:0px;
         margin-top:20px;
         padding:10px;
         margin-left:0;

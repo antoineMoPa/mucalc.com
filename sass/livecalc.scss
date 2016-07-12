@@ -37,6 +37,7 @@
     border:none;
     background:#fff;
     box-shadow:none;
+    font-family:monospace;
 }
 
 .livecalc-secondary-output,
@@ -128,4 +129,8 @@ livecalc{
     padding:10px;
     margin-top:10px;
     margin-bottom:10px;
+}
+
+.livecalc-sharing a{
+    margin-right:10px;
 }

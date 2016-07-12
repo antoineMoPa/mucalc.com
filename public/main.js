@@ -419,7 +419,18 @@ function livecalc(root_el, namespace, user){
     } else {
         net_engine.send_user_id(user.get_public_id());
     }
+
+    {
+        // share url activation
+        var url_share_button = qsa(".url-popup-modal")[0];
         
+        url_share_button.onclick = function(e){
+            e.preventDefault();
+            var link = url_share_button.href;
+            modal_inform(link);
+        }
+    }
+    
     exports.die = function(message){
         render("livecalc-die",root_el);
 
