@@ -795,8 +795,12 @@ function livecalc(root_el, namespace, user){
         });
         
         cell.calculate = calculate;
-        
+
+        var operation_keys = ["+","-","*","/"];
+                    
         input.onkeydown = function(e){
+            var key_num = e.keyCode || e.which;
+
             if(e.keyCode == 13 && !e.shiftKey){
                 e.preventDefault();
                 if(get_value() != ""){
@@ -812,9 +816,80 @@ function livecalc(root_el, namespace, user){
                 if(get_value() == ""){
                     delete_cell(get_index());
                 }
+            } else {
+                // Detect if an operator
+                // was inserted (+ - * /)
+                // and wrap selected text
+                for(var i in operation_keys){
+                    var op = operation_keys[i];
+                    if(e.key == op){
+                        operation_keydown(e, op);
+                    }
+                }
             }
         }
 
+        /*
+          
+          Manage text selection smartly
+          when user types an operator + / - / * / '/'
+          
+          And move cursor to a practical position.
+
+         */
+        function operation_keydown(e, operation){
+            var start = input.selectionStart;
+            var end = input.selectionEnd;
+            
+            if(start != end){
+                e.preventDefault();
+
+                // By default, place cursor after operator
+                var inside = false;
+                
+                if( operation == "+" ||
+                    operation == "-"
+                  ){
+                    inside = true;
+                }
+                
+                var after = ")" + operation + "[[cursor]]";
+                    
+                if(inside){
+                    after = operation + "[[cursor]]" + ")";
+                } 
+                
+                selection_wrap("(", after, inside);
+            }
+        }
+
+        /*
+          before_sel : something to place before selection
+          after_sel : idem, after
+          inside : Put cursor inside of parens?
+         */
+        function selection_wrap(before_sel, after_sel,inside){
+            var start = input.selectionStart;
+            var end = input.selectionEnd;
+            var val = input.value;
+            var before = val.substr(0,start);
+            var between = val.substr(start, end - start); 
+            var after = val.substr(end,val.length - end);
+            
+            var new_val = before;
+            new_val += before_sel;
+            new_val += between;
+            new_val += after_sel;
+            new_val += after;
+
+            var new_start = new_val.indexOf("[[cursor]]");
+            new_val = new_val.replace("[[cursor]]","");
+            input.value = new_val;
+            
+            input.selectionStart = new_start;
+            input.selectionEnd = input.selectionStart;
+        } 
+        
         function go(){
             calculate();
             
