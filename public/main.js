@@ -865,36 +865,9 @@ function livecalc(root_el, namespace, user){
                     after = operation + "[[cursor]]" + ")";
                 } 
                 
-                selection_wrap("(", after, inside);
+                selection_wrap(input, "(", after, operation);
             }
         }
-
-        /*
-          before_sel : something to place before selection
-          after_sel : idem, after
-          inside : Put cursor inside of parens?
-         */
-        function selection_wrap(before_sel, after_sel,inside){
-            var start = input.selectionStart;
-            var end = input.selectionEnd;
-            var val = input.value;
-            var before = val.substr(0,start);
-            var between = val.substr(start, end - start); 
-            var after = val.substr(end,val.length - end);
-            
-            var new_val = before;
-            new_val += before_sel;
-            new_val += between;
-            new_val += after_sel;
-            new_val += after;
-
-            var new_start = new_val.indexOf("[[cursor]]");
-            new_val = new_val.replace("[[cursor]]","");
-            input.value = new_val;
-            
-            input.selectionStart = new_start;
-            input.selectionEnd = input.selectionStart;
-        } 
         
         function go(){
             calculate();
@@ -924,6 +897,64 @@ function livecalc(root_el, namespace, user){
         return exports;
     }
 
+    /*
+      before_sel : something to place before selection
+      after_sel : idem, after
+      
+      puts selections at [[cursor]] ans [[cursor-end]]
+    */
+    function selection_wrap(input, before_sel, after_sel, fallback, no_selection){
+        var fallback = fallback || "";
+        
+        var start = input.selectionStart;
+        var end = input.selectionEnd;
+
+        // if the browser does not support this feature,
+        // just add fallback at input end
+        if(input.selectionStart == undefined){
+            input.value += fallback;
+            return;
+        }
+
+        // If there is no selection
+        // add the appropriate value (no_selection) if present
+        // or the fallback
+        if(start == end){
+            before_sel = "";
+            after_sel = no_selection || (fallback + "[[cursor]]");
+        }
+
+        var val = input.value;
+        var before = val.substr(0,start);
+        var between = val.substr(start, end - start); 
+        var after = val.substr(end,val.length - end);
+        
+        var new_val = before;
+        new_val += before_sel;
+        new_val += between;
+        new_val += after_sel;
+        new_val += after;
+        
+        var new_start = new_val.indexOf("[[cursor]]");
+        new_val = new_val.replace("[[cursor]]","");
+        
+        var new_end = new_val.indexOf("[[cursor-end]]");
+
+        // Actually using [[cursor-end]]?
+        if(new_end != -1){
+            // Yes
+            new_val = new_val.replace("[[cursor-end]]","");
+        } else {
+            // Nope, just place cursor
+            new_end = new_start;
+        }
+
+        input.value = new_val;
+        
+        input.selectionStart = new_start;
+        input.selectionEnd = new_end;
+    } 
+    
     exports.new_cell = new_cell;
     
     function send_value(index){
@@ -1392,6 +1423,26 @@ function livecalc(root_el, namespace, user){
 
         function on_click(button, input){
             var value = button.innerText;
+
+            // Are we using selection_wrap?
+            if(button.hasAttribute("data-wrap-before")){
+                var before = button.getAttribute("data-wrap-before");
+                var after = "";
+                var fallback = button.innerText
+                var no_selection = fallback + "[[cursor]]";
+                
+                if(button.hasAttribute("data-wrap-after")){
+                    after = button.getAttribute("data-wrap-after")
+                }
+
+                if(button.hasAttribute("data-no-sel")){
+                    no_selection = button.getAttribute("data-no-sel")
+                }
+                
+                selection_wrap(input, before, after, fallback, no_selection);
+                
+                return;
+            }
             
             if(input.selectionStart != undefined){
                 var offset = input.selectionStart;

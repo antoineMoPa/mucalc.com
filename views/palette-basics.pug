@@ -1,7 +1,28 @@
 .palette-basics
   h4 Basics
   button(title='Last result') ans
-  button(title='Add') +
-  button(title='Substract') -
-  button(title='Multiply') *
-  button(title='Divide') /
+  button(title='Add', 
+         data-wrap-before="(",
+         data-wrap-after="+[[cursor]])",
+         ) +
+  button(title='Substract',
+         data-wrap-before="(",
+         data-wrap-after="-[[cursor]])",
+         ) -
+  button(title='Multiply',
+         data-wrap-before="(",
+         data-wrap-after=")*[[cursor]]",
+         ) *
+  button(title='Divide',
+         data-wrap-before="(",
+         data-wrap-after=")*[[cursor]]",
+         ) /
+  button(title='Exponent',
+         data-wrap-before="(",
+         data-wrap-after=")^[[cursor]]",
+         ) ^
+  button(title='Square root',
+         data-wrap-before="sqrt(",
+         data-wrap-after="[[cursor]])",
+         data-no-sel="sqrt([[cursor]])",
+         ) sqrt
