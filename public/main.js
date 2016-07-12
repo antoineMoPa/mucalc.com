@@ -381,8 +381,14 @@ function mathjs_compute_engine(){
 function livecalc(root_el, namespace, user){
     eeify_mathjs();
     var chat;
-    var scope = {};
+    var scope = default_scope();
     var current_focus = -1;
+
+    function default_scope(){
+        return {
+            ans: undefined
+        };
+    }
     
     // Create template
     render("livecalc", root_el);
@@ -615,7 +621,7 @@ function livecalc(root_el, namespace, user){
     }
 
     function re_run(){
-        scope = {};
+        scope = default_scope();
         for(var i = 0; i < cells.children.length; i++){
             cells.children[i].calculate();
         }
@@ -985,6 +991,7 @@ function livecalc(root_el, namespace, user){
         // Evaluate and display errors/result
         try{
             var result = math.eval(text, scope);
+            scope["ans"] = result;
         } catch (exception){
             output.textContent = exception;
             return;
@@ -1019,7 +1026,7 @@ function livecalc(root_el, namespace, user){
                 output.textContent = result;
             }
         } else {
-            output.textContent = result;
+            output.textContent = "[undefined]";
             return;
         }
         
