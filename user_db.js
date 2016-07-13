@@ -116,7 +116,7 @@ module.exports.exists_email = exists_email;
 function exists_email(email, callback){
     User.find({ email: email }, function(err, user){
         if(err){console.log(err)};
-        
+
         if(user.length > 0){
             callback(true, user[0]);
         } else {

@@ -6,19 +6,26 @@
       fieldset
         label User name (6-40 letters and numbers)
         br
-        input(type="text", pattern="^[AZa-z0-9]{6-40}$", name="username", placeholder="JohnSmith")
-    .text-left
-      button(type="submit" value="submit")
-        | Change username
+        input(type="text", pattern="^[A-Za-z0-9]{6,40}$", 
+              name="username", placeholder="JohnSmith", 
+              value=user.get_username()
+              )
+      .text-left
+        button(type="submit" value="submit")
+          | Change username
     h4 Change email address
     form(action="/account-email", method="post")
       fieldset 
         label New email address
         br
-        input(type="email", name="email", placeholder="email@email.com")
-    .text-left
-      button(type="submit" value="submit")
-        | Change email address
+        input(
+              type="email", name="email", 
+              placeholder="email@email.com",
+              value=user.get_email()
+              )
+      .text-left
+        button(type="submit" value="submit")
+          | Change email address
   col-md-6
     h4 Password Change
     form(action="/account-password", method="post")
