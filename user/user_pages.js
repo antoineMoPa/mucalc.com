@@ -194,7 +194,7 @@ module.exports = function(app, cache_user_model){
     app.get('/login', function (req, res) {
         if(!res.locals.logged_in){
             // If not logged in
-            res.render('base',{page: "login"});a
+            res.render('base',{page: "login"});
         } else {
             // If logged in, redirect to user dashboard
             res.redirect("/dashboard");
