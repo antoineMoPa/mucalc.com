@@ -13,6 +13,10 @@ module.exports.new_sheet = function(){
     });
 }
 
+module.exports.log_visit = function(what){
+    console.log("visit: " + what);
+}
+
 module.exports.new_sheet_visit = function(id){
     client.incr("visit_sheet:"+id, function(err, msg){
         if(err != null){

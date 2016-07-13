@@ -2,6 +2,7 @@
 
 module.exports = function(app, stats){
     app.get('/pricing', function (req, res) {
+        stats.log_visit("pricing-page");
         res.render('base',{page: "pricing"});
     });
     

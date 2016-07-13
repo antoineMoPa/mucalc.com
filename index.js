@@ -52,6 +52,7 @@ app.set('views', './views')
 app.set('view engine', 'pug');
 
 app.get('/', function (req, res) {
+    stats.log_visit("landing-page");
     res.render('base',{page: "landing"});
 });
 
