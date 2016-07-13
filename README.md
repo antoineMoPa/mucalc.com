@@ -1,4 +1,4 @@
-Code Status: Some features are broken today since I am working on login. Not production ready yet.
+Code Status: No major problem.
 
 # livecalc.xyz
 
