@@ -8,6 +8,10 @@ header h1{
     font-weight:300;
 }
 
+header p{
+    margin:15px 20px;
+}
+
 @media (max-width:768px){
     header h1{
         text-align:center!important;
@@ -35,7 +39,6 @@ header{
     display:block;
     padding-top:4px;
     padding-bottom:4px;
-    border-bottom:3px solid $color_3;
     position:relative;
     z-index:100;
 }
@@ -63,6 +66,7 @@ header button{
 
 .new-sheet-button{
     color:#fff;
+    display:inline-block;
     margin-right:20px;
 }
 
@@ -86,3 +90,24 @@ header button{
     }
 }
 
+nav{
+    text-align:center;
+}
+
+nav ul{
+    padding:0;
+    margin:0;
+    background:$color_5;
+}
+
+nav li{
+    display: inline-block;
+    padding:5px 20px;
+    &:hover{
+        background:darken($color_5, 10%);
+    }
+}
+
+nav a{
+    text-decoration: none;
+}

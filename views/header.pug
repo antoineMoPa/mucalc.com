@@ -1,4 +1,4 @@
-header(class=in_sheet? "in-sheet": "")
+header
   col-md-8
     h1.inline-block.mobile-center
       a(href='https://livecalc.xyz') livecalc.xyz
@@ -8,16 +8,23 @@ header(class=in_sheet? "in-sheet": "")
      target='_blank') project
       |  |
       |  Version 0.0.12
-  col-md-4.text-right.mobile-center.links
-    a.pricing-link(href='/pricing', target='_blank')
-      | Pricing
-    if !logged_in
-      a.login(href='/login')
-        | Log in
-    else
-      a.dashboard-link(href='/dashboard')
-        | Dashboard
-      a(href="/logout") Log out
-      
+  col-md-4.text-right.mobile-center.links        
     a.new-sheet-button(href='/new', target='_blank')
       button New Sheet
+nav
+  ul
+    li
+      a.pricing-link(href='/pricing', target='_blank')
+        | Pricing
+      
+    if !logged_in
+      li
+        a.login(href='/login')
+          | Log&nbsp;in
+    
+    else
+      li
+        a.dashboard-link(href='/dashboard')
+          | Dashboard
+      li
+        a(href="/logout") Log&nbsp;out

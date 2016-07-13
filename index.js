@@ -18,6 +18,7 @@ app.use(body_parser.urlencoded({extended: true}));
 
 // Add some user info for render
 app.use(function(req, res, next){
+    res.locals.page = "not-specified";
     get_user_model(req, function(user){
         res.locals.user = user || null;
         if(user == null){
@@ -36,6 +37,7 @@ app.use(sass_middleware({
     src: "./sass",
     dest: "./public/css",
     debug: false,
+    sourceMap: true,
     outputStyle: "compressed",
     prefix: "/css"
 }));
@@ -129,7 +131,8 @@ app.get("/sheet/:id",function (req, res) {
     } else {
         // Sheet exists
         res.render('base',{
-            in_sheet: true
+            in_sheet: true,
+            page: "sheet"
         });
     }
 });

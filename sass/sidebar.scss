@@ -21,7 +21,8 @@
 }
 
 @media all and (min-width:768px){
-    header.in-sheet{
+    .in-sheet header,
+    .in-sheet nav{
         width: 75%;
     }
 }

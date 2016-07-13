@@ -8,7 +8,7 @@ html
     link(rel='stylesheet', href='/fonts/fira/fira.css')
     link(rel='stylesheet', href='/css/style.css')
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    body(class="page-"+(page || ""))
+  body(class="page-"+(page || ""), class=in_sheet? "in-sheet": "")
     include ./header.pug
     if in_sheet
       col-md-9
