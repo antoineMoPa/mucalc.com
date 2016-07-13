@@ -3,6 +3,8 @@
 var cookie = require('cookie');
 var user_cache = require('./user_cache');
 
+var sheet_counter = require('./sheet_counter');
+
 var site_user_count = 0;
 
 /* old globals */
@@ -86,8 +88,8 @@ function livechat(namespace, nsp, socket, user){
 module.exports.livecalc = livecalc;
 function livecalc(namespace, nsp){
     var model = require("./sheet_model").create();
-    var sheet_user_count = 0;
-
+    var counter = sheet_counter.Counter();
+    
     namespaces.push(namespace);
 
     // Check if sheet exists
@@ -175,7 +177,7 @@ function livecalc(namespace, nsp){
             // Rate limiting.
             // while registered users are not managed,
             // leave this to 5
-            if(sheet_user_count >= 5){
+            if(counter.get() >= 5){
                 socket.emit("too many users");
                 return;
             }
@@ -185,20 +187,21 @@ function livecalc(namespace, nsp){
             stats.get_sheet_visits(namespace, function(num){
                 nsp.emit("sheet visit count", num);
             });
-            
-            sheet_user_count++;
+
+
+            counter.plus("anon");
             site_user_count++;
             
             console.log(
                 "connection    - " +
                     site_user_count +
                     " users in site, " +
-                    sheet_user_count +
+                    counter.get("anon") +
                     " users in sheet " +
                     namespace
             );
 
-            nsp.emit("user count", sheet_user_count);
+            nsp.emit("user count", counter.get("anon"));
 
             if(users[session_id] != undefined){
                 users[session_id].focus = -1;
@@ -256,15 +259,19 @@ function livecalc(namespace, nsp){
                         user.save();
                         // And in mongo
                         user.save_permanent();
+
+                        after();
                     });
                 } else {
                     user.set_nickname(nickname);
+                    after();
                 }
                 
-                users[session_id].nickname = nickname;
-
-                send_user_data();
-                send_focus_index();
+                function after(){
+                    users[session_id].nickname = nickname;
+                    send_user_data();
+                    send_focus_index();
+                }
             });
             
             function send_user_data(){
@@ -322,19 +329,19 @@ function livecalc(namespace, nsp){
             });
             
             socket.on("disconnect",function(socket){                
-                sheet_user_count--;
+                counter.minus("anon");
                 site_user_count--;
-
+                
                 console.log(
                     "disconnection - " +
                         site_user_count +
                         " users in site, " +
-                        sheet_user_count +
+                        counter.get("anon") +
                         " users in sheet " +
                         namespace
                 );
                 
-                nsp.emit("user count", sheet_user_count);
+                nsp.emit("user count", counter.get("anon"));
                 
                 if(registered){
                     // Save user in memory

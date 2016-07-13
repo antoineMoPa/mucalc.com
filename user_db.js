@@ -42,6 +42,11 @@ UserSchema.methods.verify_password = function(given_password){
     return false;
 };
 
+UserSchema.methods.update_password = function(new_password){
+    this.password = hash_password(new_password);
+    this.save();
+};
+
 module.exports.create = create;
 
 function create(data, callback){

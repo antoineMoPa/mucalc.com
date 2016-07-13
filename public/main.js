@@ -523,7 +523,7 @@ function livecalc(root_el, namespace, user){
             nickname = new_nickname;
             username_field.innerText = nickname;
         };
-
+        
         exports.on_user_data = function(data){
             user.set_public_id(data.public_id);
             exports.set_nickname(data.nickname);
@@ -1569,11 +1569,17 @@ function livechat(root_el, namespace, socket, user){
         root_el.innerHTML = "";
     };
 
+    var past_messages_loaded = false;
+    
     exports.on_user_ready = function(){
-        // Now that we know the user id, we
-        // load the messages
-        // (and we will be able to mark "own" messages)
-        socket.emit("load more messages",0);
+        // Only do this once
+        if(past_messages_loaded == false){
+            // Now that we know the user id, we
+            // load the messages
+            // (and we will be able to mark "own" messages)
+            socket.emit("load more messages",0);
+            past_messages_loaded = true;
+        }
     };
     
     function get_value(){
@@ -1608,7 +1614,7 @@ function livechat(root_el, namespace, socket, user){
         var chat_header = 15;
         var input_height = 40;
         var input_width = w - button_width - 60;
-        var chat_height = parseInt(2*winh/3 - input_height);
+        var chat_height = parseInt(winh/3 - input_height);
         
         textarea.style.width = (input_width)+"px";
         

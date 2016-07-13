@@ -88,6 +88,47 @@ module.exports = function(app, cache_user_model){
         });
     });
 
+    app.get('/account-password',function(req, res){
+        res.redirect("/account");
+    });
+    
+    app.post('/account-password', function (req, res) {
+        var user = res.locals.user || null;
+        var current_password = req.body.current_password || "";
+        var new_password = req.body.new_password || "";
+        var new_password_repeat = req.body.new_password_repeat || "";
+
+        if(user == null){
+            res.redirect("/signup");
+            return;
+        }
+                
+        user.fetch_permanent_user(function(){
+            var perm = user.get_permanent_user();
+            
+            if(!perm.verify_password(current_password)){
+                account_render(req, res, false, ["Wrong password"]);
+                return;
+            }
+
+            // Password length
+            if(new_password.length < 6){
+                account_render(req, res, false, ["Password is too short."]);
+                return;
+            }
+            
+            // Password & password repead match
+            if(new_password_repeat != new_password){
+                account_render(req, res, false,
+                               ["New passwords do not match."]);
+                return;
+            }
+            
+            perm.update_password(new_password);
+            account_render(req, res, true, "Password updated!");
+        });
+    });
+    
     app.get('/account-email',function(req, res){
         res.redirect("/account");
     });
@@ -140,7 +181,7 @@ module.exports = function(app, cache_user_model){
             });
         } else {
             var ip = get_ip(req);
-            console.log("unsuccessful username change: " + ip);
+            console.log("unsuccessful account operation: " + ip);
             
             res.render('base',{
                 page: "account",
@@ -153,7 +194,7 @@ module.exports = function(app, cache_user_model){
     app.get('/login', function (req, res) {
         if(!res.locals.logged_in){
             // If not logged in
-            res.render('base',{page: "login"});
+            res.render('base',{page: "login"});a
         } else {
             // If logged in, redirect to user dashboard
             res.redirect("/dashboard");
@@ -286,7 +327,7 @@ module.exports = function(app, cache_user_model){
         }
         
         // Password length
-        if(username.length < 6){
+        if(password.length < 6){
             success = false;
             errors.push("Password is too short.");
         }

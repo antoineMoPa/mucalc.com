@@ -11,6 +11,7 @@ function Counter(){
 
     data.counters = {};
 
+    var counters = data.counters;
     var types = [];
     
     exports.plus = function(type){
