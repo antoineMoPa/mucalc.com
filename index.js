@@ -67,6 +67,16 @@ app.get('/signup', function (req, res) {
     }
 });
 
+app.get('/account', function (req, res) {
+    if(res.locals.logged_in){
+        // If logged in
+        res.render('base',{page: "account"});
+    } else {
+        // Else, go to signup
+        res.redirect("/signup");
+    }
+});
+
 app.get('/login', function (req, res) {
     if(!res.locals.logged_in){
         // If not logged in
