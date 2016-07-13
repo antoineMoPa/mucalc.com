@@ -117,7 +117,8 @@ app.get("/sheet/:id",function (req, res) {
             if(exists){
                 livecalc.new_namespace(sheet_id);
                 res.render('base',{
-                    in_sheet: true
+                    in_sheet: true,
+                    page: "sheet"
                 });
                 
                 // For "recently visited sheets"
