@@ -346,10 +346,11 @@ function lc_network_engine(socket, shell){
         });
     };
 
-    exports.edit_cell = function(index, value){
+    exports.edit_cell = function(index, value, method){
         socket.emit("edit cell", {
             number: index,
-            content: value
+            content: value,
+            method: method
         });
     };
 
@@ -471,7 +472,8 @@ function livecalc(root_el, namespace, user){
     exports.on_edit_cell = function(data){
         var number = data.number;
         var content = data.content;
-        edit_cell(number, content);
+        var method = data.method;
+        edit_cell(number, content, method);
     };
 
     exports.on_sheet_locked = function(data){
@@ -731,10 +733,16 @@ function livecalc(root_el, namespace, user){
         cell_count = i;
     }
     
-    function edit_cell(number, content){
+    function edit_cell(number, content, method){
         grow_to(number);
-        var field = find_cell(number).input;
-        field.value = content;
+
+        if(method == "insert"){
+            new_cell(content, false, false, number);
+        } else {
+            var field = find_cell(number).input;
+            field.value = content;
+        }
+        
         calculate_cell(number);
     }
 
@@ -748,13 +756,41 @@ function livecalc(root_el, namespace, user){
         }
     }
 
-    function new_cell(content, send_data, animate){
+    function insert_cell_at(index, send_data, callback){
+        new_cell("", send_data, true, index);
+        callback();
+    }
+    
+    function new_cell(content, send_data, animate, at_index){
         var exports = {};
         var content = content || "";
-
+        var method = "append";
+        
+        if(at_index == undefined || at_index < 0){
+            at_index = -1;
+        } else {
+            method = "insert";
+        }
+        
         cell_count++;
         var cell = dom(load_template("livecalc-cell").content);
-        cells.appendChild(cell);
+
+        if(at_index == -1){
+            // Append at end
+            cells.appendChild(cell);
+        } else {
+            // Append at index
+            cells.insertBefore(
+                cell,                       // Insert this
+                find_cell(at_index).element // Before this cell
+            );
+        }
+
+        // This should not be used anymore,
+        // since it may change anytime.
+        // use get_index()
+        at_index = undefined;
+        
         update_indices();
 
         /* TODO: use find_cell instead */
@@ -767,6 +803,15 @@ function livecalc(root_el, namespace, user){
         
         if(animate == true){
             appear(cell);
+        }
+        
+        var add_cell_button = subqsa(cell, ".add-cell-button .inner")[0];
+
+        add_cell_button.onclick = function(){
+            var index = get_index();
+            insert_cell_at(index, true,function(){
+                focus(index);
+            });
         }
         
         input.setAttribute("value", content);
@@ -783,7 +828,7 @@ function livecalc(root_el, namespace, user){
                 hide(math_part);
             }
         });
-
+        
         // Hide these at beginning
         hide(text_part);
         hide(secondary_output);
@@ -902,7 +947,7 @@ function livecalc(root_el, namespace, user){
 
         if(send_data){
             send_focus(get_index());
-            send_value(get_index());
+            send_value(get_index(), method);
         }
         
         return exports;
@@ -959,7 +1004,7 @@ function livecalc(root_el, namespace, user){
             // Nope, just place cursor
             new_end = new_start;
         }
-
+        
         input.value = new_val;
         
         input.selectionStart = new_start;
@@ -968,12 +1013,14 @@ function livecalc(root_el, namespace, user){
     
     exports.new_cell = new_cell;
     
-    function send_value(index){
+    function send_value(index, method){
+        var method = method || "append";
+        
         var cell_data = find_cell(index);
         
         var input = cell_data.input;
 
-        net_engine.edit_cell(index, input.value);
+        net_engine.edit_cell(index, input.value, method);
     } 
     
     function calculate_cell(index){

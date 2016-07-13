@@ -1,0 +1,80 @@
+template(name='livecalc')
+  .livecalc
+    .livecalc-header
+      col-md-4.text-left.mobile-center
+        .sheet-state
+      col-md-4.text-center
+        .user-count(title='(Including you)')
+      col-md-4.text-right
+        .user-info.mobile-center
+          span.user-name
+            | Anonymous
+          if logged_in
+            |  - 
+            a(href="/dashboard", target="_blank") dashboard
+            |  - 
+            a(href="/logout") Log out
+          else
+            |  - 
+            a(href="/login") Log in
+    .livecalc-cells
+    template-instance(data-name='sheet-panel')
+    .panel
+      h3 Settings
+      template-instance(data-name='single-field',
+                        data-info='This name is used in the chat: '
+                        data-class='nickname', 
+                        data-default='anonymous')
+    template-instance(data-name='small-doc')
+template(name='sheet-panel')
+  .sheet-panel.panel
+    h3 Sheet Panel
+    col-md-3
+      | Lock sheet from further editing
+      br
+      button(name='lock-sheet')
+        | Lock Sheet
+    col-md-3
+      | Open a copy
+      br
+      button(name='new-copy')
+        | New Copy
+    br
+    h3 Stats
+    p
+      span.visit-count
+        0
+      |  visits.
+template(name='plot-interact-button')
+  .text-center
+    button.plot-interact
+      |  Interact with this plot
+template(name='fullscreen')
+  .fullscreen
+    .fullscreen-header
+      col-sm-6
+        h3.fullscreen-title
+      col-sm-6
+        .text-right
+          button.close-button
+            |  Close
+    .content
+template(name='livecalc-cell')
+  .template-wrapper
+    .add-cell-button
+      p.text-center.inner
+        | +
+    .livecalc-cell
+      .text-part
+      .math-part
+        fieldset
+          div
+            input.inline-block.livecalc-input(
+              type='text', 
+              placeholder='Type math')
+            button.inline-block.livecalc-go-button
+              | Go
+            pre.livecalc-output.
+            pre.livecalc-secondary-output
+        p.users-info
+        .plot

@@ -21,11 +21,14 @@ module.exports.create = function(){
         if(sheet.params.locked){
             return;
         }
-        
+
         var number = parseInt(data.number);
         var content = data.content;
-        
-        if(number >= 0){
+        var method = data.method;
+
+        if(method == "insert"){
+            sheet.cells.splice(number, 0, content);
+        } else if(number >= 0){
             sheet.cells[number] = content;
         }
     }

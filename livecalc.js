@@ -318,6 +318,14 @@ function livecalc(namespace, nsp){
                     save();
                 }
             });
+
+            socket.on("insert cell", function(data){
+                if(!model.is_locked()){
+                    model.insert_cell(data);
+                    socket.broadcast.emit("insert cell", data);
+                    save();
+                }
+            });
             
             socket.on("delete cell", function(data){
                 if(!model.is_locked()){
