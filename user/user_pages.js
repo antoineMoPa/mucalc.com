@@ -206,6 +206,11 @@ module.exports = function(app, cache_user_model){
     app.get('/logout', function (req, res){
         var session_id = cookie_utils.cookie_get_id(req);
         cookie_utils.cookie_send_id(res, "");
+
+        // So that the frontend does not think user
+        // is logged in.
+        res.locals.user = undefined;
+        res.locals.logged_in = false;
         
         cache_user_model.logout(session_id);
         
