@@ -711,6 +711,7 @@ function livecalc(root_el, namespace, user){
         return {
             element: el,
             input: subqsa(el, ".livecalc-input")[0],
+            button: subqsa(el, ".livecalc-go-button")[0],
             output: subqsa(el,".livecalc-output")[0],
             secondary_output: subqsa(el,".livecalc-secondary-output")[0],
             usersinfo: subqsa(el,".users-info")[0],
@@ -793,13 +794,13 @@ function livecalc(root_el, namespace, user){
 
         update_indices();
 
-        /* TODO: use find_cell instead */
-        var input = subqsa(cell, ".livecalc-input")[0];
-        var button = subqsa(cell, ".livecalc-go-button")[0];
-        var output = subqsa(cell, ".livecalc-output")[0];
-        var text_part = subqsa(cell, ".text-part")[0];
-        var math_part = subqsa(cell, ".math-part")[0];
-        var secondary_output = subqsa(cell, ".livecalc-secondary-output")[0];
+        var cell_data        = find_cell(get_index());
+        var input            = cell_data.input;
+        var button           = cell_data.button;
+        var output           = cell_data.output;
+        var text_part        = cell_data.text_part;
+        var math_part        = cell_data.math_part;
+        var secondary_output = cell_data.secondary_output;
 
         if(animate == true){
             appear(cell);
