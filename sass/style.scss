@@ -105,6 +105,11 @@ button{
     border-radius:2px;
     cursor:pointer;
     word-wrap: break-word;
+    transition:all 0.3s;
+
+    &:hover{
+        background:darken($color_3,10%);
+    }
 }
 
 button:first-child{
