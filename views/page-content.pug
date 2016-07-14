@@ -33,7 +33,9 @@
         col-md-6
           p.text-right.livecalc-sharing
               | Share this sheet: 
-              a(target="_blank", href=("https://twitter.com/intent/tweet?text=View%20this%20livecalc.xyz%20sheet:%20"+ share_url))
+              a(target="_blank", href="https://www.facebook.com/sharer/sharer.php?u=" + share_url)
+                | facebook
+              a(target="_blank", href=("https://twitter.com/intent/tweet?text=View%20this%20livecalc.xyz%20sheet:%20" + share_url))
                 | twitter 
               a(target="_blank",href=share_url).url-popup-modal
                 | URL
