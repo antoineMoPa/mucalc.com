@@ -33,5 +33,17 @@
     }
 }
 
+.sidebar-resize-header{
+    cursor: ns-resize;
+}
+
+livechat{
+    height:33%;
+}
+
+.palette{
+    height:66%;
+}
+
 @import "palette.scss";
 

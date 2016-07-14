@@ -19,7 +19,7 @@ function hide(el){
     el.classList.add("hidden");
 }
 
-/* 
+/*
    Determine if hidden
  */
 function hidden(el){
@@ -37,7 +37,7 @@ function show(el){
 
 /*
   Load a template
-  
+
   returns the HTML
  */
 function load_template(name){
@@ -46,7 +46,7 @@ function load_template(name){
     if(el == undefined){
         console.error("Template "+name+" does not exist.");
     }
-    
+
     var content = el.innerHTML;
 
     var params = el.getAttribute("data-params");
@@ -54,22 +54,22 @@ function load_template(name){
     if(params == "" || params == null){
         params = [];
     } else {
-        params = params.split(","); 
+        params = params.split(",");
     }
-    
+
     return {
         content: content,
         params: params
     };
 }
 
-/* 
+/*
    finds template-instances
-   
-   replaces handlebars by data- attributes 
-   
+
+   replaces handlebars by data- attributes
+
    {{meow}} will be replaced by attribute data-meow
-   
+
    (Sort of a preprocessor)
 */
 function instanciator(el){
@@ -85,12 +85,12 @@ function instanciator(el){
         for(var j = 0; j < params.length; j++){
             var attr = "data-"+params[j];
             var value = instance.getAttribute(attr);
-            
+
             // Sanitize value to avoid XSS
             value = value.replace(/[^A-Za-z0-9\-\.\_\: ]/g,"");
             var attr = attr.replace(/^data-/,"")
             var handle = "{{"+attr+"}}";
-            
+
             content = content.replace(handle,value);
         }
 
@@ -99,21 +99,21 @@ function instanciator(el){
 }
 
 /*
-  Create an instance of a template and put it in to_el, 
+  Create an instance of a template and put it in to_el,
   replacing the content
   Improvement idea: manage parameters and use this in instanciator
   instead of current code.
 */
 function render(template_name, to_el){
     var template = load_template(template_name).content;
-    
+
     var to_el = to_el || dom("<div></div>");
 
     to_el.innerHTML = template;
     instanciator(to_el);
-    
+
     return to_el;
-} 
+}
 
 /*
   Load a script
@@ -146,7 +146,7 @@ function disappear(el, effect){
 function appear(el, effect, reverse){
     var reverse = reverse || false;
     var effect = effect || "scale up";
-    
+
     var effects = {
         "scale up": {
             max: 3,
@@ -162,7 +162,7 @@ function appear(el, effect, reverse){
                 if(reverse){
                     ratio = 1 - ratio;
                 }
-                
+
                 el.style.opacity = "0.0";
                 el.style.opacity = 1.0 - ratio;
                 el.style.transform = "scale("+(1.0 - ratio)+")";
@@ -182,7 +182,7 @@ function appear(el, effect, reverse){
                 if(reverse){
                     ratio = 1 - ratio;
                 }
-                
+
                 el.style.opacity = "0.0";
                 el.style.opacity = 1.0 - ratio;
                 el.style.transformOrigin = "top";
@@ -209,7 +209,7 @@ function appear(el, effect, reverse){
             tmp(el);
         };
     }
-    
+
     animate(el, effect);
 }
 
@@ -271,7 +271,7 @@ function animate(el,options,step){
     }
 
     options.step(el, step, max);
-    
+
     setTimeout(
         function(){
             animate(el, options, step - 1);
@@ -295,7 +295,7 @@ function lc_network_engine(socket, shell){
     socket.on("user data", function(data){
         shell.on_user_data(data);
     });
-    
+
     socket.on("sheet",function(sheet){
         shell.on_sheet(sheet);
     });
@@ -371,12 +371,12 @@ function lc_network_engine(socket, shell){
     socket.on("sheet visit count", function(num){
         shell.on_visit_count(num);
     });
-    
+
     return exports;
 }
 
 function mathjs_compute_engine(){
-    
+
 }
 
 function livecalc(root_el, namespace, user){
@@ -390,10 +390,10 @@ function livecalc(root_el, namespace, user){
             ans: undefined
         };
     }
-    
+
     // Create template
     render("livecalc", root_el);
-    
+
     var cells = subqsa(root_el,".livecalc-cells")[0];
     var cell_count;
     var exports = {};
@@ -402,13 +402,13 @@ function livecalc(root_el, namespace, user){
     var params = {};
 
     var net_engine = lc_network_engine(socket, exports);
-    
+
     exports.el = root_el;
 
     exports.socket = socket;
-    
+
     new_cell("", true, true);
-    
+
     exports.on_sheet = function(sheet){
         load_json(sheet);
     };
@@ -424,14 +424,14 @@ function livecalc(root_el, namespace, user){
     {
         // share url activation
         var url_share_button = qsa(".url-popup-modal")[0];
-        
+
         url_share_button.onclick = function(e){
             e.preventDefault();
             var link = url_share_button.href;
             modal_inform(link);
         }
     }
-    
+
     exports.die = function(message){
         render("livecalc-die",root_el);
 
@@ -455,14 +455,14 @@ function livecalc(root_el, namespace, user){
                 }
             }
         ];
-        
+
         modal(message, buttons);
     };
-    
+
     exports.set_chat = function(c){
         chat = c;
     };
-    
+
     exports.on_user_count = function(count){
         var plural = count > 1;
         var count = parseInt(count);
@@ -482,22 +482,22 @@ function livecalc(root_el, namespace, user){
                data.initiator +
                "\". You can still open a copy."
              );
-        
+
         params.locked = true;
-        
+
         update_state();
     };
-    
+
     exports.on_focus_index = function(data){
         for(var i = 0; i < data.length; i++){
             var cell = find_cell(i);
-            
+
             if(cell == null){
                 return;
             }
-            
+
             var usersinfo = cell.usersinfo;
-            
+
             if(Array.isArray(data[i]) && data[i].length > 0){
                 usersinfo.textContent = data[i].join(", ") + " editing this cell...";
             } else {
@@ -505,7 +505,7 @@ function livecalc(root_el, namespace, user){
             }
         }
     };
-    
+
     exports.on_delete_cell = function(data){
         var number = data.number;
         delete_cell(number, true);
@@ -514,7 +514,7 @@ function livecalc(root_el, namespace, user){
     window.addEventListener("beforeunload", net_engine.close);
 
     var nickname = "";
-    
+
     function init_user_data(){
         var nickname_input = subqsa(root_el, ".nickname input")[0];
         var nickname_button = subqsa(root_el, ".nickname button")[0];
@@ -525,23 +525,23 @@ function livecalc(root_el, namespace, user){
             nickname = new_nickname;
             username_field.innerText = nickname;
         };
-        
+
         exports.on_user_data = function(data){
             user.set_public_id(data.public_id);
             exports.set_nickname(data.nickname);
             chat.on_user_ready();
         };
-        
+
         exports.send_nickname = function(){
             net_engine.send_nickname(nickname);
         }
-        
+
         nickname_input.onkeydown = function(e){
             if(e.keyCode == 13){
                 submit();
             }
         }
-        
+
         nickname_button.addEventListener("click",function(){
             submit();
         });
@@ -552,7 +552,7 @@ function livecalc(root_el, namespace, user){
             exports.send_nickname();
         }
     }
-    
+
     init_user_data();
 
     function init_sheet_panel(){
@@ -568,7 +568,7 @@ function livecalc(root_el, namespace, user){
                 modal_inform("This sheet is the public demo, it can't be locked.");
                 return;
             }
-            
+
             modal_yesno(
                 "This action cannot be undone. " +
                     "Nobody will be able to modify this " +
@@ -580,25 +580,25 @@ function livecalc(root_el, namespace, user){
                     }
                 });
         };
-        
+
         var new_copy_button = subqsa(
             root_el,
             "button[name='new-copy']"
         )[0];
-        
+
         new_copy_button.onclick = function(){
             window.location.href = "/copy/"+namespace;
         }
 
         var visit_count = subqsa(panel, ".visit-count")[0];
-        
+
         exports.on_visit_count = function(count){
             visit_count.textContent = count;
         };
     }
 
     init_sheet_panel();
-    
+
     /*
       Delete a cell. If remote, we don't send an event to the server.
      */
@@ -607,7 +607,7 @@ function livecalc(root_el, namespace, user){
 
         // Never delete last remaining cell
         var len = cells.children.length;
-        
+
         if((index > 0 || len > 1) && index < len){
             var cell = find_cell(index).element;
 
@@ -615,9 +615,9 @@ function livecalc(root_el, namespace, user){
             if(cell.getAttribute("data-deleting") == "true"){
                 return;
             }
-            
+
             cell.setAttribute("data-deleting","true");
-            
+
             animated_remove(cell,function(){
                 update_indices();
                 focus(index-1);
@@ -641,16 +641,16 @@ function livecalc(root_el, namespace, user){
     }
 
     exports.re_run = re_run;
-    
+
     function load_json(data){
         var data = JSON.parse(data);
         var cells = data.cells;
         params = data.params;
 
         update_state();
-        
+
         delete_all();
-        
+
         for(var i = 0; i < cells.length; i++){
             new_cell(cells[i], true, false);
         }
@@ -661,7 +661,7 @@ function livecalc(root_el, namespace, user){
     exports.load_json = load_json;
 
     var sheet_state = subqsa(root_el, ".sheet-state")[0];
-    
+
     function update_state(){
         if(params.locked){
             sheet_state.textContent = "This sheet is locked.";
@@ -673,7 +673,7 @@ function livecalc(root_el, namespace, user){
     }
 
     update_state();
-    
+
     function send_all(){
         for(var i = 0; i < cells.children.length; i++){
             send_value(i);
@@ -681,7 +681,7 @@ function livecalc(root_el, namespace, user){
     }
 
     exports.send_all = send_all;
-    
+
     function focus(index){
         if(index >= cell_count || index < 0){
             return;
@@ -692,7 +692,7 @@ function livecalc(root_el, namespace, user){
     }
 
     exports.focus = focus;
-    
+
     function send_focus(index){
         if(index == null){
             index = -1;
@@ -700,14 +700,14 @@ function livecalc(root_el, namespace, user){
         current_focus = index;
         net_engine.send_focus(index);
     }
-    
+
     function find_cell(index){
         var el = cells.children[index];
 
         if(el == undefined){
             return null;
         }
-        
+
         return {
             element: el,
             input: subqsa(el, ".livecalc-input")[0],
@@ -721,7 +721,7 @@ function livecalc(root_el, namespace, user){
     }
 
     exports.find_cell = find_cell;
-    
+
     function update_indices(){
         var i = 0;
         for(i = 0; i < cells.children.length; i++){
@@ -732,7 +732,7 @@ function livecalc(root_el, namespace, user){
         }
         cell_count = i;
     }
-    
+
     function edit_cell(number, content, method){
         grow_to(number);
 
@@ -742,7 +742,7 @@ function livecalc(root_el, namespace, user){
             var field = find_cell(number).input;
             field.value = content;
         }
-        
+
         calculate_cell(number);
     }
 
@@ -760,18 +760,18 @@ function livecalc(root_el, namespace, user){
         new_cell("", send_data, true, index);
         callback();
     }
-    
+
     function new_cell(content, send_data, animate, at_index){
         var exports = {};
         var content = content || "";
         var method = "append";
-        
+
         if(at_index == undefined || at_index < 0){
             at_index = -1;
         } else {
             method = "insert";
         }
-        
+
         cell_count++;
         var cell = dom(load_template("livecalc-cell").content);
 
@@ -790,7 +790,7 @@ function livecalc(root_el, namespace, user){
         // since it may change anytime.
         // use get_index()
         at_index = undefined;
-        
+
         update_indices();
 
         /* TODO: use find_cell instead */
@@ -800,11 +800,11 @@ function livecalc(root_el, namespace, user){
         var text_part = subqsa(cell, ".text-part")[0];
         var math_part = subqsa(cell, ".math-part")[0];
         var secondary_output = subqsa(cell, ".livecalc-secondary-output")[0];
-        
+
         if(animate == true){
             appear(cell);
         }
-        
+
         var add_cell_button = subqsa(cell, ".add-cell-button .inner")[0];
 
         add_cell_button.onclick = function(){
@@ -813,7 +813,7 @@ function livecalc(root_el, namespace, user){
                 focus(index);
             });
         }
-        
+
         input.setAttribute("value", content);
 
         /* Make sure inputs are shown on mouse click */
@@ -828,17 +828,17 @@ function livecalc(root_el, namespace, user){
                 hide(math_part);
             }
         });
-        
+
         // Hide these at beginning
         hide(text_part);
         hide(secondary_output);
-        
+
         function get_index(){
             return parseInt(cell.getAttribute("data-index"));
         }
 
         exports.get_index = get_index;
-        
+
         function get_value(){
             return input.value;
         }
@@ -850,16 +850,16 @@ function livecalc(root_el, namespace, user){
         input.addEventListener("click",function(){
             send_focus(get_index());
         });
-        
+
         /* lost focus */
         input.addEventListener("blur",function(){
             send_focus(-1);
         });
-        
+
         cell.calculate = calculate;
 
         var operation_keys = ["+","-","*","/"];
-                    
+
         input.onkeydown = function(e){
             var key_num = e.keyCode || e.which;
 
@@ -892,42 +892,42 @@ function livecalc(root_el, namespace, user){
         }
 
         /*
-          
+
           Manage text selection smartly
           when user types an operator + / - / * / '/'
-          
+
           And move cursor to a practical position.
 
          */
         function operation_keydown(e, operation){
             var start = input.selectionStart;
             var end = input.selectionEnd;
-            
+
             if(start != end){
                 e.preventDefault();
 
                 // By default, place cursor after operator
                 var inside = false;
-                
+
                 if( operation == "+" ||
                     operation == "-"
                   ){
                     inside = true;
                 }
-                
+
                 var after = ")" + operation + "[[cursor]]";
-                    
+
                 if(inside){
                     after = operation + "[[cursor]]" + ")";
-                } 
-                
+                }
+
                 selection_wrap(input, "(", after, operation);
             }
         }
-        
+
         function go(){
             calculate();
-            
+
             var index = get_index();
 
             // If last cell, add new cell
@@ -935,12 +935,12 @@ function livecalc(root_el, namespace, user){
                 new_cell("", true, true);
             }
         }
-        
+
         button.onclick = function(){
             send_value(get_index());
             go();
         };
-        
+
         exports.calculate = calculate;
 
         input.focus();
@@ -949,19 +949,19 @@ function livecalc(root_el, namespace, user){
             send_focus(get_index());
             send_value(get_index(), method);
         }
-        
+
         return exports;
     }
 
     /*
       before_sel : something to place before selection
       after_sel : idem, after
-      
+
       puts selections at [[cursor]] ans [[cursor-end]]
     */
     function selection_wrap(input, before_sel, after_sel, fallback, no_selection){
         var fallback = fallback || "";
-        
+
         var start = input.selectionStart;
         var end = input.selectionEnd;
 
@@ -982,18 +982,18 @@ function livecalc(root_el, namespace, user){
 
         var val = input.value;
         var before = val.substr(0,start);
-        var between = val.substr(start, end - start); 
+        var between = val.substr(start, end - start);
         var after = val.substr(end,val.length - end);
-        
+
         var new_val = before;
         new_val += before_sel;
         new_val += between;
         new_val += after_sel;
         new_val += after;
-        
+
         var new_start = new_val.indexOf("[[cursor]]");
         new_val = new_val.replace("[[cursor]]","");
-        
+
         var new_end = new_val.indexOf("[[cursor-end]]");
 
         // Actually using [[cursor-end]]?
@@ -1004,25 +1004,25 @@ function livecalc(root_el, namespace, user){
             // Nope, just place cursor
             new_end = new_start;
         }
-        
+
         input.value = new_val;
-        
+
         input.selectionStart = new_start;
         input.selectionEnd = new_end;
-    } 
-    
+    }
+
     exports.new_cell = new_cell;
-    
+
     function send_value(index, method){
         var method = method || "append";
-        
+
         var cell_data = find_cell(index);
-        
+
         var input = cell_data.input;
 
         net_engine.edit_cell(index, input.value, method);
-    } 
-    
+    }
+
     function calculate_cell(index){
         var cell_data = find_cell(index);
         currently_calculated_cell = cell_data;
@@ -1040,7 +1040,7 @@ function livecalc(root_el, namespace, user){
         plot_el.innerHTML = "";
         show(math_part);
         hide(secondary_output);
-        
+
         // Extract comment
         var comment_pos = value.indexOf("//");
 
@@ -1048,7 +1048,7 @@ function livecalc(root_el, namespace, user){
             text_comment = value.substr(comment_pos+2,value.length);
             math_value = value.substr(0,comment_pos);
         }
-        
+
         if(text_comment != "" && math_value == ""){
             // Has comment but no math
             // Show only text part
@@ -1074,7 +1074,7 @@ function livecalc(root_el, namespace, user){
             hide(text_part);
             return;
         }
-        
+
         var text = ee_parse(math_value);
 
         // Evaluate and display errors/result
@@ -1087,7 +1087,7 @@ function livecalc(root_el, namespace, user){
         }
 
         secondary_output.innerHTML = "";
-        
+
         if(text == ""){
             return;
         } else if(result != undefined){
@@ -1102,14 +1102,14 @@ function livecalc(root_el, namespace, user){
                 // and also show the non-rounded value.
                 if(result != rounded){
                     final_output = rounded;
-                    secondary_output.textContent = 
+                    secondary_output.textContent =
                         "Raw float value: " +
                         result;
                     show(secondary_output);
                 } else {
                     final_output = result;
                 }
-                
+
                 output.textContent = final_output;
             } else {
                 output.textContent = result;
@@ -1118,7 +1118,7 @@ function livecalc(root_el, namespace, user){
             output.textContent = "[undefined]";
             return;
         }
-        
+
         flash(output,"#09bc8a","#ffffff");
     }
 
@@ -1133,7 +1133,7 @@ function livecalc(root_el, namespace, user){
                 for(i in arguments){
                     var arg = arguments[i];
                     num += 1/arg;
-                }        
+                }
                 return 1 / num;
             },
             rule: function(number){
@@ -1154,17 +1154,17 @@ function livecalc(root_el, namespace, user){
             "π": math.pi
         });
     }
-    
-    /* 
-       Wait for user click before 
-       calculating something potentially long 
+
+    /*
+       Wait for user click before
+       calculating something potentially long
     */
     function wait_for_click(cell, callback){
         render("livecalc-wait-click", cell.plot);
-        
+
         var button = subqsa(cell.plot,"button")[0];
         button.onclick = go;
-        
+
         function go(){
             button.innerHTML = "Computing...";
             setTimeout(callback,100);
@@ -1178,24 +1178,24 @@ function livecalc(root_el, namespace, user){
         var number = parseInt(number);
 
         plot_el.innerHTML = "";
-        
+
         if(number < 0 || number > 255){
             throw "Number should be between 0 and 255";
         }
 
         var div_width = plot_el.clientWidth;
-        
+
         var grid_size = 100;
         var pixel_size = 4;
-        
+
         var width = grid_size;
         var height = grid_size;
 
         var can = dom("<canvas></canvas>");
         var ctx = can.getContext("2d");
-        
+
         plot_el.appendChild(can);
-        
+
         can.width = width * pixel_size;
         can.height = height * pixel_size;
 
@@ -1245,13 +1245,13 @@ function livecalc(root_el, namespace, user){
                 }
 
                 set_pixel(i, j, val);
-                
+
                 var cell_1 = last_line[i-1];
                 var cell_2 = last_line[i];
                 var cell_3 = last_line[i+1];
-                
+
                 var num = 0;
-                
+
                 if(cell_1){
                     num += 4;
                 }
@@ -1263,7 +1263,7 @@ function livecalc(root_el, namespace, user){
                 }
 
                 next = false;
-                
+
                 // `rule`: 8 bits
                 // `num`: 3 bits addressing `rule` bits
                 //
@@ -1285,7 +1285,7 @@ function livecalc(root_el, namespace, user){
                 if(number & parseInt(Math.pow(2,num))){
                     next = true;
                 }
-                
+
                 if(next){
                     line[i] = true;
                 } else {
@@ -1309,13 +1309,13 @@ function livecalc(root_el, namespace, user){
             }
             return line;
         }
-        
+
         ctx.putImageData(imgdata,0,0);
-        
+
         // We must return a value
         return "";
     }
-    
+
     function plot(){
         var plot_el = currently_calculated_cell.plot;
         var fullscreen_button = render("plot-interact-button");
@@ -1331,18 +1331,18 @@ function livecalc(root_el, namespace, user){
                 fn: expression
             });
         }
-        
-        
+
+
         // For most screens: keep this width
         // To optimize vertical space used +
         // pragmatic aspect ratio
         var width = 550;
-        
+
         // Smaller screens limit widthx
         if(div_width < 550){
             width = div_width - 10;
         }
-        
+
         functionPlot({
             target: plot_el,
             width: width,
@@ -1350,9 +1350,9 @@ function livecalc(root_el, namespace, user){
             data: functions_data,
             grid: true
         });
-        
+
         plot_el.appendChild(fullscreen_button);
-        
+
         fullscreen_button.onclick = function(){
             fullscreen(expression, function(content){
                 functionPlot({
@@ -1373,58 +1373,58 @@ function livecalc(root_el, namespace, user){
                 var close_button = subqsa(fullscreen_el, ".close-button")[0];
                 var content = subqsa(fullscreen_el, ".content")[0];
                 var title = subqsa(fullscreen_el, ".fullscreen-title")[0];
-                
+
                 title.textContent = title_text;
-                
+
                 close_button.onclick = function(){
                     fullscreen_el.parentNode.removeChild(fullscreen_el);
                 };
-                
+
                 document.body.appendChild(fullscreen_el);
                 callback(content);
             }
         }
-        
+
         // We must return a value
         return "";
     }
-    
+
     function zfractal(plot_el, expression, iterations, size){
         var iterations = iterations || 10;
         var exp = math.compile(expression);
 
         plot_el.innerHTML = "";
-        
+
         var div_width = plot_el.clientWidth;
         var pixel_ratio = 1;
-        
+
         var size = size || 30;
-        
+
         var width = size;
         var height = size;
-        
+
         var can = dom("<canvas></canvas>");
         var ctx = can.getContext("2d");
-        
+
         plot_el.appendChild(can);
-        
+
         // Make it square
         can.width = width * pixel_ratio;
         can.height = height * pixel_ratio;
 
         var data = ctx.createImageData(width, height);
-        
+
         for(var i = 0; i < width; i++){
             for(var j = 0; j < height; j++){
                 scope.c = math.complex(
                     4.0 * (i/width - 0.5),
                     4.0 * (j/height - 0.5)
                 );
-                
+
                 scope.z = math.complex(scope.c);
 
                 var val = 255;
-                
+
                 for(var k = 0; k < iterations; k++){
                     scope.z = exp.eval(scope);
                     if(len(scope.z) > 2.0){
@@ -1434,7 +1434,7 @@ function livecalc(root_el, namespace, user){
                 }
 
                 var index = 4 * (j * width + i);
-                        
+
                 data.data[index + 0] = val;
                 data.data[index + 1] = val;
                 data.data[index + 2] = val;
@@ -1443,17 +1443,19 @@ function livecalc(root_el, namespace, user){
         }
 
         ctx.putImageData(data,0,0);
-        
+
         function len(z){
             return Math.sqrt(
-                Math.pow(z.re,2) + 
+                Math.pow(z.re,2) +
                     Math.pow(z.im,2)
             );
         }
     }
 
     var palette_el = qsa(".palette")[0];
-    
+
+    exports.palette = palette_el;
+
     if(palette_el){
         init_palette(palette_el);
     }
@@ -1463,9 +1465,9 @@ function livecalc(root_el, namespace, user){
             // Prevent focus loss to input
             event.preventDefault();
             event.stopPropagation();
-            
+
             var el = event.target;
-            
+
             // Is it a button ?
             if(el.tagName.toLowerCase() == "button"){
                 var cell = find_cell(current_focus);
@@ -1488,7 +1490,7 @@ function livecalc(root_el, namespace, user){
                 var after = "";
                 var fallback = button.innerText
                 var no_selection = fallback + "[[cursor]]";
-                
+
                 if(button.hasAttribute("data-wrap-after")){
                     after = button.getAttribute("data-wrap-after")
                 }
@@ -1496,15 +1498,15 @@ function livecalc(root_el, namespace, user){
                 if(button.hasAttribute("data-no-sel")){
                     no_selection = button.getAttribute("data-no-sel")
                 }
-                
+
                 selection_wrap(input, before, after, fallback, no_selection);
-                
+
                 return;
             }
-            
+
             if(input.selectionStart != undefined){
                 var offset = input.selectionStart;
-                
+
                 var curr_val = input.value; // Current input value
                 var input_begin = curr_val.substr(0,offset);
                 var input_end = curr_val.substr(offset,curr_val.length);
@@ -1512,13 +1514,13 @@ function livecalc(root_el, namespace, user){
                 if(offset != input.selectionEnd){
                     // If some text is selected, we'll replace it
                     // So erase that part
-                    
+
                     input_end = curr_val.substr(
                         input.selectionEnd,
                         curr_val.length
                     );
                 }
-                
+
                 input.value =
                     input_begin +
                     value +
@@ -1528,7 +1530,7 @@ function livecalc(root_el, namespace, user){
                 // user cursor
                 var replace_var =
                     button.getAttribute("data-replace-var") || "";
-                
+
                 if(replace_var != ""){
                     var var_pos = value.indexOf(replace_var);
                     var var_len = replace_var.length;
@@ -1551,7 +1553,7 @@ function livecalc(root_el, namespace, user){
             }
         }
     }
-    
+
     return exports;
 }
 
@@ -1576,7 +1578,7 @@ function init_doc(calc){
     for(var i = 0; i < codes.length; i++){
         var el = codes[i];
         var content = el.innerHTML;
-        
+
         init_click(el, content);
         el.setAttribute("title","Click to add to sheet");
     }
@@ -1593,7 +1595,7 @@ function init_doc(calc){
 
 function livechat(root_el, namespace, socket, user){
     render("livechat", root_el);
-    
+
     var log = subqsa(root_el, ".message-log")[0];
     var textarea = subqsa(root_el, "textarea")[0];
     var button = subqsa(root_el, "button")[0];
@@ -1601,13 +1603,15 @@ function livechat(root_el, namespace, socket, user){
 
     textarea.value = "";
 
+    exports.root_el = root_el;
+
     exports.has_focus = false;
     exports.textarea = textarea;
-    
+
     textarea.addEventListener("focus",function(){
         exports.has_focus = true;
     });
-    
+
     textarea.addEventListener("blur",function(){
         exports.has_focus = false;
     });
@@ -1617,7 +1621,7 @@ function livechat(root_el, namespace, socket, user){
     };
 
     var past_messages_loaded = false;
-    
+
     exports.on_user_ready = function(){
         // Only do this once
         if(past_messages_loaded == false){
@@ -1628,15 +1632,15 @@ function livechat(root_el, namespace, socket, user){
             past_messages_loaded = true;
         }
     };
-    
+
     function get_value(){
         return textarea.value;
     }
-    
+
     function scroll_bottom(){
         log.scrollTop = log.scrollHeight;
     }
-    
+
     textarea.onkeydown = function(e){
         if(e.keyCode == 13 && !e.shiftKey){
             e.preventDefault();
@@ -1644,38 +1648,41 @@ function livechat(root_el, namespace, socket, user){
         }
     }
 
+    exports.resize = resize;
+
     /*
       Note: This is full of ugly hacks to position and size
       The chat elements.
      */
-    function resize(){
+    function resize(proportion){
         var winw = window.innerWidth;
         var winh = window.innerHeight;
+        var proportion = proportion || 1/3;
         var scroll = window.scrollY || 0;
-        
+
         /* set with to one column + margin */
         var w = (parseInt(winw)/4) - 10;
-        
+
         var button_width = button.clientWidth;
-                
+
         var chat_header = 15;
         var input_height = 40;
         var input_width = w - button_width - 60;
-        var chat_height = parseInt(winh/3 - input_height);
-        
+        var chat_height = parseInt(proportion * winh - input_height);
+
         textarea.style.width = (input_width)+"px";
-        
+
         log.style.height = (
             chat_height - input_height - chat_header - 10
         ) + "px";
     }
 
     resize();
-    
+
     window.addEventListener("resize", resize);
-    
+
     button.addEventListener("click",submit);
-    
+
     socket.on("new message", function(data){
         var el = render_message(data);
         log.appendChild(el);
@@ -1687,20 +1694,20 @@ function livechat(root_el, namespace, socket, user){
         log.appendChild(el);
         scroll_bottom();
     });
-    
+
     socket.on("past messages", function(messages){
         var user_id = user.get_public_id();
 
         for(var i = messages.length - 1; i >= 0; i--){
             var data = JSON.parse(messages[i]);
             var own = false;
-            
+
             if(data.public_id == user_id){
                 own = true;
             }
-            
+
             var el = render_message(data, own);
-            
+
             if(log.children[0] != undefined){
                 log.insertBefore(el, log.children[0]);
             } else {
@@ -1711,7 +1718,7 @@ function livechat(root_el, namespace, socket, user){
         // While this is used only at page load:
         scroll_bottom();
     });
-    
+
     function render_message(data, own){
         var el;
         if(own){
@@ -1729,7 +1736,7 @@ function livechat(root_el, namespace, socket, user){
         // Clickable links
         message.innerHTML = message.innerHTML
             .replace(/(https?\:\/\/[^\n ]*)/g,"<a href='$1' target='_blank'>$1</a>");
-        
+
         var sender = subqsa(el, ".sender")[0];
 
         // Put sender nickname
@@ -1744,22 +1751,22 @@ function livechat(root_el, namespace, socket, user){
 
         return el;
     }
-    
+
     // Send chat message
     function submit(){
         var val = get_value();
-        
+
         if(val != ""){
 
             // Only whitespace?
             if(val.match(/[^\s\n]/) == null){
                 return;
             }
-            
+
             socket.emit("new message",{
                 message: val
             });
-            
+
             textarea.value = "";
         }
     }
@@ -1771,7 +1778,7 @@ function User(){
     var exports = {};
 
     var public_id = "";
-    
+
     exports.has_id = function(){
         if(public_id == ""){
             return false;
@@ -1781,7 +1788,7 @@ function User(){
         }
         return true;
     }
-    
+
     exports.get_public_id = function(){
         return public_id;
     }
@@ -1789,7 +1796,7 @@ function User(){
     exports.set_public_id = function(id){
         public_id = id;
     }
-    
+
     return exports;
 }
 
@@ -1801,26 +1808,76 @@ var is_landing = qsa(".landing").length > 0? true: false;
 if(is_sheet){
     // In a sheet
     var namespace = /\/sheet\/(.*)/g.exec(href)[1];
-    
+
     var user = User();
-    
+
     // Start everything
     // Start calculator
     var calc = livecalc(qsa("livecalc")[0], namespace, user);
     var chat = livechat(qsa("livechat")[0], namespace, calc.socket, user);
     calc.set_chat(chat);
+
+    resizeable_sidebar_box(function(proportion){
+        chat.resize(1-proportion);
+    });
     
+    function resizeable_sidebar_box(callback){
+        // Make chat + palette resizable
+        var resizable_header = qsa(".sidebar-resize-header")[0];
+        var dragging = false;
+        var initial_pos = 0;
+        var upper_box = calc.palette;
+        var lower_box = chat.root_el;
+
+        resizable_header.addEventListener("mousedown",function(e){
+            e.preventDefault();
+            dragging = true;
+        });
+
+
+        resizable_header.addEventListener("mouseup",function(e){
+            dragging = false;
+        });
+
+        document.body.addEventListener("mousemove",function(e){
+            if(dragging){
+                var current_pos = e.clientY;
+                var proportion = current_pos / window.innerHeight;
+
+                proportion = clip(proportion, 0.2,0.8);
+                
+                var upper_proportion =
+                    parseInt(proportion * 100) + "%";
+                var lower_proportion =
+                    parseInt((1-proportion) * 100) + "%";
+
+                upper_box.style.height = upper_proportion;
+                lower_box.style.height = lower_proportion;
+
+                callback(proportion);
+
+                function clip(val, min, max){
+                    if(val > min){
+                        return val < max? val :max;
+                    } else {
+                        return min;
+                    }
+                }
+            }
+        });
+    }
+
     // Start documentation
     init_doc(calc);
 } else if (is_landing){
     // TODO: create something nice but easy on CPU for background
 }
 
-/** 
-    modal 
-    
-    Example: 
-    
+/**
+    modal
+
+    Example:
+
     var buttons = [
         {
             text: "Accept",
@@ -1836,7 +1893,7 @@ function modal(message, buttons){
     var content = subqsa(modal, ".content p")[0];
     var buttons_container = subqsa(modal, ".buttons")[0];
     var buttons = buttons || [];
-    
+
     content.textContent = message;
     document.body.appendChild(overlay);
     overlay.appendChild(modal);
@@ -1854,9 +1911,9 @@ function modal(message, buttons){
         var text = buttons[i].text || "No button text";
 
         button.textContent = text;
-            
+
         enable_click(button, callback);
-        
+
         buttons_container.appendChild(button);
     }
 
@@ -1866,7 +1923,7 @@ function modal(message, buttons){
             callback(exports);
         });
     }
-    
+
     return exports;
 }
 
@@ -1879,7 +1936,7 @@ function modal_inform(message){
             }
         }
     ];
-    
+
     return modal(message, buttons);
 }
 
@@ -1903,7 +1960,7 @@ function modal_yesno(message, callback){
             }
         }
     ];
-    
+
     return modal(message, buttons);
 }
 
