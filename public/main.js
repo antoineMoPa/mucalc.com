@@ -858,6 +858,16 @@ function livecalc(root_el, namespace, user){
 
         cell.calculate = calculate;
 
+        {
+            // manage delete cell button
+            var delete_cell_button
+                = subqsa(cell,".delete-cell-button")[0];
+
+            delete_cell_button.onclick = function(){
+                delete_cell(get_index());
+            };
+        }
+        
         var operation_keys = ["+","-","*","/"];
 
         input.onkeydown = function(e){

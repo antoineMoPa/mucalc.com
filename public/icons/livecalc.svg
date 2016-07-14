@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   id="svg2"
+   viewBox="0 0 199.99999 199.99999"
+   height="200"
+   width="200">
+  <defs
+     id="defs4" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(0,-852.36225)"
+     id="layer1">
+    <g
+       transform="translate(19.975764,0)"
+       id="g4190">
+      <circle
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-opacity:1"
+         id="path4140"
+         cx="9.9492826"
+         cy="862.37396"
+         r="9.3314562" />
+      <rect
+         transform="matrix(-0.70710678,0.70710678,0.70710678,0.70710678,0,0)"
+         ry="0"
+         y="616.24036"
+         x="597.51263"
+         height="1.1265482"
+         width="10.537461"
+         id="rect4138"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <rect
+         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         id="rect3336"
+         width="10.537461"
+         height="1.1265482"
+         x="611.53491"
+         y="602.21814"
+         ry="0"
+         transform="matrix(0.70710678,0.70710678,-0.70710678,0.70710678,0,0)" />
+    </g>
+    <text
+       id="text4224"
+       y="836.36224"
+       x="-48"
+       style="font-style:normal;font-weight:normal;font-size:6.25000306px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       xml:space="preserve"><tspan
+         y="836.36224"
+         x="-48"
+         id="tspan4226" /></text>
+    <text
+       id="text4228"
+       y="692.36224"
+       x="-60"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         y="692.36224"
+         x="-60"
+         id="tspan4230">livecalc-source.svg: inscape svg</tspan><tspan
+         id="tspan4232"
+         y="742.36224"
+         x="-60">livecalc.svg: plain svg</tspan></text>
+  </g>
+</svg>

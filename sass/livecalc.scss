@@ -1,6 +1,27 @@
 .livecalc-cell{
     margin-top:5px;
     margin-bottom:5px;
+    position:relative;
+}
+
+.cell-and-button-wrapper{
+    .delete-cell-button{
+        position:absolute;
+        cursor:pointer;
+        top:-10px;
+        right:-10px;
+        opacity:0.1;
+        transition:all 0.3s;
+        &:hover{
+            opacity:1;
+            transform:rotate(90deg); /* oh yeah! */
+        }
+    }
+
+    /* last cell can't be deleted anyway */
+    &:last-child .delete-cell-button{
+        display:none;
+    }
 }
 
 .livecalc-cell .text-part{
@@ -150,4 +171,3 @@ livecalc{
         }
     }
 }
-
