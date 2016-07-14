@@ -310,15 +310,32 @@ function livecalc(namespace, nsp){
                     initiator: users[session_id].nickname
                 });
             });
-            
-            socket.on("edit cell", function(data){
+
+            /*
+              When a user submits a cell by pressing enter
+              or "go", the model is updated and the info 
+              is sent to other users, overwriting current value
+              for all users.
+             */
+            socket.on("definitive edit", function(data){
                 if(!model.is_locked()){
                     model.edit(data);
-                    socket.broadcast.emit("edit cell", data);
+                    socket.broadcast.emit("definitive edit", data);
                     save();
                 }
             });
 
+            /*
+              Live edits are not definitive
+              They are just there to show what other users
+              are typing
+             */
+            socket.on("live edit", function(data){
+                if(!model.is_locked()){
+                    socket.broadcast.emit("live edit", data);
+                }
+            });
+            
             socket.on("insert cell", function(data){
                 if(!model.is_locked()){
                     model.insert_cell(data);

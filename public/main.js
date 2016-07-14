@@ -304,10 +304,14 @@ function lc_network_engine(socket, shell){
         shell.on_user_count(count);
     });
 
-    socket.on("edit cell",function(data){
+    socket.on("definitive edit",function(data){
         shell.on_edit_cell(data);
     });
-
+    
+    socket.on("live edit",function(data){
+        shell.on_live_edit(data);
+    });
+    
     socket.on("sheet locked",function(data){
         shell.on_sheet_locked(data);
     });
@@ -347,13 +351,21 @@ function lc_network_engine(socket, shell){
     };
 
     exports.edit_cell = function(index, value, method){
-        socket.emit("edit cell", {
+        socket.emit("definitive edit", {
             number: index,
             content: value,
             method: method
         });
     };
 
+    
+    exports.live_edit_cell = function(index, value){
+        socket.emit("live edit", {
+            number: index,
+            content: value,
+        });
+    };
+    
     exports.ask_user_id = function(){
         socket.emit("give user id");
     };
@@ -873,21 +885,32 @@ function livecalc(root_el, namespace, user){
 
         input.onkeydown = function(e){
             var key_num = e.keyCode || e.which;
-
+            var has_live_edit = true;
+            
             if(e.keyCode == 13 && !e.shiftKey){
+                // Enter key
                 e.preventDefault();
                 if(get_value() != ""){
                     send_value(get_index());
                     go();
+
+                    // Edit will already be send
+                    has_live_edit = false;
                 }
             } else if (e.keyCode == 38) {
+                // Up arrow
                 focus(get_index()-1);
             } else if (e.keyCode == 40) {
+                // Down arrow
                 focus(get_index()+1);
             } else if(e.code == "Backspace"){
                 // Delete cell
                 if(get_value() == ""){
                     delete_cell(get_index());
+
+                    // delete_cell fires a delete event
+                    // sending edit would be a problem
+                    has_live_edit = false;
                 }
             } else {
                 // Detect if an operator
@@ -899,6 +922,35 @@ function livecalc(root_el, namespace, user){
                         operation_keydown(e, op);
                     }
                 }
+            }
+
+            if(has_live_edit){
+                send_live_throttled();
+            }
+            
+            var last_live_edit_send = time();
+            var time_threshold = 350;
+            var has_waiting_timeout = false;
+            
+            /* Send data, but not too often */
+            function send_live_throttled(){
+                if(time() - last_live_edit_send > time_threshold){
+                    send_live_edit(get_index());
+                } else {
+                    if(!has_waiting_timeout){
+                        setTimeout(function(){
+                            send_live_throttled();
+                            has_waiting_timeout = false;
+                        },
+                                   time() - time_threshold
+                                  );
+                        has_waiting_timeout = true;
+                    }
+                }
+            }
+            
+            function time(){
+                return (new Date()).getTime();
             }
         }
 
@@ -1024,6 +1076,20 @@ function livecalc(root_el, namespace, user){
 
     exports.new_cell = new_cell;
 
+    function send_live_edit(index){
+        var cell_data = find_cell(index);
+        var input = cell_data.input;
+        net_engine.live_edit_cell(index, input.value);
+    }
+
+    exports.on_live_edit = on_live_edit;
+    
+    function on_live_edit(data){
+        var cell_data = find_cell(data.number);
+        var input = cell_data.input;
+        input.value = data.content;
+    }
+    
     function send_value(index, method){
         var method = method || "append";
 
