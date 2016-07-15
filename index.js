@@ -151,18 +151,47 @@ app.get("/copy/:id",function (req, res) {
 });
 
 app.get("/new",function (req, res) {
+    new_sheet(req, res);
+});
+
+function new_sheet(req, res, data){
     // Todo: verify if a sheet already has same token
     // Not so probable...
     // Nope, new sheet
     stats.new_sheet();
     
     var token = require("./tokens").generate_token();
-
+    
     var model = require("./sheet_model").create();
     
+    if(data != undefined){
+        model.set_sheet(data);
+    }
+
     sheet_db.store_sheet(token, model.get_sheet());
     
     res.redirect("/sheet/"+token);
+}
+
+app.get("/new/:template",function (req, res) {
+    var available_templates = [
+        "circle-area",
+        "sin-x",
+        "convert-round"
+    ];
+    
+    var template = req.params.template;
+    
+    var index = available_templates.indexOf(template);
+    
+    if(index != -1){
+        var filename = available_templates[index] + ".json";
+        var content = require("./json/"+filename);
+        
+        new_sheet(req, res, content);
+    } else {
+        res.status(404).send('Template not found');
+    }
 });
 
 http.listen(3000);

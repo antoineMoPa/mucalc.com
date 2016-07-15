@@ -1,0 +1,12 @@
+{"params": {"title":"Empty","locked":false},
+ "cells": [
+     "my_angle = 45 deg",
+     "my_angle in rad",
+     "theta = my_angle in rad",
+     "sin(theta)",
+     "sin(45 deg)",
+     "sin(0.785)",
+     "plot(\"sin(x)\")"
+ ]
+}
+
