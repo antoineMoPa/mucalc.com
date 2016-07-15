@@ -50,3 +50,14 @@ body.page-landing{
     }
 }
 
+.examples{
+    background:lighten($color_3,6%);
+    padding-bottom:20px;
+
+    .example{
+        background:#fff;
+        h3{
+            color:$color_2;
+        }
+    }
+}
