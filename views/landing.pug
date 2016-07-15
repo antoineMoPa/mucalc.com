@@ -5,7 +5,9 @@
     br
     br
     |  To use livecalc.xyz, create a 
-    a(href='/new', target='_blank') new sheet
+    a(href='/new', target='_blank') new blank sheet
+    |  or try an 
+    a(href='#example-list') example
     br
     |  Up to 3 users can edit a sheet at the same time,
     br
@@ -15,6 +17,14 @@
     |  Have fun!
     br
     br
+  .examples
+    h1#example-list
+      | Try an example
+    p
+      | Click one of the launch buttons to create a new sheet with a pre-loaded example.
+    br
+    include ./landing-examples.pug
+    clearfix
   .features
     .block-center
       h3 Features
@@ -41,14 +51,6 @@
           li Chat with your teammates
           li Completely open source
 
-  .examples
-    h1
-      | Try an example
-    p
-      | Click one of the launch buttons to create a new sheet with a pre-loaded example.
-    br
-    include ./landing-examples.pug
-    clearfix
 
 p.text-center
   | Contribute code & issues on 
