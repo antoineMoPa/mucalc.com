@@ -13,6 +13,10 @@ module.exports.new_sheet = function(){
     });
 }
 
+module.exports.launch_example = function(name){
+    console.log("launch example: " + name);
+}
+
 module.exports.log_visit = function(what){
     console.log("visit: " + what);
 }

@@ -185,9 +185,10 @@ app.get("/new/:template",function (req, res) {
     var index = available_templates.indexOf(template);
     
     if(index != -1){
-        var filename = available_templates[index] + ".json";
+        var name = available_templates[index];
+        var filename = name + ".json";
         var content = require("./json/"+filename);
-        
+        stats.launch_example(name);
         new_sheet(req, res, content);
     } else {
         res.status(404).send('Template not found');
