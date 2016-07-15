@@ -593,22 +593,42 @@ function livecalc(root_el, namespace, user){
                 });
         };
 
-        var new_copy_button = subqsa(
-            root_el,
-            "button[name='new-copy']"
-        )[0];
-
-        new_copy_button.onclick = function(){
-            window.location.href = "/copy/"+namespace;
+        {
+            // New copy button
+            var new_copy_button = subqsa(
+                root_el,
+                "button[name='new-copy']"
+            )[0];
+            
+            new_copy_button.onclick = function(){
+                window.location.href = "/copy/"+namespace;
+            }
         }
 
-        var visit_count = subqsa(panel, ".visit-count")[0];
+        {
+            // View JSON button
+            var view_json_button = subqsa(
+                root_el,
+                "button[name='view-json']"
+            )[0];
+            
+            view_json_button.onclick = function(){
+                var json = get_json();
+                modal_inform(json);
+            }
+        }
 
-        exports.on_visit_count = function(count){
-            visit_count.textContent = count;
-        };
+        {
+            // Visit count
+            var visit_count = subqsa(panel, ".visit-count")[0];
+            
+            exports.on_visit_count = function(count){
+                visit_count.textContent = count;
+            };
+        }
+        
     }
-
+    
     init_sheet_panel();
 
     /*
@@ -654,6 +674,22 @@ function livecalc(root_el, namespace, user){
 
     exports.re_run = re_run;
 
+    function get_json(){
+        var data = {};
+
+        var count = cells.children.length;
+        
+        data.params = params;
+        data.cells = [];
+
+        for(var i = 0; i < count; i++){
+            var input = find_cell(i).input;
+            data.cells.push(input.value);
+        }
+
+        return JSON.stringify(data);
+    }
+    
     function load_json(data){
         var data = JSON.parse(data);
         var cells = data.cells;
@@ -1986,9 +2022,9 @@ function modal(message, buttons){
         var button = dom("<button></button>");
         var callback = buttons[i].action || function(){};
         var text = buttons[i].text || "No button text";
-
+        
         button.textContent = text;
-
+        
         enable_click(button, callback);
 
         buttons_container.appendChild(button);
