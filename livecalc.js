@@ -321,6 +321,7 @@ function livecalc(namespace, nsp){
                 if(!model.is_locked()){
                     model.edit(data);
                     socket.broadcast.emit("definitive edit", data);
+                    socket.emit("cell saved", data);
                     save();
                 }
             });

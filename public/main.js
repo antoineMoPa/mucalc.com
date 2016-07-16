@@ -307,6 +307,10 @@ function lc_network_engine(socket, shell){
     socket.on("definitive edit",function(data){
         shell.on_edit_cell(data);
     });
+
+    socket.on("cell saved",function(data){
+        shell.on_cell_saved(data);
+    });
     
     socket.on("live edit",function(data){
         shell.on_live_edit(data);
@@ -488,6 +492,10 @@ function livecalc(root_el, namespace, user){
         edit_cell(number, content, method);
     };
 
+    exports.on_cell_saved = function(data){
+        cell_state_saved(data.number);
+    };
+    
     exports.on_sheet_locked = function(data){
         // data.initiator is normally sanited on server
         modal_inform( "Sheet was locked by \"" +
@@ -508,12 +516,12 @@ function livecalc(root_el, namespace, user){
                 return;
             }
 
-            var usersinfo = cell.usersinfo;
+            var users_info = cell.users_info;
 
             if(Array.isArray(data[i]) && data[i].length > 0){
-                usersinfo.textContent = data[i].join(", ") + " editing this cell...";
+                users_info.textContent = data[i].join(", ") + " editing this cell...";
             } else {
-                usersinfo.textContent = "";
+                users_info.textContent = "";
             }
         }
     };
@@ -749,6 +757,19 @@ function livecalc(root_el, namespace, user){
         net_engine.send_focus(index);
     }
 
+    function cell_state_unsaved(index){
+        var cell = find_cell(index);
+        var cell_state = cell.cell_state;
+        cell_state.innerText = "Cell not saved. Press enter/go to save.";
+    }
+    
+    function cell_state_saved(index){
+        var cell = find_cell(index);
+        var cell_state = cell.cell_state;
+
+        cell_state.innerText = "Cell saved";
+    }
+
     function find_cell(index){
         var el = cells.children[index];
 
@@ -762,7 +783,8 @@ function livecalc(root_el, namespace, user){
             button: subqsa(el, ".livecalc-go-button")[0],
             output: subqsa(el,".livecalc-output")[0],
             secondary_output: subqsa(el,".livecalc-secondary-output")[0],
-            usersinfo: subqsa(el,".users-info")[0],
+            users_info: subqsa(el,".users-info")[0],
+            cell_state: subqsa(el,".cell-state")[0],
             text_part: subqsa(el,".text-part")[0],
             math_part: subqsa(el,".math-part")[0],
             plot: subqsa(el,".plot")[0]
@@ -848,6 +870,7 @@ function livecalc(root_el, namespace, user){
         var output           = cell_data.output;
         var text_part        = cell_data.text_part;
         var math_part        = cell_data.math_part;
+        var cell_state        = cell_data.cell_state;
         var secondary_output = cell_data.secondary_output;
 
         if(animate == true){
@@ -919,6 +942,8 @@ function livecalc(root_el, namespace, user){
         
         var operation_keys = ["+","-","*","/"];
 
+        var last_value = input.value;
+        
         input.onkeydown = function(e){
             var key_num = e.keyCode || e.which;
             var has_live_edit = true;
@@ -960,9 +985,19 @@ function livecalc(root_el, namespace, user){
                 }
             }
 
+            // Live edits does not include
+            // cell deletion
             if(has_live_edit){
-                send_live_throttled();
+                // Verify if value actually changed
+                if(input.value != last_value){
+                    send_live_throttled();
+                    // Inform user that
+                    // data is not on server yet
+                    cell_state_unsaved(get_index())
+                }
             }
+
+            last_value = input.value;
             
             var last_live_edit_send = time();
             var time_threshold = 350;
@@ -1132,7 +1167,7 @@ function livecalc(root_el, namespace, user){
         var cell_data = find_cell(index);
 
         var input = cell_data.input;
-
+        
         net_engine.edit_cell(index, input.value, method);
     }
 

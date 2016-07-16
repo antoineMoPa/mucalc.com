@@ -94,14 +94,14 @@
     border-bottom:2px solid $body_bg;
 }
 
+.livecalc .cell-state,
 .livecalc .users-info{
-    text-align:right;
     font-size:11px;
     margin:5px;
+    margin-left:10px;
 }
 
 .livecalc .plot{
-    margin:10px 10px;
 }
 
 .livecalc .plot .livecalc-wait-click,

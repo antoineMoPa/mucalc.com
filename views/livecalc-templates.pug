@@ -83,7 +83,11 @@ template(name='livecalc-cell')
               placeholder='Type math')
             button.inline-block.livecalc-go-button
               | Go
-            pre.livecalc-output.
+            pre.livecalc-output
             pre.livecalc-secondary-output
-        p.users-info
+        col-sm-6
+          p.cell-state.text-left
+        col-sm-6
+          p.users-info.text-right
+        clearfix
         .plot
