@@ -1061,7 +1061,7 @@ function livecalc(root_el, namespace, user){
 
         function go(){
             calculate();
-
+            
             var index = get_index();
 
             // If last cell, add new cell
@@ -1622,16 +1622,40 @@ function livecalc(root_el, namespace, user){
 
                 if(cell != null){
                     var input = cell.input;
-                    on_click(el, input);
+                    on_click(el, input,{
+                        go: function(){
+                            calculate_cell(current_focus)
+                            send_value(current_focus);
+
+                            // If last cell, add new cell
+                            if(current_focus == cell_count - 1){
+                                new_cell("", true, true);
+                            }
+                        }
+                    });
                 } else if (chat.has_focus){
                     on_click(el, chat.textarea);
                 }
             }
         });
 
-        function on_click(button, input){
+        function on_click(button, input, callbacks){
             var value = button.innerText;
+            var callbacks = callbacks || {};
 
+            // Does this button have a custom action?
+            if(button.hasAttribute("action")){
+                // Execute it instead
+                var action = button.getAttribute("action");
+
+                if(callbacks[action] != undefined){
+                    var cb = callbacks[action];
+                    cb();
+                }
+                
+                return;
+            }
+            
             // Are we using selection_wrap?
             if(button.hasAttribute("data-wrap-before")){
                 var before = button.getAttribute("data-wrap-before");
