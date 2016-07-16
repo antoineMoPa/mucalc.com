@@ -1619,7 +1619,6 @@ function livecalc(root_el, namespace, user){
             // Is it a button ?
             if(el.tagName.toLowerCase() == "button"){
                 var cell = find_cell(current_focus);
-
                 if(cell != null){
                     var input = cell.input;
                     on_click(el, input,{
@@ -1635,6 +1634,12 @@ function livecalc(root_el, namespace, user){
                     });
                 } else if (chat.has_focus){
                     on_click(el, chat.textarea);
+                } else {
+                    modal_inform(
+                        "Nothing is selected."+
+                            " Tip: Click on a cell's input "+
+                            "field or on the chat, then use palette."
+                    );
                 }
             }
         });
