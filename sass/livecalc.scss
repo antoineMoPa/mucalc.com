@@ -41,6 +41,11 @@
     padding-bottom:5px;
 }
 
+.livecalc-cell .math-part{
+    max-width:100%;
+    overflow-x:hidden;
+}
+
 .livecalc fieldset{
     border:none;
     margin:0;
