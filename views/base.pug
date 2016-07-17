@@ -25,8 +25,10 @@ html
     include ./templates.pug
 
   script(src='/lib/math.min.js')
-  script(src='/lib/d3.min.js', charset='utf-8')
-  script(src='/lib/function-plot.js', charset='utf-8')
+  script(src='/lib/d3.min.js')
+  script(src='/lib/function-plot.js')
   script(src='/lib/socket.io.js')
-  script(src='/lib/diff.min.js')
+  // ",Safe" disables \href in LaTeX, and has other
+  // security features.
+  script(src='/lib/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe')
   script(src='/main.js')

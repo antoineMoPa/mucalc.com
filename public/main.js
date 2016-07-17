@@ -490,6 +490,7 @@ function livecalc(root_el, namespace, user){
         var content = data.content;
         var method = data.method;
         edit_cell(number, content, method);
+        update_mathjax(data.number);
     };
 
     exports.on_cell_saved = function(data){
@@ -786,6 +787,7 @@ function livecalc(root_el, namespace, user){
             users_info: subqsa(el,".users-info")[0],
             cell_state: subqsa(el,".cell-state")[0],
             text_part: subqsa(el,".text-part")[0],
+            mathjax_output: subqsa(el,".mathjax-output")[0],
             math_part: subqsa(el,".math-part")[0],
             plot: subqsa(el,".plot")[0]
         };
@@ -870,7 +872,7 @@ function livecalc(root_el, namespace, user){
         var output           = cell_data.output;
         var text_part        = cell_data.text_part;
         var math_part        = cell_data.math_part;
-        var cell_state        = cell_data.cell_state;
+        var cell_state       = cell_data.cell_state;
         var secondary_output = cell_data.secondary_output;
 
         if(animate == true){
@@ -1007,14 +1009,17 @@ function livecalc(root_el, namespace, user){
             function send_live_throttled(){
                 if(time() - last_live_edit_send > time_threshold){
                     send_live_edit(get_index());
+                    update_mathjax(get_index());
                 } else {
                     if(!has_waiting_timeout){
-                        setTimeout(function(){
-                            send_live_throttled();
-                            has_waiting_timeout = false;
-                        },
-                                   time() - time_threshold
-                                  );
+                        setTimeout(
+                            function(){
+                                send_live_throttled();
+                                has_waiting_timeout = false;
+                            },
+                            time() - time_threshold
+                        );
+                        
                         has_waiting_timeout = true;
                     }
                 }
@@ -1025,6 +1030,9 @@ function livecalc(root_el, namespace, user){
             }
         }
 
+        // Run at load
+        update_mathjax(get_index());
+        
         /*
 
           Manage text selection smartly
@@ -1061,9 +1069,11 @@ function livecalc(root_el, namespace, user){
 
         function go(){
             calculate();
-            
+
             var index = get_index();
 
+            update_mathjax(index);
+            
             // If last cell, add new cell
             if(index == cell_count - 1){
                 new_cell("", true, true);
@@ -1086,7 +1096,7 @@ function livecalc(root_el, namespace, user){
 
         return exports;
     }
-
+    
     /*
       before_sel : something to place before selection
       after_sel : idem, after
@@ -1146,13 +1156,56 @@ function livecalc(root_el, namespace, user){
     }
 
     exports.new_cell = new_cell;
+    
+    function update_mathjax(index){
+        var cell_data = find_cell(index);
+        var input            = cell_data.input;
+        var mathjax_output   = cell_data.mathjax_output;
 
+        {
+            // Reduce height change glitches
+            // Caused by removing element
+            mathjax_output.style.minHeight =
+                mathjax_output.clientHeight +
+                10 + "px";
+
+            setTimeout(function(){
+                mathjax_output.style.minHeight = 0;
+            },3000);
+        }
+        
+        mathjax_output.innerHTML = "";
+        
+        if(input.value == ""){
+            return;
+        }
+        
+        var content;
+        
+        try{
+            content = math.parse(input.value);
+        } catch (e){
+            return;
+        }
+        
+        var tex = "$$"+content.toTex()+"$$";
+        
+        var div = MathJax.HTML.Element(
+            "div",
+            {},
+            tex
+        );
+        
+        mathjax_output.appendChild(div);
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    }
+    
     function send_live_edit(index){
         var cell_data = find_cell(index);
         var input = cell_data.input;
         net_engine.live_edit_cell(index, input.value);
     }
-
+    
     exports.on_live_edit = on_live_edit;
     
     function on_live_edit(data){
@@ -1324,7 +1377,7 @@ function livecalc(root_el, namespace, user){
      */
     function rule(plot_el, number){
         var number = parseInt(number);
-
+        
         plot_el.innerHTML = "";
 
         if(number < 0 || number > 255){

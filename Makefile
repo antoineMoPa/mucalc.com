@@ -26,3 +26,6 @@ fira:
 	mv public/fonts/fira-extract/* public/fonts/fira
 	rm -rf public/fonts/fira-download public/fonts/fira-extract
 	rm -rf public/fonts/fira/technical\ reports/
+
+mathjax:
+	git clone git@github.com:mathjax/MathJax.git public/lib/mathjax
