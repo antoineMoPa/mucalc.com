@@ -33,6 +33,10 @@ If you want to use the fira firefox font:
 
     make fira
 
+To download mathjax:
+
+    make mathjax
+
 Run
 
     nodejs index.js
@@ -41,6 +45,14 @@ You can now visit [http://127.0.0.1:3000](http://127.0.0.1:3000).
 
 # Contributing
 
-You can submit issues.
+You can submit issues. You can also clone and code then send a pull request.
 
-You can also clone and code then send a pull request.
+# Code priorities
+
+Work is currently going on for 0.1.0 release.
+
+[Priorities for 0.1.0](https://github.com/antoineMoPa/livecalc.xyz/milestone/1) - This milestone focuses on general usability, UI, UX, etc.
+
+Then we'll add some more math goodness:
+
+[Priorities for 0.2.0](https://github.com/antoineMoPa/livecalc.xyz/milestone/2) - This milestone focuses on math tools & adding backends for more power
