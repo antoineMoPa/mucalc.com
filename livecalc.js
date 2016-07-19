@@ -343,8 +343,9 @@ function livecalc(namespace, nsp){
                         counter.get("anon") +
                         " users in sheet " +
                         namespace +
-                        " ip: " +
-                        ip
+                        " [ip: " +
+                        ip +
+                        "]"
                 );
                 
                 nsp.emit("user count", counter.get("anon"));
