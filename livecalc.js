@@ -121,6 +121,7 @@ function livecalc(namespace, nsp){
         
         nsp.on("connection", function(socket){
             var cookie_val = socket.handshake.headers['cookie'];
+            var ip = socket.handshake.address;
             var session_id = cookie.parse(cookie_val || '').session_id || "";
             var registered = false;
             var user;
@@ -198,7 +199,10 @@ function livecalc(namespace, nsp){
                     " users in site, " +
                     counter.get("anon") +
                     " users in sheet " +
-                    namespace
+                    namespace +
+                    " [ip: " +
+                    ip +
+                    "]"
             );
 
             nsp.emit("user count", counter.get("anon"));
@@ -364,7 +368,9 @@ function livecalc(namespace, nsp){
                         " users in site, " +
                         counter.get("anon") +
                         " users in sheet " +
-                        namespace
+                        namespace +
+                        " ip: " +
+                        ip
                 );
                 
                 nsp.emit("user count", counter.get("anon"));
