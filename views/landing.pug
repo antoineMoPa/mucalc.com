@@ -1,29 +1,41 @@
 .landing.only-landing
-  h1.text-center Solve problems together
-  p.text-center
-    | livecalc.xyz is a collaborative calculator
-    br
-    br
-    |  To use livecalc.xyz, create a 
-    a(href='/new', target='_blank') new blank sheet
-    |  or try an 
-    a(href='#example-list') example
-    br
-    |  Up to 3 users can edit a sheet at the same time,
-    br
-    |  so share the sheet URL to your friends/classmates/colleagues!
-    br
-    br
-    |  Have fun!
-    br
-    br
+  row
+    col-md-6.col-inline-block
+      h1.text-center Solve problems together
+      p.text-center
+        | livecalc.xyz is a collaborative calculator
+        br
+        br
+        |  To use livecalc.xyz, create a 
+        a(href='/new', target='_blank') new blank sheet
+        br
+        |  or try an 
+        a(href='#example-list') example
+        br
+        |  Up to 3 users can edit a sheet at the same time,
+        br
+        |  so share the sheet URL to your friends/classmates/colleagues!
+        br
+        br
+        |  Have fun!
+        br
+        br
+    col-md-6.col-inline-block
+        img(src="/images/screenshot.png", 
+            alt="screenshot").screenshot
+        .text-center
+          a(href="#example-list")
+            button.screenshot-cta
+              | Try an example
+  clearfix  
   .examples
     h1#example-list
       | Try an example
     p
       | Click one of the launch buttons to create a new sheet with a pre-loaded example.
     br
-    include ./landing-examples.pug
+    .examples-row
+      include ./landing-examples.pug
     clearfix
   .features
     .block-center

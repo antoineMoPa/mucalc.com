@@ -84,3 +84,8 @@ public/fonts
 
 # Generated CSS
 public/css/**
+
+# Most images will not be tracked
+public/images/*
+
+dump.rdb

@@ -7,14 +7,33 @@ body.page-landing{
 .landing{
     max-width:100%;
     word-wrap: break-word;
-}
 
-.landing h1{
-    line-height:80px;
-    color:#fff;
-    font-size:30px;
-    font-family: 'Fira Sans';
-    font-weight:300;
+    .col-inline-block{
+        display:inline-block;
+        vertical-align:middle;
+        float:none;
+        margin:0 -4px;
+    }
+
+    .screenshot{
+        max-width:100%;
+        max-width:calc(100% - 60px);
+        margin:30px;
+        box-shadow:0 0 3px #333;
+    }
+
+    button.screenshot-cta{
+        background:$color_2;
+        margin-bottom:40px;
+    }
+    
+    h1{
+        line-height:80px;
+        color:#fff;
+        font-size:30px;
+        font-family: 'Fira Sans';
+        font-weight:300;
+    }
 }
 
 .landing p{
@@ -55,8 +74,7 @@ body.page-landing{
 .examples{
     background:lighten($color_3,6%);
     padding:20px;
-    margin:20px;
-
+    margin:0 -10px;
     h1{
         margin-top:0;
     }
@@ -64,22 +82,46 @@ body.page-landing{
     p{
         margin:0 20px;
     }
+}
+
+@media all and (min-width:768px){
+    .examples-row{
+        display:flex;
+        overflow:hidden;
+
+        .example-wrapper{
+            flex:1;
+            padding-bottom:70px;
+            position:relative;
+            
+            .button-container{
+                position: absolute;
+                width:100%;
+                bottom:10px;
+                left:0;
+            }
+        }
+    }
+}
+
+.example-wrapper{
+    flex:1;
+    background:#fff;
+    margin:20px;
+}
+
+.example{
+    padding:20px;
+    padding-bottom:0;
+    margin-bottom: 20px;
+    p{
+        color:#000;
+        font-size:16px;
+        margin:10px 0;
+    }
     
-    .example{
-        margin:0 20px;
-        padding:20px;
-        padding-bottom:0;
-        background:#fff;
-        margin-bottom: 20px;
-        p{
-            color:#000;
-            font-size:16px;
-            margin:10px 0;
-        }
-        
-        h3{
-            color:$color_2;
-        }
+    h3{
+        color:$color_2;
     }
 }
 

@@ -29,3 +29,6 @@ fira:
 
 mathjax:
 	git clone git@github.com:mathjax/MathJax.git public/lib/mathjax
+
+screenshot:
+	wget -N https://cloud.githubusercontent.com/assets/2675724/16932125/736ffbac-4d12-11e6-9af7-3904af973d41.png -O public/images/screenshot.png
