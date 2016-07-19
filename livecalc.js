@@ -82,6 +82,19 @@ function livechat(namespace, nsp, socket, user){
     return exports;
 }
 
+function system_chat_message(namespace, nsp, message){
+    var data = {
+        message: message,
+        sender: "livecalc.xyz system",
+        public_id: -1,
+        date: new Date()
+    };
+
+    nsp.emit("new message", data);
+    
+    chat_db.add_message(namespace, data);
+}
+
 /*
   callback(success)
 */
@@ -128,6 +141,13 @@ function livecalc(namespace, nsp){
             var registered = false;
             var user;
             var public_id;
+
+            /**
+               Helper function to get socket's username in this context
+            */
+            function get_username(){
+                return users[session_id].username || "";
+            }
             
             function temp_user(){
                 // Temporary user
@@ -148,11 +168,21 @@ function livecalc(namespace, nsp){
                         // User actually logged in
                         registered = true;
                         user = cache_user_model.cached_user(session_id);
+
+                        // Fetch data
                         user.fetch(function(){
+                            // Then update our data
                             public_id = user.get_public_id();
                             users[session_id] = user.get_public_data();
                             chat.set_user(user);
                             send_user_data();
+                            
+                            // Inform users
+                            system_chat_message(
+                                namespace,
+                                nsp,
+                                get_username() + " connected."
+                            );
                         });
                     } else {
                         // User had a session_id, but it
@@ -173,6 +203,13 @@ function livecalc(namespace, nsp){
                 temp_user();
                 // Still send temp data
                 send_user_data();
+
+                // Inform users
+                system_chat_message(
+                    namespace,
+                    nsp,
+                    get_username() + " connected."
+                );
             }
 
             send_focus_index();
@@ -285,7 +322,7 @@ function livecalc(namespace, nsp){
                 send_focus_index();
                 
                 socket.emit("sheet locked", {
-                    initiator: users[session_id].username
+                    initiator: get_username()
                 });
             });
 
@@ -335,7 +372,13 @@ function livecalc(namespace, nsp){
             socket.on("disconnect",function(socket){                
                 counter.minus("anon");
                 site_user_count--;
-                
+
+                system_chat_message(
+                    namespace,
+                    nsp,
+                    get_username() + " disconnected."
+                );
+
                 console.log(
                     "disconnection - " +
                         site_user_count +

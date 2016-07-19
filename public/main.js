@@ -106,12 +106,26 @@ function instanciator(el){
 */
 function render(template_name, to_el){
     var template = load_template(template_name).content;
-
+    var has_to_el = false;
+    
+    if(to_el != undefined){
+        has_to_el = true;
+    }
+    
     var to_el = to_el || dom("<div></div>");
 
     to_el.innerHTML = template;
     instanciator(to_el);
 
+    // If we were not rendering to something
+    if(!has_to_el){
+        // If there is only one element,
+        if(to_el.children.length == 1){
+            // return it
+            return to_el.children[0];
+        }
+    }
+    
     return to_el;
 }
 
@@ -241,8 +255,8 @@ function animated_remove(el, callback){
 /*
   Make something flash
  */
-function flash(el,color,text_color){
-    var original_color, original_text;
+function flash(el){
+    console.log("flashing: ", el);
     var options = {
         max: 2,
         time_step: 300,
@@ -533,6 +547,7 @@ function livecalc(root_el, namespace, user){
 
         exports.on_user_data = function(data){
             user.set_public_id(data.public_id);
+            username_field.innerText = data.username;
             chat.on_user_ready();
         };
     }
@@ -1323,7 +1338,7 @@ function livecalc(root_el, namespace, user){
             return;
         }
         
-        flash(output,"#09bc8a","#ffffff");
+        flash(output);
     }
 
     /*
@@ -1918,7 +1933,17 @@ function livechat(root_el, namespace, socket, user){
 
     socket.on("new message", function(data){
         var el = render_message(data);
+
         log.appendChild(el);
+        
+        var system_message = false;
+        
+        if(data.public_id == -1){
+            system_message = true;
+            el.classList.add("system-message");
+        }
+        
+        flash(el);
         scroll_bottom();
     });
 
@@ -1934,13 +1959,22 @@ function livechat(root_el, namespace, socket, user){
         for(var i = messages.length - 1; i >= 0; i--){
             var data = JSON.parse(messages[i]);
             var own = false;
-
+            var system_message = false;
+            
+            if(data.public_id == -1){
+                system_message = true;
+            }
+            
             if(data.public_id == user_id){
                 own = true;
             }
 
             var el = render_message(data, own);
-
+            
+            if(system_message){
+                el.classList.add("system-message");
+            }
+            
             if(log.children[0] != undefined){
                 log.insertBefore(el, log.children[0]);
             } else {

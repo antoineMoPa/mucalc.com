@@ -86,6 +86,11 @@
     max-width:calc(100% - 40px);
     width:calc(100% - 40px);
     overflow-y:scroll;
+
+    &.flashing{
+        background: $color_3 !important;
+        color: #fff;
+    }
 }
 
 .livecalc-secondary-output{

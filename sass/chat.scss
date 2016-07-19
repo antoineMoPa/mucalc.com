@@ -22,6 +22,26 @@ livechat{
     border-top-left-radius:0;
     margin-left:0;
     margin-right:auto;
+
+}
+
+.system-message .livechat-message{
+    background:lighten($color_7,30%);
+    width:90%;
+    font-size:10px;
+    color:#fff;
+    margin:auto;
+    border-radius:10px;
+
+    .content, .sender{
+        float:left;
+        width:50%;
+    }
+}
+
+.flashing .livechat-message{
+    background:$color_3;
+    color:#fff;
 }
 
 .sent .livechat-message{
