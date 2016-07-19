@@ -14,14 +14,12 @@ template(name='livechat')
     textarea(placeholder='Join the conversation')
     button
       | Send
-template(name='livechat-received-message')
-  .livechat-received-message
-    .content
-    .sender
-template(name='livechat-sent-message')
-  .livechat-sent-message
-    .content
-    .sender
+template(name='livechat-message')
+  .livechat-message-wrapper
+    .livechat-message
+      .content
+      .sender
+    .date
 template(name='small-doc')
   .doc
     include ./doc.pug

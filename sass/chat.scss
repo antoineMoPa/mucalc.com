@@ -6,8 +6,7 @@ livechat{
     display:block;
 }
 
-.livechat-sent-message,
-.livechat-received-message{
+.livechat-message{
     width:90%;
     word-wrap: break-word;
     margin-bottom:5px;
@@ -16,7 +15,7 @@ livechat{
     border-radius:10px;
 }
 
-.livechat-received-message{
+.received .livechat-message{
     color:$color_2;
     background:#fff;
     border:1px solid darken(#eee,4%);
@@ -25,13 +24,23 @@ livechat{
     margin-right:auto;
 }
 
-.livechat-sent-message{
+.sent .livechat-message{
     color:$color_2;
     background:$color_5;
     border:1px solid darken($color_5,5%);
     border-bottom-right-radius:0;
     margin-left:auto;
     margin-right:0;
+}
+
+.livechat-message-wrapper .date{
+    font-size: 10px;
+    color:lighten(black,20%);
+    text-align:left;
+}
+
+.sent .date{
+    text-align:right;
 }
 
 livechat .header{

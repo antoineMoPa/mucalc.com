@@ -1990,11 +1990,12 @@ function livechat(root_el, namespace, socket, user){
     });
 
     function render_message(data, own){
-        var el;
+        var el = render("livechat-message");
+
         if(own){
-            el = render("livechat-sent-message");
+            el.classList.add("sent");
         } else {
-            el = render("livechat-received-message");
+            el.classList.add("received");
         }
 
         // Set the content
@@ -2009,6 +2010,8 @@ function livechat(root_el, namespace, socket, user){
 
         var sender = subqsa(el, ".sender")[0];
 
+        var date = subqsa(el, ".date")[0];
+
         // Put sender nickname
         sender.textContent = data.sender;
 
@@ -2019,6 +2022,12 @@ function livechat(root_el, namespace, socket, user){
         // Replace newline inside message to <br>
         message.innerHTML = message.innerHTML.replace(/\n/g,"<br/>");
 
+        var raw_date = data.date || "";
+        
+        if(raw_date != ""){
+            date.textContent = moment(raw_date).fromNow();
+        }
+        
         return el;
     }
 

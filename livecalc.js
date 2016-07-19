@@ -2,7 +2,6 @@
 
 var cookie = require('cookie');
 var user_cache = require('./user_cache');
-
 var sheet_counter = require('./sheet_counter');
 
 var site_user_count = 0;
@@ -70,7 +69,8 @@ function livechat(namespace, nsp, socket, user){
         var data = {
             message: data.message,
             sender: user.get_nickname(),
-            public_id: user.get_public_id()
+            public_id: user.get_public_id(),
+            date: new Date()
         };
         
         chat_db.add_message(namespace, data);
