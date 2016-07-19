@@ -10,6 +10,7 @@ var cache_user_model = require("./cache_user_model");
 var chat_db = require("./chat_db");
 var stats = require("./stats");
 var cookie_utils = require("./user/cookie_utils");
+var package_info = require("./package.json");
 
 livecalc.set_globals(io, sheet_db, chat_db, stats, cache_user_model);
 
@@ -18,6 +19,7 @@ app.use(body_parser.urlencoded({extended: true}));
 
 // Add some user info for render
 app.use(function(req, res, next){
+    res.locals.version = package_info["version"] || "";
     res.locals.page = "not-specified";
     get_user_model(req, function(user){
         res.locals.user = user || null;
