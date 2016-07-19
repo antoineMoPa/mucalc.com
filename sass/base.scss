@@ -81,16 +81,18 @@ col-md-3{
     width:25%;
 }
 
-col-md-4{
+col-md-4,
+col-sm-4{
     width:33.33%;
-    margin:0;
 }
 
-col-md-6{
+col-md-6,
+col-sm-6{
     width:50%;
 }
 
-col-md-8{
+col-md-8,
+col-sm-8{
     width:65%;
 }
 
@@ -100,10 +102,6 @@ col-md-9{
 
 col-md-10{
     width:82%;
-}
-
-col-sm-6{
-    width:49%;
 }
 
 @media (max-width:768px){
@@ -126,6 +124,12 @@ col-sm-6{
 
 .hidden{
     display:none;
+}
+
+@media (max-width:768px){
+    .sm-hide{
+        display:none!important;
+    }
 }
 
 .flashing{

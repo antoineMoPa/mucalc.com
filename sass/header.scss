@@ -12,22 +12,14 @@ header p{
     margin:15px 20px;
 }
 
-@media (max-width:768px){
-    header h1{
-        text-align:center!important;
-        display:block!important;
-    }
-}
-
 header h1 a{
     color:#fff;
 }
 
-@media (max-width:500px){
+@media (max-width:768px){
     h1{
+        font-size:14px;
         margin:10px;
-        margin-top:20px;
-        display:block!important;
         text-align:center;
     }
 }
@@ -44,10 +36,9 @@ header{
     min-height: 53px;
 }
 
-@media (max-width:500px){
-    header .col{
-        display:block;
-        width:100%;
+@media (max-width:768px){
+    header{
+        min-height: 0;
     }
 }
 
@@ -74,7 +65,7 @@ header button{
 @media (max-width:1250px){
     .new-sheet-button button{
         font-size:11px;
-        margin-top:8px
+        margin-top:0;
     }
 }
 
@@ -85,9 +76,6 @@ header button{
 @media (max-width:768px){
     .new-sheet-button{
         margin-right:0;
-    }
-    header{
-        padding-bottom:20px;
     }
 }
 
