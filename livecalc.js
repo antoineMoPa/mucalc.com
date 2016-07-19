@@ -121,7 +121,9 @@ function livecalc(namespace, nsp){
         
         nsp.on("connection", function(socket){
             var cookie_val = socket.handshake.headers['cookie'];
-            var ip = socket.handshake.address;
+            var ip = socket.handshake.headers['x-forwarded-for'] || 
+		socket.handshake.address;
+
             var session_id = cookie.parse(cookie_val || '').session_id || "";
             var registered = false;
             var user;
