@@ -29,7 +29,6 @@ var UserSchema = new mongoose.Schema({
     username: String,
     password: String,
     email: String,
-    nickname: String,
     sheets: Array,
     recent_sheets: Array
 });
@@ -58,7 +57,6 @@ function create(data, callback){
         name: data.name || "",
         username: data.username || "",
         email: data.email || "",
-        nickname: data.nickname || "",
         password: hash_password(data.password)
     });
     
@@ -93,7 +91,6 @@ UserSchema.methods.login = function(cache_user_model, session_id){
     }
     
     user.set_permanent_user(this);
-    user.set_nickname(this.nickname);
     user.set_session_id(session_id);
     user.set_public_id(public_id);
     user.save();

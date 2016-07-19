@@ -35,7 +35,7 @@ Example of a successful login and sheet interaction.
 * Socket.io connection and cookie reception
 * Verify if session exists
 * Add user to memory
-* Send nickname and public_id to client
+* Send public_id to client
 * Past messages are loaded in chat, messages where
   `public id == current user id`
   are highlighted as own-message.

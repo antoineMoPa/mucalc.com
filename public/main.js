@@ -332,12 +332,6 @@ function lc_network_engine(socket, shell){
         socket.close();
     };
 
-    exports.send_nickname = function(nickname){
-        socket.emit("set nickname", {
-            nickname: nickname
-        });
-    };
-
     exports.lock_sheet = function(){
         socket.emit("lock sheet");
     };
@@ -534,44 +528,13 @@ function livecalc(root_el, namespace, user){
 
     window.addEventListener("beforeunload", net_engine.close);
 
-    var nickname = "";
-
     function init_user_data(){
-        var nickname_input = subqsa(root_el, ".nickname input")[0];
-        var nickname_button = subqsa(root_el, ".nickname button")[0];
         var username_field = qsa(".user-name")[0];
-
-        exports.set_nickname = function(new_nickname){
-            nickname_input.value = new_nickname;
-            nickname = new_nickname;
-            username_field.innerText = nickname;
-        };
 
         exports.on_user_data = function(data){
             user.set_public_id(data.public_id);
-            exports.set_nickname(data.nickname);
             chat.on_user_ready();
         };
-
-        exports.send_nickname = function(){
-            net_engine.send_nickname(nickname);
-        }
-
-        nickname_input.onkeydown = function(e){
-            if(e.keyCode == 13){
-                submit();
-            }
-        }
-
-        nickname_button.addEventListener("click",function(){
-            submit();
-        });
-
-        function submit(){
-            nickname = nickname_input.value;
-            flash(nickname_input,"#eee","#333");
-            exports.send_nickname();
-        }
     }
 
     init_user_data();
@@ -2012,7 +1975,7 @@ function livechat(root_el, namespace, socket, user){
 
         var date = subqsa(el, ".date")[0];
 
-        // Put sender nickname
+        // Put sender name
         sender.textContent = data.sender;
 
         // Remove newline at begining and end of string

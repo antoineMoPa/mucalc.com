@@ -17,8 +17,7 @@ function cached_user(session_id, public_id){
     var data = {
         public_id: public_id || "",
         session_id: session_id || "",
-        nickname: "Anonymous",
-        username: "",
+        username: "Anonymous",
         permanent_id: null,
         recent_sheets: []
     };
@@ -35,7 +34,6 @@ function cached_user(session_id, public_id){
         permanent_user = new_permanent_user;
         data.username = permanent_user.username;
         data.email = permanent_user.email;
-        data.nickname = permanent_user.nickname;
         data.permanent_id = permanent_user.id;
         data.recent_sheets = permanent_user.recent_sheets;
     }
@@ -110,13 +108,17 @@ function cached_user(session_id, public_id){
     exports.get_public_data = function(){
         return {
             public_id: data.public_id,
-            nickname: data.nickname,
+            username: data.username,
             focus: -1
         }
     };
     
     exports.get_public_id = function(){
         return data.public_id;
+    };
+
+    exports.get_username = function(){
+        return data.username;
     };
     
     exports.set_public_id = function(new_id){
@@ -131,18 +133,6 @@ function cached_user(session_id, public_id){
         data.session_id = new_id;
     };
     
-    exports.set_nickname = function(new_nickname){
-        if(permanent_user != null){
-            permanent_user.nickname = new_nickname;
-            permanent_user.save();
-        }
-        data.nickname = new_nickname;
-    };
-
-    exports.get_nickname = function(){
-        return data.nickname;
-    };
-
     exports.set_username = function(new_username){
         if(permanent_user != null){
             permanent_user.username = new_username;

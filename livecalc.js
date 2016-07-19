@@ -68,7 +68,7 @@ function livechat(namespace, nsp, socket, user){
 
         var data = {
             message: data.message,
-            sender: user.get_nickname(),
+            sender: user.get_username(),
             public_id: user.get_public_id(),
             date: new Date()
         };
@@ -216,7 +216,7 @@ function livecalc(namespace, nsp){
             var chat = livechat(namespace, nsp, socket, user);
             
             /*
-              Build array containing array of nicknames
+              Build array containing array of usernames
               of user focussing on each cell
               
               [
@@ -242,7 +242,7 @@ function livecalc(namespace, nsp){
                             continue;
                         }
                         if(user.focus != undefined && user.focus != -1){
-                            fi[user.focus].push(user.nickname);
+                            fi[user.focus].push(user.username);
                         }
                     }
                 }
@@ -251,34 +251,6 @@ function livecalc(namespace, nsp){
             
             // Send sheet to user
             socket.emit("sheet", JSON.stringify(model.get_sheet()));
-            
-            socket.on("set nickname",function(data){
-                // Prevent XSS
-                // Prevent injection of whatever dom element here
-                // by allowing only certain characters
-                var nickname = data.nickname.replace(/[^A-Za-z0-9\-]/g,"");
-                
-                if(registered){
-                    user.fetch_permanent_user(function(){
-                        user.set_nickname(nickname);
-                        // Store in redis
-                        user.save();
-                        // And in mongo
-                        user.save_permanent();
-
-                        after();
-                    });
-                } else {
-                    user.set_nickname(nickname);
-                    after();
-                }
-                
-                function after(){
-                    users[session_id].nickname = nickname;
-                    send_user_data();
-                    send_focus_index();
-                }
-            });
             
             function send_user_data(){
                 socket.emit("user data", user.get_public_data());
@@ -313,7 +285,7 @@ function livecalc(namespace, nsp){
                 send_focus_index();
                 
                 socket.emit("sheet locked", {
-                    initiator: users[session_id].nickname
+                    initiator: users[session_id].username
                 });
             });
 
