@@ -490,7 +490,7 @@ function livecalc(root_el, namespace, user){
         var content = data.content;
         var method = data.method;
         edit_cell(number, content, method);
-        update_mathjax(data.number);
+        update_mathjax_input(data.number);
     };
 
     exports.on_cell_saved = function(data){
@@ -787,6 +787,7 @@ function livecalc(root_el, namespace, user){
             users_info: subqsa(el,".users-info")[0],
             cell_state: subqsa(el,".cell-state")[0],
             text_part: subqsa(el,".text-part")[0],
+            mathjax_input: subqsa(el,".mathjax-input")[0],
             mathjax_output: subqsa(el,".mathjax-output")[0],
             math_part: subqsa(el,".math-part")[0],
             plot: subqsa(el,".plot")[0]
@@ -1009,7 +1010,7 @@ function livecalc(root_el, namespace, user){
             function send_live_throttled(){
                 if(time() - last_live_edit_send > time_threshold){
                     send_live_edit(get_index());
-                    update_mathjax(get_index());
+                    update_mathjax_input(get_index());
                 } else {
                     if(!has_waiting_timeout){
                         setTimeout(
@@ -1031,7 +1032,7 @@ function livecalc(root_el, namespace, user){
         }
 
         // Run at load
-        update_mathjax(get_index());
+        update_mathjax_input(get_index());
         
         /*
 
@@ -1072,7 +1073,7 @@ function livecalc(root_el, namespace, user){
 
             var index = get_index();
 
-            update_mathjax(index);
+            update_mathjax_input(index);
             
             // If last cell, add new cell
             if(index == cell_count - 1){
@@ -1156,25 +1157,49 @@ function livecalc(root_el, namespace, user){
     }
 
     exports.new_cell = new_cell;
+
+    function update_mathjax_output(index, tex_content){
+        var cell_data = find_cell(index);
+        var mathjax_output   = cell_data.mathjax_output;
+
+        mathjax_output.innerHTML = "";
+
+        if(content == ""){
+            return;
+        }
+        
+        var content;
+        
+        var tex = "$$"+tex_content+"$$";
+        
+        var div = MathJax.HTML.Element(
+            "div",
+            {},
+            tex
+        );
+        
+        mathjax_output.appendChild(div);
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    }
     
-    function update_mathjax(index){
+    function update_mathjax_input(index){
         var cell_data = find_cell(index);
         var input            = cell_data.input;
-        var mathjax_output   = cell_data.mathjax_output;
+        var mathjax_input   = cell_data.mathjax_input;
 
         {
             // Reduce height change glitches
             // Caused by removing element
-            mathjax_output.style.minHeight =
-                mathjax_output.clientHeight +
+            mathjax_input.style.minHeight =
+                mathjax_input.clientHeight +
                 10 + "px";
 
             setTimeout(function(){
-                mathjax_output.style.minHeight = 0;
+                mathjax_input.style.minHeight = 0;
             },3000);
         }
         
-        mathjax_output.innerHTML = "";
+        mathjax_input.innerHTML = "";
         
         if(input.value == ""){
             return;
@@ -1196,7 +1221,7 @@ function livecalc(root_el, namespace, user){
             tex
         );
         
-        mathjax_output.appendChild(div);
+        mathjax_input.appendChild(div);
         MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     }
     
@@ -1288,17 +1313,20 @@ function livecalc(root_el, namespace, user){
         }
 
         secondary_output.innerHTML = "";
-
+        update_mathjax_output(index, "");
+        
+        var tex_output = "";
+        
         if(text == ""){
             return;
         } else if(result != undefined){
             if(typeof result == "function"){
                 output.textContent = "[function]";
+                tex_output = "";
             } else if (typeof result == "number"){
                 // Here, we will round values if needed
                 var rounded = parseFloat(result.toPrecision(10));
                 var final_output = "";
-
                 // If we display a rounding, inform the user
                 // and also show the non-rounded value.
                 if(result != rounded){
@@ -1312,14 +1340,26 @@ function livecalc(root_el, namespace, user){
                 }
 
                 output.textContent = final_output;
+                tex_output = final_output;
             } else {
                 output.textContent = result;
+                tex_output = result;
             }
+            
+            if(tex_output != ""){
+                try{
+                    tex_output = math.parse(tex_output.toString()).toTex();
+                } catch (e) {
+                    console.error(e + "");
+                }
+                update_mathjax_output(index, tex_output);
+            }
+        
         } else {
             output.textContent = "[undefined]";
             return;
         }
-
+        
         flash(output,"#09bc8a","#ffffff");
     }
 
