@@ -12,6 +12,20 @@ var stats = require("./stats");
 var cookie_utils = require("./user/cookie_utils");
 var package_info = require("./package.json");
 
+/*
+  default data
+ */
+var secrets = {
+    base_url: "http://localhost",
+    fb_appid: null
+};
+
+try{
+    secrets = require("./secrets.json");
+} catch (e){
+    console.log("No secrets.json found. Facebook functions will not work.");
+}
+
 livecalc.set_globals(io, sheet_db, chat_db, stats, cache_user_model);
 
 app.use(body_parser.json());
@@ -65,7 +79,7 @@ app.get('/', function (req, res) {
 });
 
 // All the user pages (account, login, etc.)
-var user_pages = require("./user/user_pages")(app, cache_user_model)
+var user_pages = require("./user/user_pages")(app, cache_user_model, secrets)
 
 // All the marketing pages (pricing)
 var marketing_pages = require("./marketing/marketing")(app, stats)

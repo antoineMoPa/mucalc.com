@@ -2,7 +2,11 @@
 
 var cookie_utils = require("./cookie_utils");
 
-module.exports = function(app, cache_user_model){    
+module.exports = function(app, cache_user_model, secrets){
+    var redirect_url = secrets.base_url + "/fb/validate";
+
+    var fb_api = require("./fb_api")(app, cache_user_model, secrets);
+        
     app.get('/signup', function (req, res) {
         if(!res.locals.logged_in){
             // If not logged in

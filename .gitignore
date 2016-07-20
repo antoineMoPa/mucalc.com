@@ -89,3 +89,5 @@ public/css/**
 public/images/*
 
 dump.rdb
+
+secrets.json
