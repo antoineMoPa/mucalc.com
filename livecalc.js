@@ -82,7 +82,12 @@ function livechat(namespace, nsp, socket, user){
     return exports;
 }
 
-function system_chat_message(namespace, nsp, message){
+/*
+  precision on emitter:
+  Can be either socket.broadcast or nsp
+  This function uses emitter.emit()
+ */
+function system_chat_message(namespace, emitter, message){
     var data = {
         message: message,
         sender: "livecalc.xyz system",
@@ -90,7 +95,7 @@ function system_chat_message(namespace, nsp, message){
         date: new Date()
     };
 
-    nsp.emit("new message", data);
+    emitter.emit("new message", data);
     
     chat_db.add_message(namespace, data);
 }
@@ -175,14 +180,18 @@ function livecalc(namespace, nsp){
                             public_id = user.get_public_id();
                             users[session_id] = user.get_public_data();
                             chat.set_user(user);
-                            send_user_data();
                             
-                            // Inform users
+                            // Inform other users
+                            // ( current user will load
+                            //   this as past message
+                            //   after we send the user data )
                             system_chat_message(
                                 namespace,
-                                nsp,
-                                get_username() + " connected."
+                                socket.broadcast,
+                                get_username() + " joined the sheet."
                             );
+                            
+                            send_user_data();
                         });
                     } else {
                         // User had a session_id, but it
@@ -207,7 +216,7 @@ function livecalc(namespace, nsp){
                 // Inform users
                 system_chat_message(
                     namespace,
-                    nsp,
+                    socket.broadcast,
                     get_username() + " connected."
                 );
             }
@@ -320,8 +329,15 @@ function livecalc(namespace, nsp){
                 save(true);
                 
                 send_focus_index();
+
+                // Inform users
+                system_chat_message(
+                    namespace,
+                    nsp,
+                    get_username() + " locked the sheet. You can still open a copy."
+                );
                 
-                socket.emit("sheet locked", {
+                nsp.emit("sheet locked", {
                     initiator: get_username()
                 });
             });
@@ -376,7 +392,7 @@ function livecalc(namespace, nsp){
                 system_chat_message(
                     namespace,
                     nsp,
-                    get_username() + " disconnected."
+                    get_username() + " left the sheet."
                 );
 
                 console.log(

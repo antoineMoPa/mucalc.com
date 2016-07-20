@@ -256,7 +256,6 @@ function animated_remove(el, callback){
   Make something flash
  */
 function flash(el){
-    console.log("flashing: ", el);
     var options = {
         max: 2,
         time_step: 300,
@@ -696,11 +695,13 @@ function livecalc(root_el, namespace, user){
     exports.load_json = load_json;
 
     var sheet_state = subqsa(root_el, ".sheet-state")[0];
-
+    var lock_panel = qsa(".panel-lock-sheet")[0];
+    
     function update_state(){
         if(params.locked){
             sheet_state.textContent = "This sheet is locked.";
             sheet_state.setAttribute("title","Modifications will not be saved. You can still open a copy (See bottom of the page).");
+            hide(lock_panel);
         } else {
             sheet_state.textContent = "This sheet is public.";
             sheet_state.setAttribute("title","");
@@ -1897,7 +1898,8 @@ function livechat(root_el, namespace, socket, user){
     }
 
     exports.resize = resize;
-
+    var current_proportion = 1/3;
+    
     /*
       Note: This is full of ugly hacks to position and size
       The chat elements.
@@ -1905,7 +1907,9 @@ function livechat(root_el, namespace, socket, user){
     function resize(proportion){
         var winw = window.innerWidth;
         var winh = window.innerHeight;
-        var proportion = proportion || 1/3;
+        var proportion = proportion || current_proportion;
+        // Save it in case we need it.
+        current_proportion = proportion;
         var scroll = window.scrollY || 0;
 
         /* set with to one column + margin */
@@ -1927,9 +1931,11 @@ function livechat(root_el, namespace, socket, user){
 
     resize();
 
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", function(){
+        resize();
+    });
 
-    button.addEventListener("click",submit);
+    button.addEventListener("click", submit);
 
     socket.on("new message", function(data){
         var el = render_message(data);
@@ -2164,8 +2170,8 @@ if(is_sheet){
     ];
  */
 function modal(message, buttons){
-    var modal = render("modal-inform").children[0];
-    var overlay = render("modal-overlay").children[0];
+    var modal = render("modal-inform");
+    var overlay = render("modal-overlay");
     var content = subqsa(modal, ".content p")[0];
     var buttons_container = subqsa(modal, ".buttons")[0];
     var buttons = buttons || [];
