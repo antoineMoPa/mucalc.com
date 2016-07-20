@@ -17,6 +17,12 @@ livecalc.set_globals(io, sheet_db, chat_db, stats, cache_user_model);
 app.use(body_parser.json());
 app.use(body_parser.urlencoded({extended: true}));
 
+// Startup message + version
+console.log(
+    "Starting livecalc.xyz server version: " +
+        (package_info["version"] || "")
+);
+
 // Add some user info for render
 app.use(function(req, res, next){
     res.locals.version = package_info["version"] || "";
