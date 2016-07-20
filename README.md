@@ -1,10 +1,12 @@
 Code Status: No major problem.
 
+Current milestone: https://github.com/antoineMoPa/livecalc.xyz/milestone/1
+
 # livecalc.xyz
 
 livecalc.xyz is a multi-user math web app. The math is parsed & computed in the browser by [math.js](http://mathjs.org/).
 
-[Live demo](https://www.livecalc.xyz/sheet/demo)
+[Live demo](https://www.livecalc.xyz/new)
 
 # Example
 
