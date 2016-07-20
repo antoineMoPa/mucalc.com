@@ -40,3 +40,19 @@
     width:30%;
     max-width:57px;
 }
+
+.palette-content,
+.palette-numbers .palette-content,
+.palette-greek-letters .palette-content{
+    background:#ccc;
+    text-align:center;
+    padding-bottom:5px;
+    margin-right:10px;
+    box-shadow:0 0 3px #aaa inset;
+
+    p{
+        padding-top:5px;
+        padding-left:10px;
+        text-align:left;
+    }
+}
