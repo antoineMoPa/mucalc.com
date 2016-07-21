@@ -36,7 +36,7 @@
 
 .livecalc-cell .math-part,
 .livecalc .livecalc-header{
-    background:$color_4;
+    background:#eee;
     padding-top:5px;
     padding-bottom:5px;
 }
@@ -44,6 +44,7 @@
 .livecalc-cell .math-part{
     max-width:100%;
     overflow-x:hidden;
+    border-bottom:2px solid #bbb;
 }
 
 .livecalc fieldset{
@@ -64,9 +65,14 @@
     color:#444;
     border:none;
     background:#fff;
-    box-shadow:none;
     font-family:monospace;
     overflow-x:hidden;
+}
+
+.livecalc-input,
+.livecalc-secondary-output,
+.livecalc-output{
+    box-shadow:0 0 2px rgba(0,0,0,0.2);
 }
 
 .livecalc-secondary-output,
@@ -107,9 +113,12 @@
     border-radius:0;
     border:none;
     padding:5px;
-    background:$color_2;
+    background:lighten($color_2,10%);
     color:#eee;
-    border-bottom:2px solid $body_bg;
+    border-bottom:2px solid darken($color_2,30%);
+    &:hover{
+        background:$color_2;
+    }
 }
 
 .livecalc .cell-state,
@@ -147,6 +156,7 @@
     text-align:left;
     font-size:14px;
     color:darken($color_3, 20%);
+    border-bottom:2px solid #bbb;
 }
 
 .livecalc-header .sheet-state{
@@ -166,6 +176,7 @@ livecalc{
     padding:10px;
     margin-top:10px;
     margin-bottom:10px;
+    border-bottom:2px solid #bbb;
 }
 
 .livecalc-sharing a{
