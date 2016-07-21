@@ -8,6 +8,9 @@ livecalc.xyz is a multi-user math web app. The math is parsed & computed in the 
 
 [Live demo](https://www.livecalc.xyz/new)
 
+[![Live demo](https://livecalc.xyz/icon-96x96.png) ](https://www.livecalc.xyz/new)
+
+
 # Example
 
     sin(45 deg) => 0.7071067811865475
