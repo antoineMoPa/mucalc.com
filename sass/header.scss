@@ -17,10 +17,11 @@ header h1 a{
 }
 
 @media (max-width:768px){
-    h1{
-        font-size:14px;
-        margin:10px;
-        text-align:center;
+    header h1{
+        font-size:19px;
+        text-align: center;
+        margin-top: 17px;
+        margin-left: 20px;
     }
 }
 
@@ -77,6 +78,13 @@ header button{
     .new-sheet-button{
         margin-right:0;
     }
+}
+
+.header-logo{
+    height: 40px;
+    margin-right: -6px;
+    margin-top: 7px;
+    margin-left: 16px;
 }
 
 nav{
