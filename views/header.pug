@@ -16,6 +16,10 @@ header
   clearfix
 nav
   ul
+    if(page != "landing")
+      li
+        a.pricing-link(href='/')
+          | Home
     li
       a.pricing-link(href='/pricing', target='_blank')
         | Pricing
