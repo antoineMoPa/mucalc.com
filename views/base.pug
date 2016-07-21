@@ -12,6 +12,10 @@ html
     meta(property='og:image', content='http://livecalc.xyz/images/logo-square.png')
     meta(property='og:title', content='livecalc.xyz open source collaborative calculator')
     meta(property='og:description', content='Multi-user calculator for all your projects that include math, plots & problems to solve.')
+    link(rel='icon', type='image/png', href='/favicon.png')
+    link(rel="icon", sizes="192x192", href="/big-icon.png")
+    link(rel="apple-touch-icon", sizes="128x128", href="/med-icon.png")
+    link(rel="apple-touch-icon-precomposed", sizes="128x128", href="/med-icon.png")
   body(class="page-"+(page || ""), class=in_sheet? "in-sheet": "")
     include ./header.pug
     if in_sheet
