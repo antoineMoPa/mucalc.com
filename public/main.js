@@ -1158,7 +1158,12 @@ function livecalc(root_el, namespace, user){
         );
         
         mathjax_output.appendChild(div);
-        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+
+        hide(div);
+        
+        MathJax.Hub.Queue(["Typeset",function(){
+            show(div);
+        }]);
     }
     
     function update_mathjax_input(index){
