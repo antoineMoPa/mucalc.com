@@ -30,7 +30,9 @@ var UserSchema = new mongoose.Schema({
     password: String,
     email: String,
     sheets: Array,
-    recent_sheets: Array
+    recent_sheets: Array,
+    name: String,
+    fb_id: String,
 });
 
 UserSchema.methods.verify_password = function(given_password){
@@ -55,6 +57,7 @@ function create(data, callback){
     
     var user = new User({
         name: data.name || "",
+        fb_id: data.fb_id || "",
         username: data.username || "",
         email: data.email || "",
         password: hash_password(data.password)
@@ -68,6 +71,8 @@ function create(data, callback){
         }
         callback();
     });
+
+    return user;
 }
 
 /*
@@ -75,11 +80,14 @@ function create(data, callback){
   Fetches data from mongodb
   Puts it in redis
   
+  session_id optional
+  
  */
 UserSchema.methods.login = function(cache_user_model, session_id){
     var user = cache_user_model.create();
     var public_id = user.get_public_id();
-
+    var session_id = session_id || user.get_session_id();
+    
     if(this.public_id == undefined || this.public_id == ""){
         // Set public id for the first time
         this.public_id = public_id;
@@ -95,7 +103,7 @@ UserSchema.methods.login = function(cache_user_model, session_id){
     user.set_public_id(public_id);
     user.save();
     
-    return public_id;
+    return user;
 };
 
 var User = mongoose.model('User', UserSchema);
@@ -143,6 +151,24 @@ function exists_username(username, callback){
         }
     });
 }
+
+module.exports.exists_fb_id = exists_fb_id;
+
+/* 
+   Exists in mongo ?
+   callback(exists: true | false)   
+*/
+function exists_fb_id(fb_id, callback){
+    User.find({ fb_id: fb_id }, function(err, user){
+        if(err){console.log(err)};
+        if(user.length > 0){
+            callback(true, user[0]);
+        } else {
+            callback(false);
+        }
+    });
+}
+
 
 module.exports.get_user_by_id = get_user_by_id;
 

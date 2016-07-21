@@ -1,0 +1,13 @@
+h1.text-center Complete your account
+
+.auth.signup-form
+  .oauth-signup-form.login-block
+    form(action="/oauth/signup", method="post")
+      fieldset
+        label User name (6-40 letters and numbers)
+        br
+        input(type="text", pattern="^[A-Za-z0-9]{6,40}$", name="username", placeholder="JohnSmith", size="40")
+      br
+      .text-center
+        button(type="submit" value="submit")
+          | Create my account

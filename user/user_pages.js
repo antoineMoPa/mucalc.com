@@ -1,10 +1,9 @@
 /* Handles request to user pages */
 
 var cookie_utils = require("./cookie_utils");
+var user_utils = require("./user_utils");
 
 module.exports = function(app, cache_user_model, secrets){
-    var redirect_url = secrets.base_url + "/fb/validate";
-
     var fb_api = require("./fb_api")(app, cache_user_model, secrets);
         
     app.get('/signup', function (req, res) {
@@ -38,57 +37,26 @@ module.exports = function(app, cache_user_model, secrets){
     app.get('/account-username',function(req, res){
         res.redirect("/account");
     });
-    
-    app.post('/account-username', function (req, res) {
+
+    app.post('/account-username',function(req, res){
         var user = res.locals.user || null;
         
         if(user == null){
             res.redirect("/signup");
             return;
         }
+
+        var username = req.body.username || "";
         
-        user.fetch_permanent_user(function(){
-            var username = req.body.username || "";
-            var user_db = cache_user_model.db;
-                        
-            // Until not true,
-            var success = true;
-            var errors = [];
-            
-            // Username length
-            if(username.length < 6){
-                success = false;
-                errors.push("Username is too short.");
+        user_utils.validate_nickname(username, function(success, errors){
+            if(success){
+                // Save user to mongo db
+                user.set_username(username);
+                account_render(req, res, true,
+                               ["Your username was changed"]);
+            } else {
+                account_render(req, res, false, errors);
             }
-            
-            // Username length
-            if(username.length > 40){
-                success = false;
-                errors.push("Username is too long.");
-            }
-            
-            // Username format
-            if(!username.match(/^[A-Za-z0-9]*$/)){
-                success = false;
-                errors.push("Username contains invalid characters.");
-            }
-            
-            // Check username for existence
-            user_db.exists_username(username, function(exists){
-                if(exists){
-                    success = false;
-                    errors.push("This username is already used by someone.");
-                }
-                
-                // If still successful
-                if(success == true){
-                    // Save user to mongo db
-                    user.set_username(username);
-                    account_render(req, res, true, ["Your username was changed"]);
-                } else {
-                    account_render(req, res, false, errors);
-                }
-            });
         });
     });
 

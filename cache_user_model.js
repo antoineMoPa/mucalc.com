@@ -19,7 +19,9 @@ function cached_user(session_id, public_id){
         session_id: session_id || "",
         username: "Anonymous",
         permanent_id: null,
-        recent_sheets: []
+        recent_sheets: [],
+        fb_id: "",
+        name: ""
     };
 
     var permanent_user = null;
@@ -34,6 +36,8 @@ function cached_user(session_id, public_id){
         permanent_user = new_permanent_user;
         data.username = permanent_user.username;
         data.email = permanent_user.email;
+        data.name = permanent_user.name;
+        data.fb_id = permanent_user.fb_id;
         data.permanent_id = permanent_user.id;
         data.recent_sheets = permanent_user.recent_sheets;
     }
@@ -84,6 +88,22 @@ function cached_user(session_id, public_id){
         permanent_user.save();
     };
 
+    exports.set_name = function(name){
+        data.name = name;
+    };
+
+    exports.get_name = function(name){
+        return data.name;
+    };
+    
+    exports.set_fb_id = function(fb_id){
+        data.fb_id = fb_id;
+    };
+
+    exports.get_fb_id = function(){
+        return data.fb_id;
+    };
+    
     /*
       Save in cache
      */
