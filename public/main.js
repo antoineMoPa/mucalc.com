@@ -1360,7 +1360,7 @@ function livecalc(root_el, namespace, user){
       Add some useful stuff to math.js
     */
     function eeify_mathjs(){
-        math.import({
+        var custom_functions = {
             /* Parallel resistors */
             LL: function(a,b){
                 var num = 0;
@@ -1386,7 +1386,16 @@ function livecalc(root_el, namespace, user){
                 return "";
             },
             "π": math.pi
-        });
+        };
+
+        custom_functions.zfractal.toTex = function(node, options){
+            var exp = node.args[0].toString();
+            exp = exp.replace(/"/g,"");
+            exp = ee_parse(exp);
+            return "z \\rightarrow " + exp;
+        };
+        
+        math.import(custom_functions);
     }
 
     /*
@@ -1634,7 +1643,7 @@ function livecalc(root_el, namespace, user){
     function zfractal(plot_el, expression, iterations, size){
         var iterations = iterations || 10;
         var exp = math.compile(expression);
-
+        
         plot_el.innerHTML = "";
 
         var div_width = plot_el.clientWidth;

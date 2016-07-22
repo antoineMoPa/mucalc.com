@@ -199,7 +199,8 @@ app.get("/new/:template",function (req, res) {
     var available_templates = [
         "circle-area",
         "sin-x",
-        "convert-round"
+        "convert-round",
+        "julia"
     ];
     
     var template = req.params.template;

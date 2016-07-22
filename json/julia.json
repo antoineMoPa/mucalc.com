@@ -1,0 +1,10 @@
+{"params":
+ {
+     "title":"Empty",
+     "locked":false
+ },
+ "cells":[
+     "zfractal(\"z**2 -0.8+0.156i\",40,400)",
+     "zfractal(\"z**2 + 0.285+0.01i\",40,400)"
+ ]
+}

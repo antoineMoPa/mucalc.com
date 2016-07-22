@@ -27,12 +27,20 @@ body.page-landing{
         margin-bottom:40px;
     }
     
-    h1{
+    h1,h2{
         line-height:80px;
         color:#fff;
         font-size:30px;
         font-family: 'Fira Sans';
         font-weight:300;
+    }
+
+    .text-block{
+        margin-left:20px;
+        margin-right:20px;
+        padding:40px;
+        padding-top:10px;
+        background:lighten($color_3,6%);
     }
 }
 
