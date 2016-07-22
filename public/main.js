@@ -1381,7 +1381,7 @@ function livecalc(root_el, namespace, user){
             zfractal: function(e,i,s){
                 var cell = currently_calculated_cell;
                 wait_for_click(cell, function(){
-                    zfractal(cell.plot, e, i, s);
+                    zfractal(cell, e, i, s);
                 });
                 return "";
             },
@@ -1640,9 +1640,17 @@ function livecalc(root_el, namespace, user){
         return "";
     }
 
-    function zfractal(plot_el, expression, iterations, size){
+    function zfractal(cell, expression, iterations, size){
+        var plot_el = cell.plot;
+        var output = cell.output;
         var iterations = iterations || 10;
-        var exp = math.compile(expression);
+
+        try{
+            var exp = math.compile(expression);
+        } catch (exception){
+            output.textContent = exception;
+            return;
+        }
         
         plot_el.innerHTML = "";
 
@@ -1677,7 +1685,13 @@ function livecalc(root_el, namespace, user){
                 var val = 255;
 
                 for(var k = 0; k < iterations; k++){
-                    scope.z = exp.eval(scope);
+                    try{
+                        scope.z = exp.eval(scope);
+                    } catch (exception){
+                        output.textContent = exception;
+                        return;
+                    }
+        
                     if(len(scope.z) > 2.0){
                         val = parseInt(((k/iterations) * 255));
                         break;
