@@ -60,6 +60,27 @@ module.exports = function(app, cache_user_model, secrets){
         });
     });
 
+    app.post('/account-name',function(req, res){
+        var user = res.locals.user || null;
+        
+        if(user == null){
+            res.redirect("/signup");
+            return;
+        }
+        
+        var name = req.body.name || "";
+        
+        if(name.match(/^[A-Za-z0-9\ \-]{1,60}$/)){
+            // Save user to mongo db
+            user.set_name(name);
+            user.save();
+            account_render(req, res, true,
+                           ["Your name was changed"]);
+        } else {
+            account_render(req, res, false, ['name format not valid']);
+        }
+    });
+    
     app.get('/account-password',function(req, res){
         res.redirect("/account");
     });

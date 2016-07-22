@@ -1,7 +1,7 @@
 .account-content
   h3 Your Account
   col-md-6
-    h4 Change your username
+    h4 Change your username (name on livecalc.xyz)
     form(action="/account-username", method="post")
       fieldset
         label User name (6-40 letters and numbers)
@@ -13,6 +13,18 @@
       .text-left
         button(type="submit" value="submit")
           | Change username
+    h4 Set your name (optional)
+    form(action="/account-name", method="post")
+      fieldset
+        label  Your name (6-40 letters and numbers)
+        br
+        input(type="text", pattern="^[A-Za-z0-9\ \-]{1,60}$", 
+              name="name", placeholder="John A. Smith", 
+              value=user.get_name()
+              )
+      .text-left
+        button(type="submit" value="submit")
+          | Change name
     h4 Change email address
     form(action="/account-email", method="post")
       fieldset 
