@@ -56,7 +56,6 @@ app.use(Cookies.express());
 // Manage cookies
 // Add some user info for render
 app.use(function(req, res, next){
-    console.log("setting cookies up");
     res.locals.cookies = new Cookies(req, res);
     res.locals.version = package_info["version"] || "";
     res.locals.page = "not-specified";
