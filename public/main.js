@@ -688,6 +688,15 @@ function livecalc(root_el, namespace, user){
         for(var i = 0; i < cells.length; i++){
             new_cell(cells[i], true, false);
         }
+
+        if(params.locked == true){
+            modal_inform(
+                "This sheet is locked for edition.\n" +
+                    "Edits will not be saved or sent to other users.\n" +
+                    "But don't worry,\n" +
+                    "you can still try things, use the chat and open a copy.");
+        }
+        
         re_run();
         focus(0);
     }
@@ -1361,10 +1370,10 @@ function livecalc(root_el, namespace, user){
                 }
                 return 1 / num;
             },
-            rule: function(number){
+            rule: function(number, size){
                 var cell = currently_calculated_cell;
                 wait_for_click(cell, function(){
-                    rule(cell.plot, number)
+                    rule(cell.plot, number, size)
                 });
                 return "";
             },
@@ -1399,9 +1408,9 @@ function livecalc(root_el, namespace, user){
     /*
       Cellular automata
      */
-    function rule(plot_el, number){
+    function rule(plot_el, number, size){
         var number = parseInt(number);
-        
+
         plot_el.innerHTML = "";
 
         if(number < 0 || number > 255){
@@ -1410,9 +1419,17 @@ function livecalc(root_el, namespace, user){
 
         var div_width = plot_el.clientWidth;
 
-        var grid_size = 100;
+        var grid_size = size || 100;
+        
         var pixel_size = 4;
 
+        if(size > 100){
+            pixel_size = 2;
+        }
+        if(size > 200){
+            pixel_size = 1;
+        }
+        
         var width = grid_size;
         var height = grid_size;
 
@@ -2182,6 +2199,7 @@ function modal(message, buttons){
     var buttons = buttons || [];
 
     content.textContent = message;
+    content.innerHTML = content.innerHTML.replace(/\n/g,"<br>");
     document.body.appendChild(overlay);
     overlay.appendChild(modal);
 
