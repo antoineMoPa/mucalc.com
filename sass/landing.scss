@@ -41,6 +41,26 @@ body.page-landing{
         padding:40px;
         padding-top:10px;
         background:lighten($color_3,6%);
+
+        img{
+            max-width:100%;
+        }
+    }
+}
+
+@media all and (max-width:768px){
+    .landing{
+        .text-block{
+            margin:0;
+            padding:20px;
+        }
+        .text-block img{
+            float:none;
+        }
+        p .MathJax_Display{
+            font-size:13px;
+            text-align:center;
+        }
     }
 }
 
@@ -139,5 +159,12 @@ body.page-landing{
         padding-right:0;
         margin-left:0;
         margin-right:0;
+    }
+}
+
+
+@media all and (max-width:768px){
+    .landing h2{
+        line-height:40px;
     }
 }
