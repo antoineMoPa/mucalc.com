@@ -17,19 +17,16 @@
           include ./pricing.pug
       else if page == "signup"
         .signup
-          include ./signup.pug
-      else if page == "oauth-signup"
-        .fb-signup
-          include ./oauth-signup.pug
+          include ./account/signup.pug
       else if page == "account"
         .account
-          include ./account.pug
+          include ./account/account.pug
       else if page == "login"
         .login
-          include ./login.pug
+          include ./account/login.pug
       else if page == "dashboard"
         .dashboard
-          include ./dashboard.pug
+          include ./account/dashboard.pug
       else if page == "sheet"
         col-md-6
           p To get started, scroll down and see the quick reference.

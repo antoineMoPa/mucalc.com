@@ -2,6 +2,8 @@ var redis = require("redis");
 
 var client = redis.createClient();
 
+var expiry_timeout = 60 * 60 * 24; // 1 day
+
 module.exports = {};
 
 function session_db_id(id){
@@ -23,10 +25,14 @@ module.exports.store_user = function(id, data){
             console.log("err: " + err);
         }
     });
+
+    // Expire session automagically
+    client.expire(id, expiry_timeout);
 };
 
 module.exports.logout = function(session_id){
     var id = session_db_id(session_id);
+
     client.del(id, function(err, reply){
         if(err != null){
             console.log("err: " + err);

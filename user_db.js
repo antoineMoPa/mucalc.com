@@ -55,12 +55,20 @@ function create(data, callback){
         console.log("Error: empty password got to user_db.create.");
     }
     
+    var password = "";
+
+    if(data.fb_id && data.fb_id != ""){
+        // No need for password here
+    } else {
+        password = hash_password(data.password);
+    }
+    
     var user = new User({
         name: data.name || "",
         fb_id: data.fb_id || "",
         username: data.username || "",
         email: data.email || "",
-        password: hash_password(data.password)
+        password: password
     });
     
     user.save(function(err){

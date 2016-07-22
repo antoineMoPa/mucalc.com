@@ -1,7 +1,9 @@
+var cookie_utils = require("./cookie_utils");
 var request = require("request");
 var user_utils = require("./user_utils");
 
 module.exports = function(app, cache_user_model, secrets){
+    var user_db = cache_user_model.db;
     var redirect_url = secrets.base_url + "/fb/validate";
 
     app.get('/fb/login', function (req, res) {
@@ -12,6 +14,14 @@ module.exports = function(app, cache_user_model, secrets){
         
         res.redirect(url);
     });
+
+    function fb_error(res){
+        res.render('base',{
+            page: "login",
+            negative_message: true,
+            message: "Facebook login did not work."
+        });
+    }
     
     app.get('/fb/validate', function (req, res) {
         var code = req.query.code;
@@ -19,12 +29,8 @@ module.exports = function(app, cache_user_model, secrets){
 
         // Verify if fb returned an error
         if(error != ""){
-            res.render('base',{
-                page: "login",
-                negative_message: true,
-                message: "Facebook login did not work."
-            });
-            
+            fb_error(res);
+            console.log("facebook login error: " + error);
             return;
         }
 
@@ -50,6 +56,12 @@ module.exports = function(app, cache_user_model, secrets){
                     "?access_token=" + access_token;
                 
                 request(me_url, on_me);
+            } else if (error) {
+                console.log("facebook token error: " + error);
+                fb_error(res);
+            } else {
+                console.log("facebook token error: " + response.statusCode);
+                fb_error(res);
             }
         }
         
@@ -59,25 +71,29 @@ module.exports = function(app, cache_user_model, secrets){
             
             var name = json_body.name;
             var fb_id = json_body.id;
-            
+
             function on_exists(exists, mongo_user){
                 if(exists){
-                    // Did user choose a username?
-                    if(mongo_user.username == ""){
-                        // Nope? send to form.
-                        render_oauth_form(res)
-                        return;
-                    }
-
-                    // User account is complete
                     // Login
-                    mongo_user.login(cache_user_model);
-
+                    var cache_user = mongo_user.login(cache_user_model);
+                    
+                    cookie_utils.cookie_send_id(
+                        res,
+                        cache_user.get_session_id()
+                    );
+                    
                     res.redirect("/dashboard");
                 } else {
+                    var username = name;
+
+                    // Only allow certain things in username
+                    // User can change it later anyway
+                    username = username.replace(/[^A-Za-z0-9]*/g,"");
+                    
                     // Create account
                     // Save user to mongo db
                     var mongo_user = user_db.create({
+                        username: username,
                         fb_id: fb_id,
                         name: name
                     }, on_create);
@@ -86,48 +102,17 @@ module.exports = function(app, cache_user_model, secrets){
 
             // When account is created after oauth
             function on_create(mongo_user){
-                var user = mongo_user.login(cache_user_model);
+                var cache_user = mongo_user.login(cache_user_model);
                 
                 cookie_utils.cookie_send_id(
                     res,
-                    user.get_session_id()
+                    cache_user.get_session_id()
                 );
                 
-                render_oauth_form(res);
+                res.redirect("/dashboard");
             }
             
             user_db.exists_fb_id(fb_id, on_exists);
-            
-            function render_oauth_form(res){
-                // Render "complete account" page
-                res.render('base',{
-                    page: "oauth-signup-form"
-                });
-            }
         }
-    });
-
-    // When a user creates an account with facebook/oauth
-    // And needs to set up their username
-    app.post('/oauth/signup',function(req, res){
-        var user = res.locals.user || null;
-        
-        if(user == null){
-            res.redirect("/signup");
-            return;
-        }
-
-        var username = req.body.username || "";
-        
-        user_utils.validate_nickname(username, function(success, errors){
-            if(success){
-                // Save user to mongo db
-                user.set_username(username);
-                account_render(req, res, true,
-                               ["Your username was changed"]);
-            } else {
-                account_render(req, res, false, errors);
-            }
-        });
     });
 }

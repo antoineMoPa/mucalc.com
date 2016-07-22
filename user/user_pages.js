@@ -1,11 +1,11 @@
 /* Handles request to user pages */
 
 var cookie_utils = require("./cookie_utils");
-var user_utils = require("./user_utils");
 
 module.exports = function(app, cache_user_model, secrets){
     var fb_api = require("./fb_api")(app, cache_user_model, secrets);
-        
+    var user_utils = require("./user_utils")(cache_user_model);
+    
     app.get('/signup', function (req, res) {
         if(!res.locals.logged_in){
             // If not logged in
@@ -176,15 +176,19 @@ module.exports = function(app, cache_user_model, secrets){
     
     
     app.get('/logout', function (req, res){
-        var session_id = cookie_utils.cookie_get_id(req);
+        var session_id = cookie_utils.cookie_get_id(res) || "";
         cookie_utils.cookie_send_id(res, "");
 
         // So that the frontend does not think user
         // is logged in.
         res.locals.user = undefined;
         res.locals.logged_in = false;
-        
-        cache_user_model.logout(session_id);
+
+        if(session_id == ""){
+            console.log("session_id is not set, but trying to logout");
+        } else {
+            cache_user_model.logout(session_id);
+        }
         
         res.render('base',{
             page: "login",

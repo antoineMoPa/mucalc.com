@@ -98,12 +98,27 @@ nav ul{
 
 nav li{
     display: inline-block;
+    vertical-align:middle;
+    padding:0;
+    height:30px;
+}
+
+nav a{
+    text-decoration: none;
     padding:5px 20px;
+    height:30px;
+    line-height:30px;
     &:hover{
         background:darken($color_5, 10%);
     }
 }
 
-nav a{
-    text-decoration: none;
+$fb_color: #3b5998;
+
+button.fb-login{
+    background:$fb_color;
+
+    &:hover{
+        background:darken($fb_color,10%);
+    }
 }

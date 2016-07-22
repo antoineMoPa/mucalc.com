@@ -10,6 +10,7 @@ var cache_user_model = require("./cache_user_model");
 var chat_db = require("./chat_db");
 var stats = require("./stats");
 var cookie_utils = require("./user/cookie_utils");
+var Cookies = require('cookies');
 var package_info = require("./package.json");
 
 /*
@@ -37,23 +38,6 @@ console.log(
         (package_info["version"] || "")
 );
 
-// Add some user info for render
-app.use(function(req, res, next){
-    res.locals.version = package_info["version"] || "";
-    res.locals.page = "not-specified";
-    get_user_model(req, function(user){
-        res.locals.user = user || null;
-        if(user == null){
-            // not logged in
-            res.locals.logged_in = false;
-        } else {
-            // logged in
-            res.locals.logged_in = true;
-        }
-        next();
-    });
-});
-
 /* Stylesheets */
 app.use(sass_middleware({
     src: "./sass",
@@ -66,6 +50,29 @@ app.use(sass_middleware({
 
 // Serve static files
 app.use(express.static('public'));
+
+app.use(Cookies.express());
+
+// Manage cookies
+// Add some user info for render
+app.use(function(req, res, next){
+    console.log("setting cookies up");
+    res.locals.cookies = new Cookies(req, res);
+    res.locals.version = package_info["version"] || "";
+    res.locals.page = "not-specified";
+
+    get_user_model(res, function(user){
+        res.locals.user = user || null;
+        if(user == null){
+            // not logged in
+            res.locals.logged_in = false;
+        } else {
+            // logged in
+            res.locals.logged_in = true;
+        }
+        next();
+    });
+});
 
 app.locals.pretty = true;
 
@@ -84,9 +91,9 @@ var user_pages = require("./user/user_pages")(app, cache_user_model, secrets)
 // All the marketing pages (pricing)
 var marketing_pages = require("./marketing/marketing")(app, stats)
 
-function is_logged_in(req, callback){
-    var session_id = cookie_utils.cookie_get_id(req) || "";
-
+function is_logged_in(res, callback){
+    var session_id = cookie_utils.cookie_get_id(res) || "";
+    
     if(session_id == ""){
         callback(false);
     }
@@ -104,10 +111,9 @@ function is_logged_in(req, callback){
   Make sure user is logged in before calling this.
   callback(cached_user)
 */
-function get_user_model(req, callback){
-    var session_id = cookie_utils.cookie_get_id(req) || "";
-    
-    is_logged_in(req, function(logged_in){
+function get_user_model(res, callback){
+    var session_id = cookie_utils.cookie_get_id(res) || "";
+    is_logged_in(res, function(logged_in){
         if(logged_in){
             user = cache_user_model.cached_user(session_id);
             user.fetch(function(){
