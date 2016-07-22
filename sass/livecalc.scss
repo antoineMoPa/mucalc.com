@@ -139,6 +139,10 @@
     display:block;
 }
 
+.livecalc .plot canvas{
+    max-width: 100%;
+}
+
 .livecalc-wait-click{
     max-width:400px;
     text-align:center;
