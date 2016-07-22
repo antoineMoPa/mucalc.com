@@ -96,7 +96,9 @@ module.exports = function(app, cache_user_model, secrets){
                         username: username,
                         fb_id: fb_id,
                         name: name
-                    }, on_create);
+                    }, function(){
+                        on_create(mongo_user);
+                    });
                 }
             }
 
