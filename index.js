@@ -17,8 +17,9 @@ var package_info = require("./package.json");
   default data
  */
 var secrets = {
-    base_url: "http://localhost",
-    fb_appid: null
+    base_url: "http://localhost:3000",
+    fb_appid: null,
+    fb_appsecret: null
 };
 
 try{
