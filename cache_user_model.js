@@ -92,9 +92,16 @@ function cached_user(session_id, public_id){
         data.name = name;
     };
 
-    exports.get_name = function(name){
+    exports.get_name = function(){
         return data.name;
     };
+
+    
+    exports.get_challenges = get_challenges;
+    
+    function get_challenges(callback){
+        return [];
+    }
     
     exports.set_fb_id = function(fb_id){
         data.fb_id = fb_id;

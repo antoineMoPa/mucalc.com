@@ -30,6 +30,8 @@ $error_color: #733;
 
 @import 'account.scss';
 
+@import 'challenges.scss';
+
 /* static pages */
 
 .static h1{
@@ -258,4 +260,3 @@ p{
 .plot-interact{
     margin-top: 30px;
 }
-

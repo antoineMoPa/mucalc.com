@@ -22,6 +22,19 @@
       a(href="/new")
         button
          | Create a new sheet
+    h4 Challenges you created
+    if recent_sheets.length == 0
+      p (No challenge)
+    .recent-sheet-list
+      ul
+        for challenge in user.get_challenges()
+          -url = "/challenge/" + challenge
+          li
+            a(href=url)= url
+    p
+      a(href="/new-challenge/")
+        button
+         | Create a new challenge
   
   col-md-6
     h4 Account Settings
