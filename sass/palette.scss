@@ -28,6 +28,8 @@
     margin:0;
     margin-top:10px;
     padding:4px;
+    padding-left:0;
+    font-weight:300;
 }
 
 .palette p{
@@ -44,15 +46,22 @@
 .palette-content,
 .palette-numbers .palette-content,
 .palette-greek-letters .palette-content{
-    background:#ccc;
+    background:#fff;
     text-align:center;
-    padding-bottom:5px;
+    padding-top:5px;
+    padding-bottom:10px;
     margin-right:10px;
-    box-shadow:0 0 3px #aaa inset;
-
+    box-shadow:0 0 3px #ddd;
     p{
         padding-top:5px;
+        &:first-child{
+            padding-top:0;
+        }
+        margin-top:0;
         padding-left:10px;
         text-align:left;
+        font-weight:300;
+        font-size:14px;
+        line-height:16px;
     }
 }

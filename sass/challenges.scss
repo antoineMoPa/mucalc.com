@@ -4,7 +4,40 @@
     padding-top:10px;
     margin-top:20px;
 
+    h1{
+        margin-left:10px;
+    } 
+    
     label{
+        font-weight:500;
+        font-size:18px;
         display:block;
+        margin-bottom:0;
+    }
+
+    p.info{
+        color:#555;
+        margin:0;
+    }
+
+    .title-input{
+        font-size:23px;
+        font-family:'Fira Sans';
+        width:50%;
+    }
+    
+    textarea{
+        font-size:17px;
+        width:50%;
+        resize:vertical;
+    }
+}
+
+@media all and (max-width:768px){
+    .new-challenge{
+        textarea,
+        .title-input{
+            width:100%;
+        }
     }
 }

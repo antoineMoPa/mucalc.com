@@ -1,9 +1,14 @@
-function livecalc(root_el, namespace, user){
+function livecalc(root_el, settings){
     eeify_mathjs();
+
     var chat;
     var scope = default_scope();
     var current_focus = -1;
-    var namespace = namespace || "";
+    var settings = settings || {};
+    var one_cell = settings.one_cell || false;
+    var user = settings.user || "";
+    var namespace = settings.namespace || "";
+    
     var networked = (namespace != "");
     
     function default_scope(){
@@ -126,6 +131,10 @@ function livecalc(root_el, namespace, user){
     };
 
     exports.on_delete_cell = function(data){
+        if(one_cell){
+            return;
+        }
+
         var number = data.number;
         delete_cell(number, true);
     }
@@ -153,6 +162,10 @@ function livecalc(root_el, namespace, user){
       Delete a cell. If remote, we don't send an event to the server.
      */
     function delete_cell(index, remote){
+        if(one_cell){
+            return;
+        }
+
         var remote = remote || false;
 
         // Never delete last remaining cell
@@ -180,6 +193,10 @@ function livecalc(root_el, namespace, user){
     }
 
     function delete_all(){
+        if(one_cell){
+            return;
+        }
+
         cells.innerHTML = "";
     }
 
@@ -340,6 +357,9 @@ function livecalc(root_el, namespace, user){
 
     /* To add cells if required*/
     function grow_to(number){
+        if(one_cell){
+            return;
+        }
         var from = cells.children.length;
         var to = number;
 
@@ -349,11 +369,19 @@ function livecalc(root_el, namespace, user){
     }
 
     function insert_cell_at(index, send_data, callback){
+        if(one_cell){
+            return;
+        }
+
         new_cell("", send_data, true, index);
         callback();
     }
 
     function new_cell(content, send_data, animate, at_index){
+        if(one_cell && cell_count == 1){
+            return;
+        }
+
         var exports = {};
         var content = content || "";
         var method = "append";
@@ -400,11 +428,17 @@ function livecalc(root_el, namespace, user){
 
         var add_cell_button = subqsa(cell, ".add-cell-button .inner")[0];
 
-        add_cell_button.onclick = function(){
-            var index = get_index();
-            insert_cell_at(index, true,function(){
-                focus(index);
-            });
+        if(!one_cell){
+            add_cell_button.onclick = function(){
+                
+                var index = get_index();
+                insert_cell_at(index, true,function(){
+                    focus(index);
+                });
+            }
+        } else {
+            add_cell_button.parentNode
+                .removeChild(add_cell_button);
         }
 
         input.setAttribute("value", content);
@@ -457,6 +491,10 @@ function livecalc(root_el, namespace, user){
                 = subqsa(cell,".delete-cell-button")[0];
 
             delete_cell_button.onclick = function(){
+                if(one_cell){
+                    return;
+                }
+
                 delete_cell(get_index());
             };
         }
@@ -894,8 +932,14 @@ function livecalc(root_el, namespace, user){
       Add some useful stuff to math.js
     */
     function eeify_mathjs(){
+        // Verify if we already did this
+        if(math.LC_TWEAKED){
+            return;
+        }
+        
         var custom_functions = {
             /* Parallel resistors */
+            LC_TWEAKED: true,
             LL: function(a,b){
                 var num = 0;
                 for(i in arguments){

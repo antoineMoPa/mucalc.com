@@ -2,6 +2,15 @@
     margin-top:5px;
     margin-bottom:5px;
     position:relative;
+
+    label,
+    fieldset & label{
+        margin-left:10px;
+        font-size:10px;
+        font-weight:300;
+        color:#555;
+        display:block;
+    }
 }
 
 .cell-and-button-wrapper{
