@@ -80,7 +80,7 @@ app.set('views', './views')
 app.set('view engine', 'pug');
 
 app.get('/', function (req, res) {
-    stats.log_visit("landing-page");
+    stats.log_visit("landing-page", req);
     res.render('base',{page: "landing"});
 });
 
@@ -185,7 +185,7 @@ function new_sheet(req, res, data){
     // Todo: verify if a sheet already has same token
     // Not so probable...
     // Nope, new sheet
-    stats.new_sheet();
+    stats.new_sheet(req);
     
     var token = require("./tokens").generate_token();
     
@@ -216,7 +216,7 @@ app.get("/new/:template",function (req, res) {
         var name = available_templates[index];
         var filename = name + ".json";
         var content = require("./json/"+filename);
-        stats.launch_example(name);
+        stats.launch_example(name, req);
         new_sheet(req, res, content);
     } else {
         res.status(404).send('Template not found');

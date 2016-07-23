@@ -231,7 +231,7 @@ function livecalc(namespace, nsp){
                 return;
             }
 
-            stats.new_sheet_visit(namespace);
+            stats.new_sheet_visit(namespace, ip);
 
             stats.get_sheet_visits(namespace, function(num){
                 nsp.emit("sheet visit count", num);
