@@ -22,6 +22,8 @@ function livecalc(root_el, namespace, user){
 
     var net_engine = lc_network_engine(socket, exports);
 
+    exports.net_engine = net_engine;
+    
     exports.el = root_el;
 
     exports.socket = socket;
@@ -148,70 +150,7 @@ function livecalc(root_el, namespace, user){
     }
 
     init_user_data();
-
-    function init_sheet_panel(){
-        var panel = qsa(".sheet-panel")[0];
-
-        var lock_sheet_button = subqsa(
-            root_el,
-            "button[name='lock-sheet']"
-        )[0];
-
-        lock_sheet_button.onclick = function(){
-            if(namespace == "demo"){
-                modal_inform("This sheet is the public demo, it can't be locked.");
-                return;
-            }
-
-            modal_yesno(
-                "This action cannot be undone. " +
-                    "Nobody will be able to modify this " +
-                    "sheet after you click \"yes\". " +
-                    "Do you really want to lock the sheet?",
-                function(yes){
-                    if(yes){
-                        net_engine.lock_sheet();
-                    }
-                });
-        };
-
-        {
-            // New copy button
-            var new_copy_button = subqsa(
-                root_el,
-                "button[name='new-copy']"
-            )[0];
-            
-            new_copy_button.onclick = function(){
-                window.location.href = "/copy/"+namespace;
-            }
-        }
-
-        {
-            // View JSON button
-            var view_json_button = subqsa(
-                root_el,
-                "button[name='view-json']"
-            )[0];
-            
-            view_json_button.onclick = function(){
-                var json = get_json();
-                modal_inform(json);
-            }
-        }
-
-        {
-            // Visit count
-            var visit_count = subqsa(panel, ".visit-count")[0];
-            
-            exports.on_visit_count = function(count){
-                visit_count.textContent = count;
-            };
-        }
-        
-    }
     
-    init_sheet_panel();
 
     /*
       Delete a cell. If remote, we don't send an event to the server.
@@ -256,6 +195,8 @@ function livecalc(root_el, namespace, user){
 
     exports.re_run = re_run;
 
+    exports.get_json = get_json;
+    
     function get_json(){
         var data = {};
 
