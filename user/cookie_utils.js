@@ -6,7 +6,7 @@ module.exports.cookie_send_id = cookie_send_id;
 
 function cookie_send_id(res, id){
     res.locals.cookies.set('session_id', id, {
-        maxAge: 60 * 60 * 24 // 1 day
+        maxAge: 60 * 60 * 24 * 1000
     });
 }
 
