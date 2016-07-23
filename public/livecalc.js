@@ -3,7 +3,9 @@ function livecalc(root_el, namespace, user){
     var chat;
     var scope = default_scope();
     var current_focus = -1;
-
+    var namespace = namespace || "";
+    var networked = (namespace != "");
+    
     function default_scope(){
         return {
             ans: undefined
@@ -20,13 +22,14 @@ function livecalc(root_el, namespace, user){
     var socket = io("/" + namespace);
     var params = {};
 
-    var net_engine = lc_network_engine(socket, exports);
-
-    exports.net_engine = net_engine;
+    if(networked){
+        var net_engine = lc_network_engine(socket, exports);
+        
+        exports.net_engine = net_engine;
+        exports.socket = socket;
+    }
     
     exports.el = root_el;
-
-    exports.socket = socket;
 
     new_cell("", true, true);
 
@@ -34,25 +37,14 @@ function livecalc(root_el, namespace, user){
         load_json(sheet);
     };
 
-    var user_count = subqsa(root_el, ".user-count")[0];
-
-    if(user.has_id() == false){
-        net_engine.ask_user_id();
-    } else {
-        net_engine.send_user_id(user.get_public_id());
-    }
-
-    {
-        // share url activation
-        var url_share_button = qsa(".url-popup-modal")[0];
-
-        url_share_button.onclick = function(e){
-            e.preventDefault();
-            var link = url_share_button.href;
-            modal_inform(link);
+    if(networked){
+        if(user.has_id() == false){
+            net_engine.ask_user_id();
+        } else {
+            net_engine.send_user_id(user.get_public_id());
         }
     }
-
+    
     exports.die = function(message){
         render("livecalc-die",root_el);
 
@@ -85,6 +77,7 @@ function livecalc(root_el, namespace, user){
     };
 
     exports.on_user_count = function(count){
+        var user_count = subqsa(root_el, ".user-count")[0];
         var plural = count > 1;
         var count = parseInt(count);
         user_count.innerHTML = count + " user" + (plural? "s": "");
@@ -137,20 +130,24 @@ function livecalc(root_el, namespace, user){
         delete_cell(number, true);
     }
 
-    window.addEventListener("beforeunload", net_engine.close);
-
+    if(networked){
+        window.addEventListener( "beforeunload",
+                                 net_engine.close );
+    }
+    
     function init_user_data(){
-        var username_field = qsa(".user-name")[0];
-
         exports.on_user_data = function(data){
+            var username_field = qsa(".user-name")[0];
+            
             user.set_public_id(data.public_id);
             username_field.innerText = data.username;
             chat.on_user_ready();
         };
     }
-
-    init_user_data();
     
+    if(networked){
+        init_user_data();
+    }
 
     /*
       Delete a cell. If remote, we don't send an event to the server.
@@ -176,7 +173,7 @@ function livecalc(root_el, namespace, user){
                 focus(index-1);
             });
 
-            if(!remote){
+            if(!remote && networked){
                 net_engine.delete_cell(index);
             }
         }
@@ -239,23 +236,17 @@ function livecalc(root_el, namespace, user){
     }
 
     exports.load_json = load_json;
-
-    var sheet_state = subqsa(root_el, ".sheet-state")[0];
-    var lock_panel = qsa(".panel-lock-sheet")[0];
     
-    function update_state(){
-        if(params.locked){
-            sheet_state.textContent = "This sheet is locked.";
-            sheet_state.setAttribute("title","Modifications will not be saved. You can still open a copy (See bottom of the page).");
-            hide(lock_panel);
-        } else {
-            sheet_state.textContent = "This sheet is public.";
-            sheet_state.setAttribute("title","");
+    if(networked){
+        function update_state(){
+            if(exports.on_update_state != undefined){
+                exports.on_update_state(params);
+            }
         }
+
+        update_state();
     }
-
-    update_state();
-
+    
     function send_all(){
         for(var i = 0; i < cells.children.length; i++){
             send_value(i);
@@ -280,7 +271,9 @@ function livecalc(root_el, namespace, user){
             index = -1;
         }
         current_focus = index;
-        net_engine.send_focus(index);
+        if(networked){
+            net_engine.send_focus(index);
+        }
     }
 
     function cell_state_unsaved(index){
@@ -758,7 +751,9 @@ function livecalc(root_el, namespace, user){
     function send_live_edit(index){
         var cell_data = find_cell(index);
         var input = cell_data.input;
-        net_engine.live_edit_cell(index, input.value);
+        if(networked){
+            net_engine.live_edit_cell(index, input.value);
+        }
     }
     
     exports.on_live_edit = on_live_edit;
@@ -775,8 +770,10 @@ function livecalc(root_el, namespace, user){
         var cell_data = find_cell(index);
 
         var input = cell_data.input;
-        
-        net_engine.edit_cell(index, input.value, method);
+
+        if(networked){
+            net_engine.edit_cell(index, input.value, method);
+        }
     }
 
     function calculate_cell(index){

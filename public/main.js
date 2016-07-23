@@ -420,9 +420,21 @@ if(is_sheet){
     var calc = livecalc(qsa("livecalc")[0], namespace, user);
     var chat = livechat(qsa("livechat")[0], namespace, calc.socket, user);
 
+    // This thing communicates with the server
     var net_engine = calc.net_engine;
+
+    // Render documentation
+    var small_doc_container =
+        subqsa(calc.el, ".small-doc-container")[0];
+    
+    render("small-doc", small_doc_container);
     
     function init_sheet_panel(root_el){
+        // Render panel
+        var panel_container =
+            subqsa(root_el, ".sheet-panel-container" )[0];
+        render("sheet-panel", panel_container);
+        
         var panel = qsa(".sheet-panel")[0];
 
         var lock_sheet_button = subqsa(
@@ -486,7 +498,36 @@ if(is_sheet){
     
     init_sheet_panel(calc.el);
 
+    // Init header
     
+    var header_container = qsa(".livecalc-header-container")[0]
+    render("livecalc-header", header_container);
+    
+    var sheet_state = subqsa(calc.el, ".sheet-state")[0];
+    var lock_panel = qsa(".panel-lock-sheet")[0];
+        
+    calc.on_update_state = function(params){
+        if(params.locked){
+            sheet_state.textContent = "This sheet is locked.";
+            sheet_state.setAttribute("title","Modifications will not be saved. You can still open a copy (See bottom of the page).");
+            hide(lock_panel);
+        } else {
+            sheet_state.textContent = "This sheet is public.";
+            sheet_state.setAttribute("title","");
+        }
+    }
+    
+    {
+        // share url activation
+        var url_share_button = qsa(".url-popup-modal")[0];
+        
+        url_share_button.onclick = function(e){
+            e.preventDefault();
+            var link = url_share_button.href;
+            modal_inform(link);
+        }
+    }
+
     calc.set_chat(chat);
 
     resizeable_sidebar_box(function(proportion){

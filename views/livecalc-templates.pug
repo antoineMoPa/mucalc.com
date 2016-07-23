@@ -1,26 +1,9 @@
 template(name='livecalc')
   .livecalc
-    .livecalc-header
-      col-md-4.text-left.mobile-center
-        .sheet-state
-      col-md-4.text-center
-        .user-count(title='(Including you)')
-      col-md-4.text-right
-        .user-info.mobile-center
-          span.user-name
-            | Anonymous
-          if logged_in
-            |  - 
-            a(href="/dashboard", target="_blank") dashboard
-            |  - 
-            a(href="/logout") Log out
-          else
-            |  - 
-            a(href="/login") Log in
-      clearfix
+    .livecalc-header-container
     .livecalc-cells
-    template-instance(data-name='sheet-panel')
-    template-instance(data-name='small-doc')
+    .sheet-panel-container
+    .small-doc-container
 template(name='sheet-panel')
   .sheet-panel.panel
     h3 Sheet Panel
