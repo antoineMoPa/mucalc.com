@@ -110,7 +110,7 @@ function mathjs_compute_engine(){
 var href = window.location.href;
 
 var is_sheet = href.match(/\/sheet\/(.*)/);
-var is_new_challenge = href.match(/\/new-challenge/);
+var is_challenge = href.match(/\/challenge/);
 var is_landing = qsa(".landing").length > 0? true: false;
 
 if(is_sheet){
@@ -291,7 +291,7 @@ if(is_sheet){
     init_doc(calc);
 } else if (is_landing){
     // TODO: create something nice but easy on CPU for background
-} else if (is_new_challenge){
+} else if (is_challenge){
     var initial = livecalc(qsa("livecalc.initial-content")[0]);
     var validator = livecalc(qsa("livecalc.validator")[0],{
         one_cell: true

@@ -6,7 +6,7 @@ module.exports = function(app, cache_user_model, secrets){
     var fb_api = require("./fb_api")(app, cache_user_model, secrets);
     var user_utils = require("./user_utils")(cache_user_model);
 
-    var challenges = require("./challenge-pages")(app, cache_user_model, secrets);
+    var challenges = require("./challenge-pages")(app, cache_user_model);
     
     app.get('/signup', function (req, res) {
         if(!res.locals.logged_in){
