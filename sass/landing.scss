@@ -41,9 +41,13 @@ body.page-landing{
         padding:40px;
         padding-top:10px;
         background:lighten($color_3,6%);
-
+        margin-bottom:40px;
         img{
             max-width:100%;
+        }
+
+        button{
+            box-shadow:0 0 8px rgba(255,255,255,0.3);
         }
     }
 }
