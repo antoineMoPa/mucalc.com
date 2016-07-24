@@ -726,7 +726,7 @@ function livecalc(root_el, settings){
         
         var content;
         
-        var tex = "$$"+tex_content+"$$";
+        var tex = "$$ "+tex_content+" $$";
         
         var div = MathJax.HTML.Element(
             "div",
@@ -917,6 +917,7 @@ function livecalc(root_el, settings){
                 } catch (e) {
                     console.error(e + "");
                 }
+                
                 update_mathjax_output(index, tex_output);
             }
         
@@ -1318,9 +1319,12 @@ function livecalc(root_el, settings){
                     var input = cell.input;
                     on_click(el, input,{
                         go: function(){
-                            calculate_cell(current_focus)
+                            calculate_cell(current_focus);
+                            
                             send_value(current_focus);
-
+                            
+                            update_mathjax_input(current_focus);
+                            
                             // If last cell, add new cell
                             if(current_focus == cell_count - 1){
                                 new_cell("", true, true);
