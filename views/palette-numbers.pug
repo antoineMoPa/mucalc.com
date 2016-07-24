@@ -1,19 +1,49 @@
 .palette-numbers
   h4 Numbers
   .palette-content
+    button(title='Last result') ans
+    button(title='Exponent',
+           data-wrap-before="(",
+           data-wrap-after=")^[[cursor]]",
+           ) ^
+    button(title='Square root',
+           data-wrap-before="sqrt(",
+           data-wrap-after="[[cursor]])",
+           data-no-sel="sqrt([[cursor]])",
+           ) sqrt
+    button(title='π, The math constant Pi',
+           data-no-sel="π[[cursor]]",
+           ) π
+    br
     button(title='7') 7
     button(title='8') 8
     button(title='9') 9
+    button(title='Add', 
+           data-wrap-before="(",
+           data-wrap-after="+[[cursor]])",
+           ).bold +
     br
     button(title='4') 4
     button(title='5') 5
     button(title='6') 6
+    button(title='Substract',
+           data-wrap-before="(",
+           data-wrap-after="-[[cursor]])",
+           ).bold -
     br
     button(title='1') 1
     button(title='2') 2
     button(title='3') 3
+    button(title='Multiply',
+           data-wrap-before="(",
+           data-wrap-after=")*[[cursor]]",
+           ).bold *
     br
     button(title='0') 0
     button(title='.') .
     button(title='go', action='go') go
+    button(title='Divide',
+           data-wrap-before="(",
+           data-wrap-after=")/[[cursor]]",
+           ).bold /
 

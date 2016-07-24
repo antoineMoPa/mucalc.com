@@ -39,8 +39,13 @@
 }
 
 .palette-numbers button{
-    width:30%;
+    width:24%;
     max-width:57px;
+
+    &.bold{
+        font-size:110%;
+        font-weight:500;
+    }
 }
 
 .palette-content,
