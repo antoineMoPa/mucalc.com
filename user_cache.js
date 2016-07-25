@@ -97,10 +97,10 @@ function visited_sheets_id(user_id){
 /*
   Call whenever a sheet is visited by a user
 */
-module.exports.visit_sheet = function(user_id, sheet_ids){
+module.exports.visit_sheet = function(user_id, sheets){
     var visited_id = visited_sheets_id(user_id);
     
-    client.lpush(visited_id, sheet_ids, function(err, reply){
+    client.rpush(visited_id, sheets, function(err, reply){
         if(err != null){
             console.log("err: " + err);
         }
@@ -114,7 +114,7 @@ module.exports.visit_sheet = function(user_id, sheet_ids){
 module.exports.recently_visited_sheets = function(user_id, callback){
     var visited_id = visited_sheets_id(user_id);
 
-    client.lrange(visited_id, -10, -1, function(err, reply){
+    client.lrange(visited_id, -20, -1, function(err, reply){
         if(err != null){
             console.log("err: " + err);
         } else {

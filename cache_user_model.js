@@ -47,8 +47,8 @@ function cached_user(session_id, public_id){
     /*
       Can be an array or a single element
      */
-    function visit_sheets(sheet_ids){
-        user_cache.visit_sheet(data.permanent_id, sheet_ids);
+    function visit_sheets(sheets){
+        user_cache.visit_sheet(data.permanent_id, sheets);
     }
 
     exports.recently_visited_sheets = recently_visited_sheets;

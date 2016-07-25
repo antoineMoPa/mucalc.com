@@ -13,6 +13,10 @@ function lc_network_engine(socket, shell){
         shell.on_user_data(data);
     });
 
+    socket.on("sheet title", function(data){
+        shell.on_sheet_title(data);
+    });
+    
     socket.on("sheet",function(sheet){
         shell.on_sheet(sheet);
     });
@@ -51,6 +55,10 @@ function lc_network_engine(socket, shell){
 
     exports.lock_sheet = function(){
         socket.emit("lock sheet");
+    };
+    
+    exports.sheet_title = function(data){
+        socket.emit("sheet title", data);
     };
 
     exports.delete_cell = function(index){
@@ -192,6 +200,23 @@ if(is_sheet){
             }
         }
 
+        {
+            var change_title_button = subqsa(
+                root_el,
+                "button[name='change-title']"
+            )[0];
+            var title_input = subqsa(
+                root_el,
+                "input[name='sheet-title']"
+            )[0];
+
+            change_title_button.onclick = function(){
+                net_engine.sheet_title({
+                    title: title_input.value
+                });
+            }
+        }
+        
         {
             // Visit count
             var visit_count = subqsa(panel, ".visit-count")[0];

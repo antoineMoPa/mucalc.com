@@ -2,7 +2,7 @@ var deepcopy = require("deepcopy");
 
 var default_sheet = {
     "params":{
-        "title":"Empty",
+        "title":"Untitled",
         "locked":false,
     },
     "cells":[
@@ -67,6 +67,16 @@ module.exports.create = function(){
         
         return sheet;
     }
+
+    exports.set_title = function(title){
+        if(sheet.params.locked){
+            return sheet;
+        }
+
+        sheet.params.title = title || "";
+        return sheet;
+    }
+
     
     exports.get_sheet = function(){
         return sheet;

@@ -7,6 +7,12 @@ template(name='livecalc')
 template(name='sheet-panel')
   .sheet-panel.panel
     h3 Sheet Panel
+    col-md-3
+      | Change title
+      br
+      input(name='sheet-title')
+      button(name='change-title')
+        | Change title
     col-md-3.panel-lock-sheet
       | Lock sheet from further editing
       br
@@ -22,6 +28,8 @@ template(name='sheet-panel')
       br
       button(name='view-json')
         | View JSON
+    clearfix
+
     clearfix
     br
     h3 Stats

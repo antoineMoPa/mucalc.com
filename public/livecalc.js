@@ -37,7 +37,10 @@ function livecalc(root_el, settings){
     exports.el = root_el;
 
     exports.on_sheet = function(sheet){
-        load_json(sheet);
+        var sheet = load_json(sheet);
+        exports.on_sheet_title({
+            title: sheet.params.title
+        });
     };
 
     var initial_content = root_el.getAttribute("data-value") || "";
@@ -118,6 +121,14 @@ function livecalc(root_el, settings){
         update_state();
     };
 
+    exports.on_sheet_title = function(data){
+        var title = subqsa(root_el,".sheet-title")[0];
+        var input = subqsa(root_el,"input[name='sheet-title']")[0];
+        title.innerText = data.title;
+        input.value = data.title;
+    };
+
+    
     exports.on_focus_index = function(data){
         for(var i = 0; i < data.length; i++){
             var cell = find_cell(i);
@@ -258,6 +269,7 @@ function livecalc(root_el, settings){
         
         re_run();
         focus(0);
+        return data;
     }
 
     exports.load_json = load_json;

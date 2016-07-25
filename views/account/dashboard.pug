@@ -14,7 +14,7 @@
       p (No recently visited sheets)
     .recent-sheet-list.list
       table
-        for sheet in recent_sheets
+        for sheet in recent_sheets.reverse()
           -url = "/sheet/"+sheet
           tr
             td
@@ -34,7 +34,7 @@
     else
       .challenge-list.list
         table
-          for challenge in challenges
+          for challenge in challenges.reverse()
             -url = "/challenge/" + challenge.public_id
             -del = url + "/delete"
             -run = url + "/run"

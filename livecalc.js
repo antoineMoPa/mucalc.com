@@ -342,6 +342,34 @@ function livecalc(namespace, nsp){
                 });
             });
 
+            socket.on("sheet title",function(data){
+                // Don't change demo name
+                if(namespace == "demo"){
+                    return;
+                }
+                
+                // locked?
+                if(model.is_locked()){
+                    return;
+                }
+
+                send_focus_index();
+
+                model.set_title(data.title);
+                
+                // Inform users
+                system_chat_message(
+                    namespace,
+                    nsp,
+                    get_username() +
+                        " change the sheet title to: " +
+                        data.title
+                );
+                
+                nsp.emit("sheet title",data);
+            });
+
+            
             /*
               When a user submits a cell by pressing enter
               or "go", the model is updated and the info 
