@@ -277,6 +277,9 @@ module.exports = function(app, cache_user_model, secrets){
     var Challenge = require("./challenge-pages").Challenge;
     
     app.get('/dashboard', function (req, res) {
+        var begin_time = (new Date()).getTime();
+        console.log("begin: " + begin_time);
+
         // Se if user is logged in and get data
         if(!res.locals.logged_in){
             // Not logged in
@@ -312,6 +315,9 @@ module.exports = function(app, cache_user_model, secrets){
                     Challenge.find({
                         owner: user.get_public_id()
                     }, function(err, challenges){
+                        var now = (new Date()).getTime();
+                        console.log("challenges: " + (now - begin_time));
+
                         resolve(challenges);
                     });
                 }
@@ -321,12 +327,18 @@ module.exports = function(app, cache_user_model, secrets){
                 find_recent_sheets,
                 find_challenges
             ]).then(function(values){
+                var now = (new Date()).getTime();
+                console.log("begin render: " + (now - begin_time));
+
                 // Render page
                 res.render('base',{
                     page: "dashboard",
                     recent_sheets: values[0],
                     challenges: values[1]
                 });
+
+                var now = (new Date()).getTime();
+                console.log("end render: " + (now - begin_time));
             });
 
         }
@@ -412,7 +424,6 @@ module.exports = function(app, cache_user_model, secrets){
                 var ip = get_ip(req);
                 
                 console.log("unsuccessful account creation attempt: " + ip);
-                
                 
                 res.render('base',{
                     page: "signup",

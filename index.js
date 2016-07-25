@@ -44,7 +44,7 @@ app.use(sass_middleware({
     src: "./sass",
     dest: "./public/css",
     debug: false,
-    sourceMap: true,
+    sourceMap: false,
     outputStyle: "compressed",
     prefix: "/css"
 }));
@@ -63,6 +63,7 @@ app.use(function(req, res, next){
 
     get_user_model(res, function(user){
         res.locals.user = user || null;
+
         if(user == null){
             // not logged in
             res.locals.logged_in = false;
