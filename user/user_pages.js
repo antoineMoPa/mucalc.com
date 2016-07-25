@@ -289,6 +289,19 @@ module.exports = function(app, cache_user_model, secrets){
                 (resolve, reject) => {
                     // Find recently visited sheets
                     user.recently_visited_sheets(function(recent_sheets){
+                        for(var sh in recent_sheets){
+                            var sheet = recent_sheets[sh];
+                            try{
+                                recent_sheets[sh] =
+                                    JSON.parse(sheet);
+                            } catch(e){
+                                recent_sheets[sh] = {
+                                    id: sheet,
+                                    title: sheet
+                                }
+                            }
+                            
+                        }
                         resolve(recent_sheets);
                     });
                 }

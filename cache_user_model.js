@@ -42,13 +42,13 @@ function cached_user(session_id, public_id){
         data.recent_sheets = permanent_user.recent_sheets;
     }
 
-    exports.visit_sheets = visit_sheets;
+    exports.visit_sheet = visit_sheet;
 
     /*
       Can be an array or a single element
      */
-    function visit_sheets(sheets){
-        user_cache.visit_sheet(data.permanent_id, sheets);
+    function visit_sheet(sheet){
+        user_cache.visit_sheet(data.permanent_id, sheet);
     }
 
     exports.recently_visited_sheets = recently_visited_sheets;

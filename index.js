@@ -148,11 +148,6 @@ app.get("/sheet/:id",function (req, res) {
                     in_sheet: true,
                     page: "sheet"
                 });
-                
-                // For "recently visited sheets"
-                if(user != null){
-                    user.visit_sheets(sheet_id);
-                }
             } else {
                 // Else, sheet not found
                 res.status(404).send('Not Found');

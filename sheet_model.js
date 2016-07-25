@@ -77,6 +77,9 @@ module.exports.create = function(){
         return sheet;
     }
 
+    exports.get_title = function(){
+        return sheet.params.title;
+    }
     
     exports.get_sheet = function(){
         return sheet;

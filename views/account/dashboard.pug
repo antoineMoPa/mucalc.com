@@ -15,10 +15,14 @@
     .recent-sheet-list.list
       table
         for sheet in recent_sheets.reverse()
-          -url = "/sheet/"+sheet
+          - url = "/sheet/" + sheet.id
+          - title = sheet.title
           tr
             td
-              a(href=url)= url
+              a(href=url)
+                = url
+                |  - 
+                = title
             td.text-right
               a.run(href=url)
                 button

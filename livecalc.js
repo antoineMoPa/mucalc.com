@@ -190,6 +190,11 @@ function livecalc(namespace, nsp){
                                 socket.broadcast,
                                 get_username() + " joined the sheet."
                             );
+
+                            user.visit_sheet({
+                                id: namespace,
+                                title: model.get_title()
+                            });
                             
                             send_user_data();
                         });

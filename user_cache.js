@@ -97,10 +97,12 @@ function visited_sheets_id(user_id){
 /*
   Call whenever a sheet is visited by a user
 */
-module.exports.visit_sheet = function(user_id, sheets){
+module.exports.visit_sheet = function(user_id, sheet){
     var visited_id = visited_sheets_id(user_id);
+
+    var sheet = JSON.stringify(sheet);
     
-    client.rpush(visited_id, sheets, function(err, reply){
+    client.rpush(visited_id, sheet, function(err, reply){
         if(err != null){
             console.log("err: " + err);
         }
