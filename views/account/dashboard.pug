@@ -12,7 +12,7 @@
     h4 Recently visited sheets
     if recent_sheets.length == 0
       p (No recently visited sheets)
-    .recent-sheet-list
+    .recent-sheet-list.list
       ul
         for sheet in recent_sheets
           -url = "/sheet/"+sheet
@@ -23,16 +23,26 @@
         button
          | Create a new sheet
     h4 Challenges you created
-    if recent_sheets.length == 0
-      p (No challenge)
-    .recent-sheet-list
+    if challenges.length == 0
+      p (No challenges)
+    .challenge-list.list
       ul
-        for challenge in user.get_challenges()
-          -url = "/challenge/" + challenge
+        for challenge in challenges
+          -url = "/challenge/" + challenge.public_id
+          -del = url + "/delete"
+          -run = url + "/run"
           li
-            a(href=url)= url
+            a(href=url)
+              = url
+              |  - 
+              = challenge.title.substr(0,50)
+            form(method="post", action=del).delete-form
+              input(type="hidden", name="id", value=challenge.public_id)
+              button.delete(type="submit")
+                | delete
+            a.run(href=run) run
     p
-      a(href="/new-challenge/")
+      a(href="/challenge/new")
         button
          | Create a new challenge
   

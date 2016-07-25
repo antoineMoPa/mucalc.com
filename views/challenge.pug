@@ -1,5 +1,5 @@
-.new-challenge
-  form(action="/challenge", method="post")
+.challenge-edit
+  form(action="/challenge/" + challenge_id, method="post").challenge-form
     h1 New Challenge
     fieldset
       label Challenge title
@@ -11,9 +11,8 @@
     fieldset
       label Your question
       p.info What is the result you want?
-      textarea(
-          name="question", placeholder="Enter a question", 
-          value=(question||""))
+      textarea(name="question", placeholder="Enter a question")
+        = (question||"")
     fieldset
       label Time
       p.info How many seconds do players have to solve the challenge?
@@ -22,10 +21,12 @@
       label Initial sheet content
       p.info Give players something to start with
       livecalc.initial-content(data-value=(initial_content||""))
+      input(type="hidden", name="initial_content")
     fieldset
       label Answer validation expression
       p.info Write a expression that returns true or false. `ans` is the cell result. For example, if the only acceptable answer is 42, type: ans == 42
-      livecalc.validator(data-value=(validator)||"")
+      livecalc.validator(data-value=(validator||""))
+      input(type="hidden", name="validator")
     .text-center
       button.submit-new-challenge
         |  Sumbit

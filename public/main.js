@@ -292,10 +292,30 @@ if(is_sheet){
 } else if (is_landing){
     // TODO: create something nice but easy on CPU for background
 } else if (is_challenge){
+
+    // Challenge form code
+    
     var initial = livecalc(qsa("livecalc.initial-content")[0]);
     var validator = livecalc(qsa("livecalc.validator")[0],{
         one_cell: true
     });
+    
+    var form = qsa("form.challenge-form")[0];
+    var initial_content_input =
+        qsa("input[name='initial_content']")[0];
+    var validator_input =
+        qsa("input[name='validator']")[0];
+
+    // on submit:
+    // Take livecalc jsons and store them in variables
+    form.onsubmit = function(){
+        initial_content_input.value = initial.get_json();
+        validator_input.value = validator.get_json();
+
+        form.submit();
+        
+        return false;
+    };
 }
 
 /**

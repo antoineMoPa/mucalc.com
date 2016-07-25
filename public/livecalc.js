@@ -36,12 +36,18 @@ function livecalc(root_el, settings){
     
     exports.el = root_el;
 
-    new_cell("", true, true);
-
     exports.on_sheet = function(sheet){
         load_json(sheet);
     };
 
+    var initial_content = root_el.getAttribute("data-value") || "";
+    
+    if(initial_content != ""){
+        load_json(initial_content);
+    } else {
+        new_cell("", true, true);
+    }
+    
     if(networked){
         if(user.has_id() == false){
             net_engine.ask_user_id();
@@ -232,8 +238,10 @@ function livecalc(root_el, settings){
         var cells = data.cells;
         params = data.params;
 
-        update_state();
-
+        if(networked){
+            update_state();
+        }
+        
         delete_all();
 
         for(var i = 0; i < cells.length; i++){

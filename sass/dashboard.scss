@@ -3,6 +3,39 @@
     background:#fff;
     box-shadow:0 0 3px rgba(0,0,0,0.3);
     margin:20px;
+
+
+    .list{
+        .delete-form{
+            display:inline-block;
+        }
+
+        a.run{
+            background:$color_3;
+            color:#fff;
+            border-radius:3px;
+            text-decoration:none;
+            padding:5px;
+        }
+        
+        a.run,
+        button{
+            margin:0 20px;
+        }
+
+        ul{
+            padding-left:0;
+        }
+        
+        li{
+            list-style-type:none;
+            padding:5px 5px;
+        }
+        
+        li:nth-child(2n+1){
+            background:#eee;
+        }
+    }
 }
 
 a.account-settings-link{

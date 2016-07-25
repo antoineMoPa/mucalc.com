@@ -273,6 +273,8 @@ module.exports = function(app, cache_user_model, secrets){
             }
         }
     }
+
+    var Challenge = require("./challenge-pages").Challenge;
     
     app.get('/dashboard', function (req, res) {
         // Se if user is logged in and get data
@@ -283,12 +285,34 @@ module.exports = function(app, cache_user_model, secrets){
         } else {
             var user = res.locals.user || null;
             
-            // Find recently visited sheets
-            user.recently_visited_sheets(function(sheets){
+            var find_recent_sheets = new Promise(
+                (resolve, reject) => {
+                    // Find recently visited sheets
+                    user.recently_visited_sheets(function(recent_sheets){
+                        resolve(recent_sheets);
+                    });
+                }
+            );
+            
+            var find_challenges = new Promise(
+                (resolve, reject) => {
+                    Challenge.find({
+                        owner: user.get_public_id()
+                    }, function(err, challenges){
+                        resolve(challenges);
+                    });
+                }
+            );
+
+            Promise.all([
+                find_recent_sheets,
+                find_challenges
+            ]).then(function(values){
                 // Render page
                 res.render('base',{
                     page: "dashboard",
-                    recent_sheets: sheets
+                    recent_sheets: values[0],
+                    challenges: values[1]
                 });
             });
         }

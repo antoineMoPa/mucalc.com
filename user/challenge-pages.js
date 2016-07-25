@@ -12,12 +12,16 @@ var ChallengeSchema = new mongoose.Schema({
     cells: String
 });
 
+var Challenge;
+
 module.exports = function(app, cache_user_model){
-    var Challenge = mongoose.model('Challenge', ChallengeSchema);
+    Challenge = mongoose.model('Challenge', ChallengeSchema);
+    
+    module.exports.Challenge = Challenge;
     
     app.get('/challenge/new', function (req, res) {
         if(res.locals.logged_in){
-            var token = require("../tokens").generate_token(20);
+            var token = require("../tokens").generate_token(10);
             
             var challenge = new Challenge({
                 public_id: token,
@@ -29,7 +33,10 @@ module.exports = function(app, cache_user_model){
                     console.log(err);
                     res.redirect("/dashboard");
                 } else {
-                    res.render('base',{page: "challenge"});
+                    res.render('base',{
+                        page: "challenge",
+                        challenge_id: token
+                    });
                 }
             });
         } else {
@@ -41,8 +48,23 @@ module.exports = function(app, cache_user_model){
     app.get('/challenge/:id', function (req, res) {
         var id = req.params.id || "";
         if(id != "" && res.locals.logged_in){
-            // If logged in
-            res.render('base',{page: "challenge"});
+
+            // Look for the challenge
+            // requirement: public_id == owner
+            Challenge.find({
+                public_id: id,
+                owner: res.locals.user.get_public_id()
+            }, function(err, challenges){
+                if(challenges.length == 0){
+                    // No match
+                    res.redirect("/dashboard");
+                } else {
+                    // Match
+                    // If logged in
+                    var ch = challenges[0];
+                    render_challenge_form(res, ch);
+                }
+            });
         } else {
             // Else, go to signup
             res.redirect("/signup");
@@ -54,28 +76,29 @@ module.exports = function(app, cache_user_model){
         
         if(res.locals.logged_in){
             var user = res.locals.user;
-
+            
             // Look for the challenge
             // requirement: public_id == owner
             Challenge.find({
                 public_id: id,
-                owner: req.locals.user.get_public_id()
-            }, function(err, challenge){
-                if(challenge.length == 0){
+                owner: res.locals.user.get_public_id()
+            }, function(err, challenges){
+                if(challenges.length == 0){
                     // No match
                     res.redirect("/dashboard");
                 } else {
-                    var ch = challenge[0];
                     // Match
                     // If logged in
-                    res.render('base',{
-                        page: "challenge",
-                        title: ch.title,
-                        question: ch.question,
-                        time: ch.time,
-                        initial_content: ch.initial_content,
-                        validator: ch.validator
-                    });
+                    var ch = challenges[0];
+
+                    ch.title = req.body.title || "";
+                    ch.question = req.body.question || "";
+                    ch.time = req.body.time || "";
+                    ch.initial_content = req.body.initial_content || "";
+                    ch.validator = req.body.validator || "";
+                    ch.save();
+
+                    render_challenge_form(res, ch);
                 }
             });
         } else {
@@ -84,4 +107,46 @@ module.exports = function(app, cache_user_model){
         }
     });
 
+    app.post('/challenge/:id/delete', function (req, res) {
+        var id = req.params.id || "";
+        
+        if(res.locals.logged_in){
+            var user = res.locals.user;
+            
+            // Look for the challenge
+            // requirement: public_id == owner
+            Challenge.find({
+                public_id: id,
+                owner: res.locals.user.get_public_id()
+            }, function(err, challenges){
+                if(challenges.length == 0){
+                    // No match
+                    res.redirect("/dashboard");
+                } else {
+                    // Match
+                    // If logged in
+                    var ch = challenges[0];
+                    ch.remove();
+                    res.redirect("/dashboard");
+                }
+            });
+        } else {
+            // Else, go to signup
+            res.redirect("/signup");
+        }
+    });
+
+    
+    function render_challenge_form(res, challenge){
+        res.render('base',{
+            page: "challenge",
+            challenge_id: challenge.public_id,
+            title: challenge.title,
+            question: challenge.question,
+            time: challenge.time,
+            initial_content: challenge.initial_content,
+            validator: challenge.validator
+        });
+        
+    }
 }
