@@ -410,5 +410,28 @@ function modal_yesno(message, callback){
     return modal(message, buttons);
 }
 
+{
+    // init delete buttons
+    
+    var buttons = qsa(".delete.post-button");
+    
+    for(var i = 0; i < buttons.length; i++){
+        var b = buttons[i];
+
+        b.onclick = function(){
+            var url = b.getAttribute("data-url");
+            var json = b.getAttribute("data-params");
+            var params = JSON.parse(json);
+            
+            please.post(url,params,{promise:true})
+                .then(function(){
+                    // tr td button
+                    var to_remove = b.parentNode.parentNode;
+                to_remove.parentNode.removeChild(to_remove);
+                });
+        }
+    }
+}
+
 console.log("Hello!");
 console.log("Fork me on http://github.com/antoineMoPa/livecalc !");

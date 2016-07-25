@@ -13,11 +13,17 @@
     if recent_sheets.length == 0
       p (No recently visited sheets)
     .recent-sheet-list.list
-      ul
+      table
         for sheet in recent_sheets
           -url = "/sheet/"+sheet
-          li
-            a(href=url)= url
+          tr
+            td
+              a(href=url)= url
+            td.text-right
+              a.run(href=url)
+                button
+                 | View
+
     p
       a(href="/new")
         button
@@ -25,22 +31,29 @@
     h4 Challenges you created
     if challenges.length == 0
       p (No challenges)
-    .challenge-list.list
-      ul
-        for challenge in challenges
-          -url = "/challenge/" + challenge.public_id
-          -del = url + "/delete"
-          -run = url + "/run"
-          li
-            a(href=url)
-              = url
-              |  - 
-              = challenge.title.substr(0,50)
-            form(method="post", action=del).delete-form
-              input(type="hidden", name="id", value=challenge.public_id)
-              button.delete(type="submit")
-                | delete
-            a.run(href=run) run
+    else
+      .challenge-list.list
+        table
+          for challenge in challenges
+            -url = "/challenge/" + challenge.public_id
+            -del = url + "/delete"
+            -run = url + "/run"
+            tr
+              td
+                a(href=url)
+                  = challenge.title
+                  |  - 
+                  = url
+              td.text-right
+                button.delete.post-button(
+                  type="submit",
+                  data-url=del,
+                  data-params=JSON.stringify({id: challenge.public_id})
+                )
+                  | Delete
+                a.run(href=run)
+                  button
+                   | Play
     p
       a(href="/challenge/new")
         button

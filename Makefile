@@ -17,7 +17,7 @@ download:
 	wget -N https://cdnjs.cloudflare.com/ajax/libs/jsdiff/2.2.3/diff.min.js -P public/lib
 # moment.js
 	wget -N http://momentjs.com/downloads/moment.min.js -P public/lib/
-
+	wget -N https://raw.githubusercontent.com/fffunction/please/master/dist/please.min.js -P public/lib
 fira:
 	wget -N https://github.com/mozilla/Fira/archive/4.202.tar.gz -P public/fonts/fira-download
 # Remove old folder

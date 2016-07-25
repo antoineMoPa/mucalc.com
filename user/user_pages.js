@@ -303,7 +303,7 @@ module.exports = function(app, cache_user_model, secrets){
                     });
                 }
             );
-
+            
             Promise.all([
                 find_recent_sheets,
                 find_challenges
@@ -315,6 +315,7 @@ module.exports = function(app, cache_user_model, secrets){
                     challenges: values[1]
                 });
             });
+
         }
     });
     

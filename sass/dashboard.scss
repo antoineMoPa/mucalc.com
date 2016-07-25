@@ -6,34 +6,28 @@
 
 
     .list{
-        .delete-form{
-            display:inline-block;
-        }
-
-        a.run{
-            background:$color_3;
-            color:#fff;
-            border-radius:3px;
-            text-decoration:none;
-            padding:5px;
+        table{
+            width:100%;
+            border-collapse:collapse;
         }
         
+        button.delete{
+            background:$error_color;
+        }
         a.run,
         button{
-            margin:0 20px;
+            margin:0 10px;
+            text-decoration:none;
         }
 
-        ul{
-            padding-left:0;
+        td{
+            margin:0;
+            padding:10px;
         }
         
-        li{
-            list-style-type:none;
-            padding:5px 5px;
-        }
-        
-        li:nth-child(2n+1){
+        tr:nth-child(2n+1){
             background:#eee;
+            padding-left:10px;
         }
     }
 }

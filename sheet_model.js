@@ -14,7 +14,6 @@ module.exports = {};
 
 module.exports.create = function(){
     var sheet = deepcopy(default_sheet);
-    
     var exports = {};
 
     exports.edit = function(data){
