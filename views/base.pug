@@ -50,9 +50,10 @@ html
   script(src='/lib/socket.io.js')
   script(src='/lib/moment.min.js')
   script(src='/lib/please.min.js')
-  // ",Safe" disables \href in LaTeX, and has other
-  // security features.
-  script(src='/lib/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe')
+  if page != "landing"
+    // ",Safe" disables \href in LaTeX, and has other
+    // security features.
+    script(src='/lib/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe')
   script(src='/base.js')
   script(src='/livecalc.js')
   script(src='/livechat.js')
