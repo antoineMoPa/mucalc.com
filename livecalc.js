@@ -358,6 +358,10 @@ function livecalc(namespace, nsp){
                     return;
                 }
 
+                if(model.get_title() == data.title){
+                    return;
+                }
+                
                 send_focus_index();
 
                 model.set_title(data.title);
@@ -367,7 +371,7 @@ function livecalc(namespace, nsp){
                     namespace,
                     nsp,
                     get_username() +
-                        " change the sheet title to: " +
+                        " changed the sheet title to: " +
                         data.title
                 );
                 
