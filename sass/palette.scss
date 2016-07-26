@@ -40,8 +40,8 @@
 
 .palette-numbers button{
     width:24%;
+    width:calc(25% - 12px);
     max-width:57px;
-
     &.bold{
         font-size:110%;
         font-weight:500;

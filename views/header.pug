@@ -1,16 +1,9 @@
 header
-  col-sm-8
+  col-sm-6
     img(src="/images/logo.png").header-logo
     h1.inline-block
       a(href='https://livecalc.xyz') livecalc.xyz
-    p.inline-block.text-left.sm-hide
-      | Github 
-      a(href='https://github.com/antoineMoPa/livecalc', 
-     target='_blank') project
-      |  |
-      |  Version 
-      = version
-  col-sm-4.text-right.mobile-center.links        
+  col-sm-6.text-right.links        
     a.new-sheet-button(href='/new')
       button New Sheet
     if(page == "sheet")
@@ -40,3 +33,6 @@ nav
           | Dashboard
       li
         a(href="/logout") Log&nbsp;out
+    li
+      a(href='https://github.com/antoineMoPa/livecalc', 
+        target='_blank') Github project

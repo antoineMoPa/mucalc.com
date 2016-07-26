@@ -16,6 +16,12 @@
     }
 }
 
+@media all and (max-width:768px){
+    .page-content{
+        width:100%;
+    }
+}
+
 .sidebar-header{
     background:$color_6;
     font-size:12px;
@@ -34,9 +40,18 @@
     }
 }
 
-@media (max-width:768px){
-    .sticky-sidebar{
-        display:none;
+@media all and (max-width:768px){
+    .has-sidebar{
+        .sticky-sidebar{
+            width:100%;
+            top:80px;
+        }
+        header{
+            position:fixed;
+            top:0;
+            left:0;
+            height:80px;
+        }
     }
 }
 

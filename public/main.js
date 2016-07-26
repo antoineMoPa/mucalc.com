@@ -273,22 +273,29 @@ if(is_sheet){
         var initial_pos = 0;
         var upper_box = calc.palette;
         var lower_box = chat.root_el;
-
+        var header = qsa("header")[0];
+        
         resizable_header.addEventListener("mousedown",function(e){
             e.preventDefault();
             dragging = true;
         });
 
 
-        resizable_header.addEventListener("mouseup",function(e){
+        document.body.addEventListener("mouseup",function(e){
             dragging = false;
         });
 
         document.body.addEventListener("mousemove",function(e){
             if(dragging){
                 var current_pos = e.clientY;
-                var proportion = current_pos / window.innerHeight;
+                var header_height = header.clientHeight;
+                var winh = window.innerHeight;
 
+                // Find proportion of cursor Y vs winh
+                var proportion = current_pos / winh;
+                // Remove header offset
+                proportion -= header_height / winh;
+                
                 proportion = clip(proportion, 0.2,0.8);
                 
                 var upper_proportion =

@@ -16,12 +16,24 @@ header h1 a{
     color:#fff;
 }
 
-@media (max-width:768px){
-    header h1{
-        font-size:19px;
-        text-align: center;
-        margin-top: 17px;
-        margin-left: 20px;
+@media (max-width:465px){
+    .page-sheet{
+        header h1{
+            font-size:15px;
+            line-height: 6px;
+        }
+        .header-logo{
+            display:none;
+        }
+        .new-sheet-button{
+            display:none;
+        }
+        header h1{
+            font-size:19px;
+            text-align: center;
+            margin-top: 17px;
+            margin-left: 20px;
+        }
     }
 }
 
