@@ -43,7 +43,7 @@ body.page-landing{
         background:lighten($color_3,6%);
         margin-bottom:40px;
         img{
-            max-width:100%;
+            max-width: 239px;
         }
 
         button{
@@ -60,6 +60,7 @@ body.page-landing{
         }
         .text-block img{
             float:none;
+            max-width:100%;
         }
         p .MathJax_Display{
             font-size:13px;
