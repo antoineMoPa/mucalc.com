@@ -278,7 +278,6 @@ module.exports = function(app, cache_user_model, secrets){
     
     app.get('/dashboard', function (req, res) {
         var begin_time = (new Date()).getTime();
-        console.log("begin: " + begin_time);
 
         // Se if user is logged in and get data
         if(!res.locals.logged_in){
@@ -315,9 +314,6 @@ module.exports = function(app, cache_user_model, secrets){
                     Challenge.find({
                         owner: user.get_public_id()
                     }, function(err, challenges){
-                        var now = (new Date()).getTime();
-                        console.log("challenges: " + (now - begin_time));
-
                         resolve(challenges);
                     });
                 }
@@ -327,8 +323,7 @@ module.exports = function(app, cache_user_model, secrets){
                 find_recent_sheets,
                 find_challenges
             ]).then(function(values){
-                var now = (new Date()).getTime();
-                console.log("begin render: " + (now - begin_time));
+                var begin_time = (new Date()).getTime();
 
                 // Render page
                 res.render('base',{
@@ -338,7 +333,10 @@ module.exports = function(app, cache_user_model, secrets){
                 });
 
                 var now = (new Date()).getTime();
-                console.log("end render: " + (now - begin_time));
+                console.log(
+                    "dashboard render time: " +
+                        (now - begin_time)
+                );
             });
 
         }

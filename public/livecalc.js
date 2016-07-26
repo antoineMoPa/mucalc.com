@@ -735,6 +735,9 @@ function livecalc(root_el, settings){
     exports.new_cell = new_cell;
 
     function update_mathjax_output(index, tex_content){
+        if(typeof MathJax == "undefined"){
+            return;
+        }
         var cell_data = find_cell(index);
         var mathjax_output   = cell_data.mathjax_output;
 
@@ -764,6 +767,10 @@ function livecalc(root_el, settings){
     }
     
     function update_mathjax_input(index){
+        if(typeof MathJax == "undefined"){
+            return;
+        }
+
         var cell_data = find_cell(index);
         var input            = cell_data.input;
         var mathjax_input   = cell_data.mathjax_input;

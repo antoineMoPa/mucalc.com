@@ -44,17 +44,18 @@ html
       include ./page-content.pug
     include ./templates.pug
 
-  script(src='/lib/math.min.js')
-  script(src='/lib/d3.min.js')
-  script(src='/lib/function-plot.js')
-  script(src='/lib/socket.io.js')
-  script(src='/lib/moment.min.js')
-  script(src='/lib/please.min.js')
-  if page != "landing"
-    // ",Safe" disables \href in LaTeX, and has other
-    // security features.
-    script(src='/lib/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe')
-  script(src='/base.js')
-  script(src='/livecalc.js')
-  script(src='/livechat.js')
-  script(src='/main.js')
+    script(src='/lib/math.min.js')
+    script(src='/lib/d3.min.js')
+    script(src='/lib/function-plot.js')
+    script(src='/lib/socket.io.js')
+    script(src='/lib/moment.min.js')
+    script(src='/lib/please.min.js')
+    script(src='/base.js')
+    script(src='/livecalc.js')
+    script(src='/livechat.js')
+    script(src='/main.js')
+    if page != "landing"
+      // ",Safe" disables \href in LaTeX, and has other
+      // security features.
+      script(src='/lib/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe', async)
+
