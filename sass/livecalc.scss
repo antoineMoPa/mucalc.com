@@ -1,3 +1,5 @@
+$cell_color:#f8f8f8;
+
 .page-sheet .main-page{
     margin-left: 0;
     margin-right: 0;
@@ -31,22 +33,30 @@ h1.sheet-title{
 }
 
 .cell-and-button-wrapper{
-    .delete-cell-button{
+    .delete-cell-button-wrapper{
         position:absolute;
         cursor:pointer;
-        top:-10px;
-        right:-10px;
-        opacity:0.1;
-        transition:all 0.3s;
-        z-index:2000;
-        &:hover{
-            opacity:1;
-            transform:rotate(90deg); /* oh yeah! */
+        width:25px;
+        top:-20px;
+        height:25px;
+        right:0;
+        background:$cell_color;
+        border-top-left-radius:5px;
+        .delete-cell-button{
+            position:absolute;
+            top:2px;
+            right:2px;
+            transition:all 0.3s;
+            opacity:0.1;
+            &:hover{
+                opacity:1;
+                transform:rotate(90deg); /* oh yeah! */
+            }
         }
     }
 
     /* last cell can't be deleted anyway */
-    &:last-child .delete-cell-button{
+    &:last-child .delete-cell-button-wrapper{
         display:none;
     }
 }
@@ -62,7 +72,7 @@ h1.sheet-title{
 
 .livecalc-cell .math-part,
 .livecalc .livecalc-header{
-    background:#f8f8f8;
+    background:$cell_color;
     padding-top:5px;
     padding-bottom:5px;
 }
