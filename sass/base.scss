@@ -28,6 +28,15 @@
         display:block!important;
         text-align:center;
     }
+    .mobile-hide{
+        display:none!important;
+    }
+}
+
+@media (min-width:768px){
+    .mobile-only{
+        display:none!important;
+    }
 }
 
 /*

@@ -1,0 +1,27 @@
+nav
+  ul
+    if(page != "landing")
+      li
+        a.pricing-link(href='/')
+          | Home
+    //li
+      a.pricing-link(href='/pricing', target='_blank')
+        | Pricing
+      
+    if !logged_in
+      li
+        a.login(href='/login')
+          | Log&nbsp;in
+      li
+        a.signup(href='/signup')
+          | Sign&nbsp;up
+    
+    else
+      li
+        a.dashboard-link(href='/dashboard')
+          | Dashboard
+      li
+        a(href="/logout") Log&nbsp;out
+    li
+      a(href='https://github.com/antoineMoPa/livecalc', 
+        target='_blank') Github project

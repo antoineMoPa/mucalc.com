@@ -38,25 +38,20 @@
     .has-sidebar nav{
         width: 75%;
     }
-}
-
-@media all and (max-width:768px){
-    .has-sidebar{
-        .sticky-sidebar{
-            width:100%;
-            top:80px;
-        }
-        header{
-            position:fixed;
-            top:0;
-            left:0;
-            height:80px;
-        }
+    .sidebar-resize-header{
+        cursor: ns-resize;
     }
 }
 
-.sidebar-resize-header{
-    cursor: ns-resize;
+@media all and (max-width:768px){
+    .main-nav nav{
+        display:none;
+    }
+    .has-sidebar{
+        .main-page{
+            display:none;
+        }
+    }
 }
 
 livechat{
@@ -67,5 +62,32 @@ livechat{
     height:66%;
 }
 
-@import "palette.scss";
+.mobile-sidebar{
+    height:100%;
+    livechat{
+        min-height:100%;
+        .message-input{
+            position:relative;
+            background:#e0e0e0;
+        }
+        
+        button{
+            top: 17px;
+            right: 25px;
+            bottom:auto;
+        }
+        
+        textarea{
+            margin: 10px;
+            width: calc(100% - 120px);
+        }
+    }
 
+    .mobile-buttons{
+        padding: 10px 20px;
+        padding-bottom: 0;
+        background: #eee;
+    }
+}
+
+@import "palette.scss";

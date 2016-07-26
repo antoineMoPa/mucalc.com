@@ -121,6 +121,12 @@ var is_sheet = href.match(/\/sheet\/(.*)/);
 var is_challenge = href.match(/\/challenge/);
 var is_landing = qsa(".landing").length > 0? true: false;
 
+var is_mobile = false;
+
+if(window.innerWidth < 768){
+    is_mobile = true;
+}
+
 if(is_sheet){
     // In a sheet
     var namespace = /\/sheet\/(.*)/g.exec(href)[1];
@@ -133,8 +139,25 @@ if(is_sheet){
         namespace: namespace,
         user: user
     });
-    var chat = livechat(qsa("livechat")[0], namespace, calc.socket, user);
 
+    var chat;
+
+    if(is_mobile){
+        chat = livechat(
+            qsa(".mobile-sidebar livechat")[0],
+            namespace,
+            calc.socket,
+            user
+        );
+    } else {
+        chat = livechat(
+            qsa(".sticky-sidebar livechat")[0],
+            namespace,
+            calc.socket,
+            user
+        );
+    }
+    
     // This thing communicates with the server
     var net_engine = calc.net_engine;
 
@@ -261,10 +284,12 @@ if(is_sheet){
     }
 
     calc.set_chat(chat);
-
-    resizeable_sidebar_box(function(proportion){
-        chat.resize(1-proportion);
-    });
+    
+    if(!is_mobile){
+        resizeable_sidebar_box(function(proportion){
+            chat.resize(1-proportion);
+        });
+    }
     
     function resizeable_sidebar_box(callback){
         // Make chat + palette resizable
@@ -474,22 +499,34 @@ function modal_yesno(message, callback){
     }
     
     var page_content = qsa(".page-content")[0];
-    var sidebar = qsa(".sticky-sidebar")[0];
+    var sticky_sidebar = qsa(".sticky-sidebar")[0];
+    var mobile_sidebar = qsa(".mobile-sidebar")[0];
     var state = "open";
-    burger.addEventListener("click",function(){
+
+    if(is_mobile){
+        // Close by default
+        next_state();
+    }
+    
+    burger.addEventListener("click",next_state);
+
+    function next_state(){
         if(state == "open"){
-            sidebar.classList.add("hidden");
+            sticky_sidebar.classList.add("hidden");
+            mobile_sidebar.classList.add("hidden");
+            disappear(mobile_sidebar);
             document.body.classList.remove("has-sidebar");
             document.body.classList.add("has-no-sidebar");
             state = "closed";
         } else {
-            sidebar.classList.remove("hidden");
+            sticky_sidebar.classList.remove("hidden");
+            mobile_sidebar.classList.remove("hidden");
+            appear(mobile_sidebar);
             document.body.classList.add("has-sidebar");
             document.body.classList.remove("has-no-sidebar");
             state = "open";
         }
-        
-    });
+    }
 })();
 
 (function(){

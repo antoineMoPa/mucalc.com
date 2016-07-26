@@ -53,7 +53,19 @@ function livechat(root_el, namespace, socket, user){
         }
     }
 
+    var is_mobile = false;
+    
+    if(window.innerWidth < 768){
+        is_mobile = true;
+    }
+
+    if(is_mobile){
+        var winh = window.innerHeight;
+        log.style.minHeight = (parseInt(winh) - 160) + "px";
+    }
+    
     exports.resize = resize;
+
     var current_proportion = 1/3;
     
     /*
@@ -61,6 +73,9 @@ function livechat(root_el, namespace, socket, user){
       The chat elements.
      */
     function resize(proportion){
+        if(is_mobile){
+            return;
+        }
         var winw = window.innerWidth;
         var winh = window.innerHeight;
         var proportion = proportion || current_proportion;
