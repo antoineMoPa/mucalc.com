@@ -512,14 +512,18 @@ function modal_yesno(message, callback){
 
     function next_state(){
         if(state == "open"){
-            sticky_sidebar.classList.add("hidden");
+            if(typeof sticky_sidebar != "undefined"){
+                sticky_sidebar.classList.add("hidden");
+            }
             mobile_sidebar.classList.add("hidden");
             disappear(mobile_sidebar);
             document.body.classList.remove("has-sidebar");
             document.body.classList.add("has-no-sidebar");
             state = "closed";
         } else {
-            sticky_sidebar.classList.remove("hidden");
+            if(typeof sticky_sidebar != "undefined"){
+                sticky_sidebar.classList.remove("hidden");
+            }
             mobile_sidebar.classList.remove("hidden");
             appear(mobile_sidebar);
             document.body.classList.add("has-sidebar");

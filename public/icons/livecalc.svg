@@ -1,47 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="200"
-   height="200"
-   viewBox="0 0 199.99999 199.99999"
-   id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="livecalc.svg">
+   id="svg2"
+   viewBox="0 0 199.99999 199.99999"
+   height="200"
+   width="200">
   <defs
      id="defs4" />
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="5.656854"
-     inkscape:cx="42.758072"
-     inkscape:cy="155.9521"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     showgrid="true"
-     units="px"
-     inkscape:window-width="1600"
-     inkscape:window-height="836"
-     inkscape:window-x="0"
-     inkscape:window-y="27"
-     inkscape:window-maximized="1">
-    <inkscape:grid
-       type="xygrid"
-       id="grid4148"
-       empspacing="20" />
-  </sodipodi:namedview>
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -55,126 +25,77 @@
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(0,-852.36225)">
+     transform="translate(0,-852.36225)"
+     id="layer1">
     <g
-       id="g4190"
-       transform="translate(19.975764,0)">
+       transform="translate(19.975764,0)"
+       id="g4190">
       <circle
-         r="9.3314562"
-         cy="862.37396"
-         cx="9.9492826"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-opacity:1"
          id="path4140"
-         style="fill:#000000;fill-opacity:1;stroke:none;stroke-opacity:1" />
+         cx="9.9492826"
+         cy="862.37396"
+         r="9.3314562" />
+      <rect
+         transform="matrix(-0.70710678,0.70710678,0.70710678,0.70710678,0,0)"
+         ry="0"
+         y="616.24036"
+         x="597.51263"
+         height="1.1265482"
+         width="10.537461"
+         id="rect4138"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <rect
          style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         id="rect4138"
-         width="10.537461"
-         height="1.1265482"
-         x="597.51263"
-         y="616.24036"
-         ry="0"
-         transform="matrix(-0.70710678,0.70710678,0.70710678,0.70710678,0,0)" />
-      <rect
-         transform="matrix(0.70710678,0.70710678,-0.70710678,0.70710678,0,0)"
-         ry="0"
-         y="602.21814"
-         x="611.53491"
-         height="1.1265482"
-         width="10.537461"
          id="rect3336"
-         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         width="10.537461"
+         height="1.1265482"
+         x="611.53491"
+         y="602.21814"
+         ry="0"
+         transform="matrix(0.70710678,0.70710678,-0.70710678,0.70710678,0,0)" />
     </g>
     <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:6.25000306px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
-       x="-48"
-       y="836.36224"
        id="text4224"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan4226"
+       y="836.36224"
+       x="-48"
+       style="font-style:normal;font-weight:normal;font-size:6.25000306px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       xml:space="preserve"><tspan
+         y="836.36224"
          x="-48"
-         y="836.36224" /></text>
+         id="tspan4226" /></text>
     <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-60"
-       y="692.36224"
        id="text4228"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan4230"
+       y="692.36224"
+       x="-60"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         y="692.36224"
          x="-60"
-         y="692.36224">livecalc-source.svg: inscape svg</tspan><tspan
-         sodipodi:role="line"
-         x="-60"
+         id="tspan4230">livecalc-source.svg: inscape svg</tspan><tspan
+         id="tspan4232"
          y="742.36224"
-         id="tspan4232">livecalc.svg: plain svg</tspan></text>
+         x="-60">livecalc.svg: plain svg</tspan></text>
     <rect
-       style="fill:#eeeeee;fill-opacity:0.93333334"
+       y="858.89777"
+       x="46.603539"
+       height="4.9389377"
+       width="27.292927"
        id="rect4149"
-       width="27.292927"
-       height="4.9389377"
-       x="46.603539"
-       y="858.89777" />
-    <rect
-       y="880.16016"
-       x="46.603539"
-       height="4.9389377"
-       width="27.292927"
-       id="rect4162"
        style="fill:#eeeeee;fill-opacity:0.93333334" />
     <rect
        style="fill:#eeeeee;fill-opacity:0.93333334"
-       id="rect4164"
+       id="rect4162"
        width="27.292927"
        height="4.9389377"
        x="46.603539"
-       y="869.48193" />
+       y="880.16016" />
     <rect
-       y="899.73315"
-       x="67.386917"
-       height="4.9389377"
-       width="6.5095506"
-       id="rect4397"
-       style="fill:#eeeeee;fill-opacity:0.93333333" />
-    <rect
-       style="fill:#eeeeee;fill-opacity:0.93333333"
-       id="rect4399"
-       width="6.5429282"
-       height="4.9389377"
-       x="67.353539"
-       y="920.99554" />
-    <rect
-       y="910.31732"
-       x="67.388435"
-       height="4.9389377"
-       width="6.5080256"
-       id="rect4401"
-       style="fill:#eeeeee;fill-opacity:0.93333333" />
-    <rect
-       style="fill:#bacdb0;fill-opacity:1"
-       id="rect4463"
-       width="18.659676"
-       height="4.9389377"
-       x="46.603539"
-       y="910.31732" />
-    <rect
-       style="fill:#bacdb0;fill-opacity:1"
-       id="rect4465"
-       width="18.326044"
-       height="4.9389377"
-       x="46.603539"
-       y="899.73315" />
-    <rect
-       y="920.99554"
+       y="869.48193"
        x="46.603539"
        height="4.9389377"
-       width="18.792927"
-       id="rect4467"
-       style="fill:#bacdb0;fill-opacity:1" />
+       width="27.292927"
+       id="rect4164"
+       style="fill:#eeeeee;fill-opacity:0.93333334" />
   </g>
 </svg>

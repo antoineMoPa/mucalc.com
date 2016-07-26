@@ -17,7 +17,15 @@
    inkscape:version="0.91 r13725"
    sodipodi:docname="livecalc-source.svg">
   <defs
-     id="defs4" />
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 99.999995 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="199.99999 : 99.999995 : 1"
+       inkscape:persp3d-origin="99.999995 : 66.666663 : 1"
+       id="perspective4305" />
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -25,9 +33,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.9999996"
-     inkscape:cx="48.408437"
-     inkscape:cy="160.3318"
+     inkscape:zoom="5.656854"
+     inkscape:cx="42.758072"
+     inkscape:cy="155.9521"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -134,47 +142,5 @@
        height="4.9389377"
        x="46.603539"
        y="869.48193" />
-    <rect
-       y="899.73315"
-       x="57.386917"
-       height="4.9389377"
-       width="16.50955"
-       id="rect4397"
-       style="fill:#eeeeee;fill-opacity:0.93333333" />
-    <rect
-       style="fill:#eeeeee;fill-opacity:0.93333333"
-       id="rect4399"
-       width="6.5429282"
-       height="4.9389377"
-       x="67.353539"
-       y="920.99554" />
-    <rect
-       y="910.31732"
-       x="62.513439"
-       height="4.9389377"
-       width="11.383025"
-       id="rect4401"
-       style="fill:#eeeeee;fill-opacity:0.93333333" />
-    <rect
-       style="fill:#bacdb0;fill-opacity:1"
-       id="rect4463"
-       width="14.034676"
-       height="4.9389377"
-       x="46.603539"
-       y="910.31732" />
-    <rect
-       style="fill:#bacdb0;fill-opacity:1"
-       id="rect4465"
-       width="8.201045"
-       height="4.9389377"
-       x="46.603539"
-       y="899.73315" />
-    <rect
-       y="920.99554"
-       x="46.603539"
-       height="4.9389377"
-       width="18.792927"
-       id="rect4467"
-       style="fill:#bacdb0;fill-opacity:1" />
   </g>
 </svg>

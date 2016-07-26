@@ -20,6 +20,9 @@
     .page-content{
         width:100%;
     }
+    .has-sidebar .page-content{
+        display:none;
+    }
 }
 
 .sidebar-header{
@@ -34,10 +37,11 @@
 }
 
 @media all and (min-width:768px){
-    .has-sidebar header,
-    .has-sidebar nav{
+    .page-sheet.has-sidebar header,
+    .page-sheet.has-sidebar nav{
         width: 75%;
     }
+    
     .sidebar-resize-header{
         cursor: ns-resize;
     }
@@ -47,9 +51,11 @@
     .main-nav nav{
         display:none;
     }
-    .has-sidebar{
-        .main-page{
-            display:none;
+    .page-sheet{
+        .has-sidebar{
+            .main-page{
+                display:none;
+            }
         }
     }
 }

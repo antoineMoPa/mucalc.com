@@ -34,9 +34,9 @@ html
     link(rel='apple-touch-icon', sizes='36x36', href='/icon-36x36.png')
   body(class="page-"+(page || ""), class=in_sheet? "has-sidebar": "")
     include ./header.pug
+    .mobile-sidebar.mobile-only
+      include ./sidebar-mobile.pug
     if in_sheet
-      .mobile-sidebar.mobile-only
-        include ./sidebar-mobile.pug
       .page-content.col-md-9
         include ./page-content.pug
       .sticky-sidebar.col-md-3.mobile-hide
