@@ -30,95 +30,59 @@
     }
 }
 
-col-md-12,
-col-md-11,
-col-md-10,
-col-md-9,
-col-md-8,
-col-md-7,
-col-md-6,
-col-md-5,
-col-md-4,
-col-md-3,
-col-md-2,
-col-md-1{
-    display:inline-block;
-    float:left;
-    vertical-align:top;
+/*
+  Homemade column framework
+
+  Syntax:
+  use either the element:
+  <col-md-6></col-md-6>
+
+  or the class:
+  <div class="col-md-6"></div>
+*/
+
+@for $i from 1 through 12{
+    col-md-#{$i}{
+        display:inline-block;
+        float:left;
+        vertical-align:top;
+    }
 }
 
+.clearfix,
 clearfix{
     display:block;
     clear:both;
 }
 
-col-sm-12,
-col-sm-11,
-col-sm-10,
-col-sm-9,
-col-sm-8,
-col-sm-7,
-col-sm-6,
-col-sm-5,
-col-sm-4,
-col-sm-3,
-col-sm-2,
-col-sm-1{
-    display:inline-block;
-    float:left;
-    vertical-align:top;
+@for $i from 1 through 12{
+    col-sm-#{$i}{
+        display:inline-block;
+        float:left;
+        vertical-align:top;
+    }
 }
 
-col-md-1{
-    width:8%;
-}
+@for $i from 1 through 12{
+    .col-md-#{$i},
+    .col-sm-#{$i}{
+        width: percentage($i/12);
+    }
 
-col-md-2{
-    width:16%;
 }
-
-col-md-3{
-    width:25%;
-}
-
-col-md-4,
-col-sm-4{
-    width:33.33%;
-}
-
-col-md-6,
-col-sm-6{
-    width:50%;
-}
-
-col-md-8,
-col-sm-8{
-    width:65%;
-}
-
-col-md-9{
-    width:74%;
-}
-
-col-md-10{
-    width:82%;
+@for $i from 1 through 12{
+    col-md-#{$i},
+    col-sm-#{$i}{
+        width: percentage($i/12);
+    }
 }
 
 @media (max-width:768px){
-    col-md-1,
-    col-md-2,
-    col-md-3,
-    col-md-4,
-    col-md-5,
-    col-md-6,
-    col-md-7,
-    col-md-8,
-    col-md-9,
-    col-md-10,
-    col-md-11,
-    col-md-12{
-        display:block;
-        width:100%;
+    @for $i from 1 through 12{
+        col-md-#{$i}{
+            display:block;
+            width:100%;
+        }
     }
 }
 

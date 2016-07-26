@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8"
-     inkscape:cx="56.402285"
-     inkscape:cy="182.88018"
+     inkscape:zoom="7.9999996"
+     inkscape:cx="48.408437"
+     inkscape:cy="160.3318"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -113,5 +113,68 @@
          x="-60"
          y="742.36224"
          id="tspan4232">livecalc.svg: plain svg</tspan></text>
+    <rect
+       style="fill:#eeeeee;fill-opacity:0.93333334"
+       id="rect4149"
+       width="27.292927"
+       height="4.9389377"
+       x="46.603539"
+       y="858.89777" />
+    <rect
+       y="880.16016"
+       x="46.603539"
+       height="4.9389377"
+       width="27.292927"
+       id="rect4162"
+       style="fill:#eeeeee;fill-opacity:0.93333334" />
+    <rect
+       style="fill:#eeeeee;fill-opacity:0.93333334"
+       id="rect4164"
+       width="27.292927"
+       height="4.9389377"
+       x="46.603539"
+       y="869.48193" />
+    <rect
+       y="899.73315"
+       x="57.386917"
+       height="4.9389377"
+       width="16.50955"
+       id="rect4397"
+       style="fill:#eeeeee;fill-opacity:0.93333333" />
+    <rect
+       style="fill:#eeeeee;fill-opacity:0.93333333"
+       id="rect4399"
+       width="6.5429282"
+       height="4.9389377"
+       x="67.353539"
+       y="920.99554" />
+    <rect
+       y="910.31732"
+       x="62.513439"
+       height="4.9389377"
+       width="11.383025"
+       id="rect4401"
+       style="fill:#eeeeee;fill-opacity:0.93333333" />
+    <rect
+       style="fill:#bacdb0;fill-opacity:1"
+       id="rect4463"
+       width="14.034676"
+       height="4.9389377"
+       x="46.603539"
+       y="910.31732" />
+    <rect
+       style="fill:#bacdb0;fill-opacity:1"
+       id="rect4465"
+       width="8.201045"
+       height="4.9389377"
+       x="46.603539"
+       y="899.73315" />
+    <rect
+       y="920.99554"
+       x="46.603539"
+       height="4.9389377"
+       width="18.792927"
+       id="rect4467"
+       style="fill:#bacdb0;fill-opacity:1" />
   </g>
 </svg>

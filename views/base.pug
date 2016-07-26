@@ -32,12 +32,12 @@ html
     link(rel='apple-touch-icon', sizes='72x72', href='/icon-72x72.png')
     link(rel='apple-touch-icon', sizes='48x48', href='/icon-48x48.png')
     link(rel='apple-touch-icon', sizes='36x36', href='/icon-36x36.png')
-  body(class="page-"+(page || ""), class=in_sheet? "in-sheet": "")
+  body(class="page-"+(page || ""), class=in_sheet? "has-sidebar": "")
     include ./header.pug
     if in_sheet
-      col-md-9
+      .page-content.col-md-9
         include ./page-content.pug
-      col-md-3.sticky-sidebar
+      .sticky-sidebar.col-md-3
         include ./sidebar.pug
       clearfix
     else

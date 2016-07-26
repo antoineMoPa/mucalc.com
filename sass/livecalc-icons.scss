@@ -1,6 +1,21 @@
+.icon{
+    vertical-align: middle;
+}
+
 .icon.delete-icon{
     background:url(../icons/livecalc.svg);
     width:20px;
     height:20px;
     background-position:-20px 0px;
+}
+
+.icon.burger-icon{
+    background:url(../icons/livecalc.svg);
+    width:40px;
+    height:40px;
+    background-position:-40px 0px;
+
+    &:hover{
+        background-position:-40px -40px;
+    }
 }

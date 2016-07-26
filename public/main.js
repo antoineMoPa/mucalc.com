@@ -458,5 +458,27 @@ function modal_yesno(message, callback){
     }
 }
 
+{
+    // Hide & show sidebar
+    var burger = qsa("header .burger-icon")[0];
+    var page_content = qsa(".page-content")[0];
+    var sidebar = qsa(".sticky-sidebar")[0];
+    var state = "open";
+    burger.addEventListener("click",function(){
+        if(state == "open"){
+            sidebar.classList.add("hidden");
+            document.body.classList.remove("has-sidebar");
+            document.body.classList.add("has-no-sidebar");
+            state = "closed";
+        } else {
+            sidebar.classList.remove("hidden");
+            document.body.classList.add("has-sidebar");
+            document.body.classList.remove("has-no-sidebar");
+            state = "open";
+        }
+        
+    });
+}
+
 console.log("Hello!");
 console.log("Fork me on http://github.com/antoineMoPa/livecalc !");

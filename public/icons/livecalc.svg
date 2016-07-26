@@ -76,5 +76,68 @@
          id="tspan4232"
          y="742.36224"
          x="-60">livecalc.svg: plain svg</tspan></text>
+    <rect
+       y="858.89777"
+       x="46.603539"
+       height="4.9389377"
+       width="27.292927"
+       id="rect4149"
+       style="fill:#eeeeee;fill-opacity:0.93333334" />
+    <rect
+       style="fill:#eeeeee;fill-opacity:0.93333334"
+       id="rect4162"
+       width="27.292927"
+       height="4.9389377"
+       x="46.603539"
+       y="880.16016" />
+    <rect
+       y="869.48193"
+       x="46.603539"
+       height="4.9389377"
+       width="27.292927"
+       id="rect4164"
+       style="fill:#eeeeee;fill-opacity:0.93333334" />
+    <rect
+       style="fill:#eeeeee;fill-opacity:0.93333333"
+       id="rect4397"
+       width="16.50955"
+       height="4.9389377"
+       x="57.386917"
+       y="899.73315" />
+    <rect
+       y="920.99554"
+       x="67.353539"
+       height="4.9389377"
+       width="6.5429282"
+       id="rect4399"
+       style="fill:#eeeeee;fill-opacity:0.93333333" />
+    <rect
+       style="fill:#eeeeee;fill-opacity:0.93333333"
+       id="rect4401"
+       width="11.383025"
+       height="4.9389377"
+       x="62.513439"
+       y="910.31732" />
+    <rect
+       y="910.31732"
+       x="46.603539"
+       height="4.9389377"
+       width="14.034676"
+       id="rect4463"
+       style="fill:#bacdb0;fill-opacity:1" />
+    <rect
+       y="899.73315"
+       x="46.603539"
+       height="4.9389377"
+       width="8.201045"
+       id="rect4465"
+       style="fill:#bacdb0;fill-opacity:1" />
+    <rect
+       style="fill:#bacdb0;fill-opacity:1"
+       id="rect4467"
+       width="18.792927"
+       height="4.9389377"
+       x="46.603539"
+       y="920.99554" />
   </g>
 </svg>
