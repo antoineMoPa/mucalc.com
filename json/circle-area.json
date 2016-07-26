@@ -1,1 +1,13 @@
-{"params":{"title":"Empty","locked":false},"cells":["r = 5","area = π*r^2",""]}
+{"params":{
+    "title":"Calculate the area of a circle",
+    "locked":false
+},
+ "cells":
+ [
+     "// First, define the radius:",
+     "r = 5",
+     "// Then, do the math:",
+     "area = π*r^2",
+     ""
+ ]
+}

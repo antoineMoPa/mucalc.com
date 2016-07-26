@@ -1,1 +1,17 @@
-{"params":{"title":"Empty","locked":false},"cells":["10cm in inches","3.93 inches in cm","round(3.1)","round(3.9)","plot(\"round(x)\")",""]}
+{"params":
+ {
+     "title":"Convert and round values",
+     "locked":false
+ },
+ "cells":
+ [
+     "// Here is how we convert centimeters to inches",
+     "10cm in inches",
+     "3.93 inches in cm",
+     "// To find the closest integer to a number:",
+     "round(3.1)",
+     "round(3.9)",
+     "// We can use functions like round() in plots to produce interesting results",
+     "plot(\"round(x)\")",
+     ""
+ ]}

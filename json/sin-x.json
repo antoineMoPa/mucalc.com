@@ -1,11 +1,15 @@
-{"params": {"title":"Empty","locked":false},
+{"params": {"title":"Use trigonometric functions","locked":false},
  "cells": [
+     "//Here is how we define variables with units",
      "my_angle = 45 deg",
+     "//We can do conversion to rad like that",
      "my_angle in rad",
      "theta = my_angle in rad",
+     "//Trigonometric functions like sin, cos and tan can be used:",
      "sin(theta)",
      "sin(45 deg)",
      "sin(0.785)",
+     "//You can also plot using these functions:",
      "plot(\"sin(x)\")"
  ]
 }
