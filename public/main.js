@@ -465,9 +465,14 @@ function modal_yesno(message, callback){
     }
 }
 
-{
+(function(){
     // Hide & show sidebar
     var burger = qsa("header .burger-icon")[0];
+
+    if(typeof burger == "undefined"){
+        return;
+    }
+    
     var page_content = qsa(".page-content")[0];
     var sidebar = qsa(".sticky-sidebar")[0];
     var state = "open";
@@ -485,7 +490,20 @@ function modal_yesno(message, callback){
         }
         
     });
-}
+})();
+
+(function(){
+    if(is_sheet){
+        var title = qsa(".sheet-title")[0];
+        var title_input = qsa("input[name='sheet-title']")[0];
+        title.addEventListener("click", function(){
+            var height = title_input.offsetTop;
+            window.scrollTo(0,height - 50);
+            title_input.focus();
+            flash(title_input);
+        });
+    }
+})();
 
 console.log("Hello!");
 console.log("Fork me on http://github.com/antoineMoPa/livecalc !");

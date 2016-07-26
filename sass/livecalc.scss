@@ -1,16 +1,25 @@
+.page-sheet .main-page{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.sheet-meta{
+    padding-left:20px;
+    background:$color_4;
+}
+
 h1.sheet-title{
-    margin-left:0;
-    margin-top:0;
     padding-top:0;
-    margin-bottom:10px;
+    padding-left:20px;
+    margin:0px;
     line-height:30px;
+    cursor: pointer;
+    background: #f0f0f0;
+    background: linear-gradient(#f0f0f0,#ececec);
 }
 
 .livecalc-cell{
-    margin-top:5px;
-    margin-bottom:5px;
     position:relative;
-
     label,
     fieldset & label{
         margin-left:10px;
@@ -29,6 +38,7 @@ h1.sheet-title{
         right:-10px;
         opacity:0.1;
         transition:all 0.3s;
+        z-index:2000;
         &:hover{
             opacity:1;
             transform:rotate(90deg); /* oh yeah! */
@@ -52,15 +62,18 @@ h1.sheet-title{
 
 .livecalc-cell .math-part,
 .livecalc .livecalc-header{
-    background:#eee;
+    background:#f8f8f8;
     padding-top:5px;
     padding-bottom:5px;
+}
+
+.cell-and-button-wrapper{
+    background:#e5e5e5;
 }
 
 .livecalc-cell .math-part{
     max-width:100%;
     overflow-x:hidden;
-    border-bottom:2px solid #bbb;
 }
 
 .livecalc fieldset{
@@ -176,7 +189,6 @@ h1.sheet-title{
     text-align:left;
     font-size:14px;
     color:darken($color_3, 20%);
-    border-bottom:2px solid #bbb;
 }
 
 .livecalc-header .sheet-state{
@@ -192,11 +204,13 @@ livecalc{
 }
 
 .panel{
-    background:$color_4;
+    background:#eee;
     padding:10px;
     margin-top:10px;
     margin-bottom:10px;
-    border-bottom:2px solid #bbb;
+    h3{
+        font-weight: 300;
+    }
 }
 
 .livecalc-sharing a{
@@ -204,19 +218,19 @@ livecalc{
 }
 
 .add-cell-button{
-    margin-top:5px;
+    padding-top:5px;
+    padding-bottom:5px;
     .inner{
         background:darken($color_4,10%);
         border-radius:3px;
         width:20px;
         margin:auto;
         color:#fff;
-        line-height:5px;
+        line-height:15px;
         cursor:pointer;
         transition: line-height 0.1s;
         &:hover{
             background:darken($color_4,20%);
-            line-height:15px;
         }
     }
 }
@@ -228,4 +242,9 @@ livecalc{
 
 header .burger-icon{
     margin-right:10px;
+}
+
+.sheet-panel input.flashing{
+    background:$color_3;
+    color:#fff;
 }
