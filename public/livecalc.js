@@ -1,3 +1,4 @@
+
 function livecalc(root_el, settings){
     eeify_mathjs();
 
@@ -48,7 +49,7 @@ function livecalc(root_el, settings){
     if(initial_content != ""){
         load_json(initial_content);
     } else {
-        new_cell("", true, true);
+        new_cell("", true, true, "mathjs");
     }
     
     if(networked){
@@ -256,7 +257,7 @@ function livecalc(root_el, settings){
         delete_all();
 
         for(var i = 0; i < cells.length; i++){
-            new_cell(cells[i], true, false);
+            new_cell(cells[i], true, false, "mathjs");
         }
 
         if(params.locked == true){
@@ -264,7 +265,9 @@ function livecalc(root_el, settings){
                 "This sheet is locked for edition.\n" +
                     "Edits will not be saved or sent to other users.\n" +
                     "But don't worry,\n" +
-                    "you can still try things, use the chat and open a copy.");
+                    "you can still try things, "+
+                    "use the chat and open a copy."
+            );
         }
         
         re_run();
@@ -366,7 +369,7 @@ function livecalc(root_el, settings){
         grow_to(number);
 
         if(method == "insert"){
-            new_cell(content, false, false, number);
+            new_cell(content, false, false, "mathjs", number);
         } else {
             var field = find_cell(number).input;
             field.value = content;
@@ -384,20 +387,20 @@ function livecalc(root_el, settings){
         var to = number;
 
         for(i = from; i <= to; i++){
-            new_cell("", false, false);
+            new_cell("", false, false, "mathjs");
         }
     }
 
-    function insert_cell_at(index, send_data, callback){
+    function insert_cell_at(index, send_data, type, callback){
         if(one_cell){
             return;
         }
 
-        new_cell("", send_data, true, index);
+        new_cell("", send_data, true, type, index);
         callback();
     }
 
-    function new_cell(content, send_data, animate, at_index){
+    function new_cell(content, send_data, animate, type, at_index){
         if(one_cell && cell_count == 1){
             return;
         }
@@ -413,8 +416,13 @@ function livecalc(root_el, settings){
         }
 
         cell_count++;
-        var cell = dom(load_template("livecalc-cell").content);
-
+        
+        var cell;
+        
+        cell = dom(load_template("livecalc-cell").content);
+        
+        cell_types[type].on_create(cell);
+        
         if(at_index == -1){
             // Append at end
             cells.appendChild(cell);
@@ -446,21 +454,34 @@ function livecalc(root_el, settings){
             appear(cell);
         }
 
-        var add_cell_button = subqsa(cell, ".add-cell-button .inner")[0];
+        var buttons = subqsa(cell, ".add-cell-buttons")[0]
+        var add_cell_button = subqsa(buttons, ".mathjscell")[0];
 
-        if(!one_cell){
-            add_cell_button.onclick = function(){
-                
+        // Create buttons for all cell types
+        for(i in cell_types){
+            var type_name = i;
+            var type = cell_types[i];
+            var text = type.button_html;
+            var type_button =
+                dom("<span class='button'>"+text+"</span>");
+            
+            type_button.onclick = function(){
                 var index = get_index();
-                insert_cell_at(index, true,function(){
+                insert_cell_at(index, true, type_name,function(){
                     focus(index);
                 });
-            }
-        } else {
-            add_cell_button.parentNode
-                .removeChild(add_cell_button);
+            };
+            
+            buttons.appendChild(type_button);
         }
 
+        // If this is one-cell sheet,
+        // hide buttons that would add more cells
+        if(one_cell){
+            buttons.parentNode
+                .removeChild(buttons);
+        }
+        
         input.setAttribute("value", content);
 
         /* Make sure inputs are shown on mouse click */
@@ -653,7 +674,7 @@ function livecalc(root_el, settings){
             
             // If last cell, add new cell
             if(index == cell_count - 1){
-                new_cell("", true, true);
+                new_cell("", true, true, "mathjs");
             }
         }
 
@@ -1354,7 +1375,7 @@ function livecalc(root_el, settings){
                             
                             // If last cell, add new cell
                             if(current_focus == cell_count - 1){
-                                new_cell("", true, true);
+                                new_cell("", true, true, "mathjs");
                             }
                         }
                     });
@@ -1488,7 +1509,7 @@ function init_doc(calc){
 
     function init_click(el, code){
         el.onclick = function(){
-            var cell = calc.new_cell(code, true, true);
+            var cell = calc.new_cell(code, true, true, "mathjs");
             cell.calculate();
             var dom_data = calc.find_cell(cell.get_index());
             show(dom_data.math_part);

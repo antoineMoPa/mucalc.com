@@ -1,0 +1,14 @@
+.text-cell{
+    .default-content{
+        display:none;
+    }
+    textarea{
+        margin:10px;
+        border:none;
+        font-size:16px;
+        padding:10px;
+        resize:vertical;
+        width:90%;
+        width:calc(100% - 40px); /* margin, padding */
+    }
+}

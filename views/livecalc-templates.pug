@@ -54,34 +54,34 @@ template(name='fullscreen')
     .content
 template(name='livecalc-cell')
   .cell-and-button-wrapper
-    .add-cell-button
-      p.text-center.inner
-        | +
+    .add-cell-buttons.text-center
     .livecalc-cell
       .delete-cell-button-wrapper
         .delete-cell-button.icon.delete-icon
-      .text-part
-      .math-part
-        fieldset
-          div
-            input.inline-block.livecalc-input(
-              type='text', 
-              placeholder='Type math')
-            button.inline-block.livecalc-go-button
-              | Go
-        label Your input (Pretty print)
-        .mathjax-input
-        col-md-6
-          label Result (Pretty print)
-          .mathjax-output
-        col-md-6
-          label Result (Raw ouput)
-          pre.livecalc-output
-          pre.livecalc-secondary-output
-        clearfix
-        col-sm-6
-          p.cell-state.text-left
-        col-sm-6
-          p.users-info.text-right
-        clearfix
-        .plot
+      .extension-content
+      .default-content
+        .text-part
+        .math-part
+          fieldset
+            div
+              input.inline-block.livecalc-input(
+                type='text', 
+                placeholder='Type math')
+              button.inline-block.livecalc-go-button
+                | Go
+          label Your input (Pretty print)
+          .mathjax-input
+          col-md-6
+            label Result (Pretty print)
+            .mathjax-output
+          col-md-6
+            label Result (Raw ouput)
+            pre.livecalc-output
+            pre.livecalc-secondary-output
+          clearfix
+          col-sm-6
+            p.cell-state.text-left
+          col-sm-6
+            p.users-info.text-right
+          clearfix
+          .plot
