@@ -39,6 +39,7 @@ function livecalc(root_el, settings){
 
     exports.on_sheet = function(sheet){
         var sheet = load_json(sheet);
+        
         exports.on_sheet_title({
             title: sheet.params.title
         });
@@ -49,7 +50,7 @@ function livecalc(root_el, settings){
     if(initial_content != ""){
         load_json(initial_content);
     } else {
-        new_cell("", true, true);
+        new_cell("", false, true);
     }
     
     if(networked){
@@ -221,7 +222,7 @@ function livecalc(root_el, settings){
     function re_run(){
         scope = default_scope();
         for(var i = 0; i < cells.children.length; i++){
-            cells.children[i].calculate();
+            calculate_cell(i);
         }
     }
 
@@ -253,11 +254,11 @@ function livecalc(root_el, settings){
         if(networked){
             update_state();
         }
-        
+
         delete_all();
 
         for(var i = 0; i < cells.length; i++){
-            new_cell(cells[i], true, false);
+            new_cell(cells[i], false, false);
         }
 
         if(params.locked == true){
@@ -418,6 +419,25 @@ function livecalc(root_el, settings){
         callback();
     }
 
+    /*
+      Adds a new cell to the sheet
+      Can be at a given position
+      
+      content can be a string of a json
+      
+      ex:
+      {
+         "type": "mathjs",
+         "value": "1+1"
+      }
+      
+      set send_data to true if you want 
+      to update data on server
+      
+      `type` will be deprecated soon and 
+      the json value will be used
+      
+     */
     function new_cell(content, send_data, animate, at_index, type){
         if(one_cell && cell_count == 1){
             return;
@@ -432,11 +452,11 @@ function livecalc(root_el, settings){
         //   then we assume mathjs type )
         try{
             var content = JSON.parse(content);
-            type = content.type;
+            type = content.type || "mathjs";
         } catch (e){
             content = {
                 type: "mathjs",
-                value: content.value
+                value: content
             }
         }
         
@@ -454,7 +474,7 @@ function livecalc(root_el, settings){
         var cell;
         
         cell = dom(load_template("livecalc-cell").content);
-        
+        console.log(type);
         cell_types[type].on_create(cell);
         
         if(at_index == -1){
@@ -519,7 +539,7 @@ function livecalc(root_el, settings){
                 .removeChild(buttons);
         }
         
-        input.setAttribute("value", content);
+        input.setAttribute("value", content.value);
 
         /* Make sure inputs are shown on mouse click */
         text_part.addEventListener("click",function(){
@@ -740,7 +760,7 @@ function livecalc(root_el, settings){
             
             // If last cell, add new cell
             if(index == cell_count - 1){
-                new_cell("", true, true, "mathjs");
+                new_cell("", true, true);
             }
         }
 
@@ -939,15 +959,15 @@ function livecalc(root_el, settings){
     }
     
     function send_value(index, method){
-        var method = method || "append";
-
-        var value = serialize(index);
-
-        console.log(value);
-        
-        if(networked){
-            net_engine.edit_cell(index, value, method);
+        if(!networked){
+            return;
         }
+
+        var method = method || "append";
+        
+        var value = serialize(index);
+        
+        net_engine.edit_cell(index, value, method);
     }
 
     function calculate_cell(index){

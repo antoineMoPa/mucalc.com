@@ -388,6 +388,7 @@ function livecalc(namespace, nsp){
             socket.on("definitive edit", function(data){
                 if(!model.is_locked()){
                     model.edit(data);
+                    console.log(model.get_sheet());
                     socket.broadcast.emit("definitive edit", data);
                     socket.emit("cell saved", data);
                     save();
