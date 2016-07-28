@@ -1,0 +1,25 @@
+template(name="math-cell-type")
+  .math-part
+    fieldset
+      div
+        input.inline-block.livecalc-input(
+          type='text', 
+          placeholder='Type math')
+        button.inline-block.livecalc-go-button
+          | Go
+    label Your input (Pretty print)
+    .mathjax-input
+    col-md-6
+      label Result (Pretty print)
+      .mathjax-output
+    col-md-6
+      label Result (Raw ouput)
+      pre.livecalc-output
+      pre.livecalc-secondary-output
+    clearfix
+    col-sm-6
+      p.cell-state.text-left
+    col-sm-6
+      p.users-info.text-right
+    clearfix
+    .plot

@@ -79,7 +79,8 @@ app.locals.pretty = true;
 
 // Views
 app.set('views', './views')
-app.set('view engine', 'pug');
+
+var render_engine = require("./render_engine")(app);
 
 app.get('/', function (req, res) {
     stats.log_visit("landing-page", req);
