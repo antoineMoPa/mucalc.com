@@ -49,7 +49,7 @@ function livecalc(root_el, settings){
     if(initial_content != ""){
         load_json(initial_content);
     } else {
-        new_cell("", true, true, "mathjs");
+        new_cell("", true, true);
     }
     
     if(networked){
@@ -257,7 +257,7 @@ function livecalc(root_el, settings){
         delete_all();
 
         for(var i = 0; i < cells.length; i++){
-            new_cell(cells[i], true, false, "mathjs");
+            new_cell(cells[i], true, false);
         }
 
         if(params.locked == true){
@@ -368,12 +368,17 @@ function livecalc(root_el, settings){
 
     function edit_cell(number, content, method){
         grow_to(number);
-
+        
         if(method == "insert"){
-            new_cell(content, false, false, "mathjs", number);
+            // Add a new cell
+            new_cell(content, false, false, number);
         } else {
+            // Update the field
+            var content = JSON.parse(content);
+            
             var field = find_cell(number).input;
-            field.value = content;
+            
+            field.value = content.value;
         }
 
         calculate_cell(number);
@@ -388,26 +393,54 @@ function livecalc(root_el, settings){
         var to = number;
 
         for(i = from; i <= to; i++){
-            new_cell("", false, false, "mathjs");
+            new_cell("", false, false);
         }
     }
 
+    function serialize(index){
+        var cell_data = find_cell(index);
+        var input = cell_data.input;
+        
+        var data = {
+            type: cell_data.type,
+            value: input.value
+        };
+
+        return JSON.stringify(data);
+    }
+    
     function insert_cell_at(index, send_data, type, callback){
         if(one_cell){
             return;
         }
 
-        new_cell("", send_data, true, type, index);
+        new_cell("", send_data, true, index, type);
         callback();
     }
 
-    function new_cell(content, send_data, animate, type, at_index){
+    function new_cell(content, send_data, animate, at_index, type){
         if(one_cell && cell_count == 1){
             return;
         }
 
-        var exports = {};
+        // Default type
+        var type = type || "mathjs";
         var content = content || "";
+        
+        // Look wether this is JSON
+        // ( some cells are only a string,
+        //   then we assume mathjs type )
+        try{
+            var content = JSON.parse(content);
+            type = content.type;
+        } catch (e){
+            content = {
+                type: "mathjs",
+                value: content.value
+            }
+        }
+        
+        var exports = {};
         var method = "append";
 
         if(at_index == undefined || at_index < 0){
@@ -551,6 +584,12 @@ function livecalc(root_el, settings){
         var operation_keys = ["+","-","*","/"];
 
         var last_value = input.value;
+
+        var live_edit_data = {
+            time_threshold: 350,
+            last_live_edit_send: time(),
+            has_waiting_timeout: false
+        };
         
         input.onkeydown = function(e){
             var key_num = e.keyCode || e.which;
@@ -592,12 +631,12 @@ function livecalc(root_el, settings){
                     }
                 }
             }
-
+                        
             // Live edits does not include
             // cell deletion
             if(has_live_edit){
                 // Verify if value actually changed
-                if(input.value != last_value){
+                if(input.value != live_edit_data.last_value){
                     send_live_throttled();
                     // Inform user that
                     // data is not on server yet
@@ -605,37 +644,56 @@ function livecalc(root_el, settings){
                 }
             }
 
-            last_value = input.value;
-            
-            var last_live_edit_send = time();
-            var time_threshold = 350;
-            var has_waiting_timeout = false;
-            
-            /* Send data, but not too often */
-            function send_live_throttled(){
-                if(time() - last_live_edit_send > time_threshold){
-                    send_live_edit(get_index());
-                    update_mathjax_input(get_index());
-                } else {
-                    if(!has_waiting_timeout){
-                        setTimeout(
-                            function(){
-                                send_live_throttled();
-                                has_waiting_timeout = false;
-                            },
-                            time() - time_threshold
-                        );
-                        
-                        has_waiting_timeout = true;
-                    }
-                }
-            }
-            
-            function time(){
-                return (new Date()).getTime();
-            }
+            live_edit_data.last_value = input.value;
         }
 
+        /* Send data, but not too often */
+        function send_live_throttled(){
+            var last_live_edit_send = live_edit_data.last_live_edit_send;
+            var time_threshold = live_edit_data.time_threshold;
+            var now = time();
+            
+            if(now - last_live_edit_send > time_threshold){
+                // If the right amount of time has elapsed
+
+                // Update last send time
+                live_edit_data.last_live_edit_send = time();
+                
+                // Send
+                send_live_edit(get_index());
+
+                // This also needed a place to be
+                // and the function already does the job
+                // of throttling
+                update_mathjax_input(get_index());
+                
+                live_edit_data.has_waiting_timeout = false;
+            } else {
+                // Is there already a timeout waiting to happen?
+                // If so, we'll quit here and let it handle the task.
+                if(!live_edit_data.has_waiting_timeout){
+                    // Postpone time
+                    var postpone_time = now -
+                        last_live_edit_send +
+                        time_threshold;
+
+                    // Postpone with setTimeout
+                    setTimeout(
+                        send_live_throttled,
+                        postpone_time
+                    );
+
+                    // Hey, we set up a timeout,
+                    // don't add a new one.
+                    live_edit_data.has_waiting_timeout = true;
+                }
+            }
+        }
+        
+        function time(){
+            return (new Date()).getTime();
+        }
+        
         // Run at load
         update_mathjax_input(get_index());
         
@@ -846,12 +904,27 @@ function livecalc(root_el, settings){
         mathjax_input.appendChild(div);
         MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     }
+
+    var last_send = (new Date()).getTime();
     
     function send_live_edit(index){
+        // Basic verification to
+        // get a warning if a dev error
+        // allows too short send intervals someday
+        var elapsed = (new Date()).getTime() - last_send;
+        last_send = (new Date()).getTime();
+
+        if(elapsed < 350){
+            console.log("Warning: sending live edits too often!");
+            console.log("time: ", elapsed);
+            return;
+        }
+        
         var cell_data = find_cell(index);
-        var input = cell_data.input;
+        var value = serialize(index);
+
         if(networked){
-            net_engine.live_edit_cell(index, input.value);
+            net_engine.live_edit_cell(index, value);
         }
     }
     
@@ -860,18 +933,20 @@ function livecalc(root_el, settings){
     function on_live_edit(data){
         var cell_data = find_cell(data.number);
         var input = cell_data.input;
-        input.value = data.content;
+
+        var content = JSON.parse(data.content);
+        input.value = content.value;
     }
     
     function send_value(index, method){
         var method = method || "append";
 
-        var cell_data = find_cell(index);
+        var value = serialize(index);
 
-        var input = cell_data.input;
-
+        console.log(value);
+        
         if(networked){
-            net_engine.edit_cell(index, input.value, method);
+            net_engine.edit_cell(index, value, method);
         }
     }
 
@@ -1527,7 +1602,7 @@ function init_doc(calc){
 
     function init_click(el, code){
         el.onclick = function(){
-            var cell = calc.new_cell(code, true, true, "mathjs");
+            var cell = calc.new_cell(code, true, true);
             cell.calculate();
             var dom_data = calc.find_cell(cell.get_index());
             show(dom_data.math_part);
