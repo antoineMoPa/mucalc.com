@@ -16,7 +16,7 @@ var cell_types = {
     },
     "text":{
         button_html: "text",
-        on_create: function(element){
+        on_create: function(element, content){
             var extension_content = subqsa(
                 element,
                 ".extension-content"
@@ -24,9 +24,26 @@ var cell_types = {
             
             element.classList.add("text-cell");
 
-            var content = render("text-cell-type");
+            var dom_content = render("text-cell-type");
+            extension_content.appendChild(dom_content);
+
+            var input = subqsa(element, ".livecalc-input")[0];
+            var textarea = subqsa(element, "textarea")[0];
+            var live_output = subqsa(element, ".live-output")[0];
             
-            extension_content.appendChild(content);
+            // Initialize content
+            textarea.value = content.value;
+
+            // Make data updatable
+            textarea.addEventListener("change", onchange);
+            textarea.addEventListener("keyup", onchange);
+
+            onchange();
+            
+            function onchange(){
+                input.value = textarea.value;
+                live_output.innerText = textarea.value;
+            }
         },
     },
 }

@@ -1,14 +1,23 @@
-.text-cell{
+.text-cell-type{
+    margin:10px;
+    padding-bottom:5px;
+    .livecalc-go-button{
+        margin:10px;
+    }
     .default-content{
         display:none;
     }
     textarea{
-        margin:10px;
         border:none;
         font-size:16px;
         padding:10px;
         resize:vertical;
         width:90%;
-        width:calc(100% - 40px); /* margin, padding */
+        width:calc(100% - 20px); /* margin, padding */
+    }
+    .live-output{
+        margin-top:0;
+        background:#fff;
+        padding:10px;
     }
 }

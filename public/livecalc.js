@@ -474,8 +474,9 @@ function livecalc(root_el, settings){
         var cell;
         
         cell = dom(load_template("livecalc-cell").content);
-        console.log(type);
-        cell_types[type].on_create(cell);
+
+        // Call the extension's on_create method
+        cell_types[type].on_create(cell, content);
         
         if(at_index == -1){
             // Append at end
