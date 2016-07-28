@@ -337,6 +337,7 @@ function livecalc(root_el, settings){
         }
 
         return {
+            type: el.getAttribute("data-type"),
             element: el,
             input: subqsa(el, ".livecalc-input")[0],
             button: subqsa(el, ".livecalc-go-button")[0],
@@ -440,8 +441,9 @@ function livecalc(root_el, settings){
         at_index = undefined;
 
         update_indices();
-
+        
         var cell_data        = find_cell(get_index());
+        var element          = cell_data.element;
         var input            = cell_data.input;
         var button           = cell_data.button;
         var output           = cell_data.output;
@@ -450,6 +452,8 @@ function livecalc(root_el, settings){
         var cell_state       = cell_data.cell_state;
         var secondary_output = cell_data.secondary_output;
 
+        element.setAttribute("data-type", type);
+        
         if(animate == true){
             appear(cell);
         }
@@ -496,10 +500,14 @@ function livecalc(root_el, settings){
                 hide(math_part);
             }
         });
-
+        
         // Hide these at beginning
-        hide(text_part);
-        hide(secondary_output);
+        if(text_part != undefined){
+            hide(text_part);
+        }
+        if(secondary_output != undefined){
+            hide(secondary_output);
+        }
 
         function get_index(){
             return parseInt(cell.getAttribute("data-index"));
@@ -793,7 +801,12 @@ function livecalc(root_el, settings){
         }
 
         var cell_data = find_cell(index);
-        var input            = cell_data.input;
+        
+        if(cell_data.type != "mathjs"){
+            return;
+        }
+        
+        var input           = cell_data.input;
         var mathjax_input   = cell_data.mathjax_input;
 
         {
@@ -864,6 +877,11 @@ function livecalc(root_el, settings){
 
     function calculate_cell(index){
         var cell_data = find_cell(index);
+
+        if(cell_data.type != "mathjs"){
+            return;
+        }
+        
         currently_calculated_cell = cell_data;
         var cell = cell_data.element;
         var text_part = cell_data.text_part;

@@ -9,7 +9,7 @@ var cell_types = {
             
             element.classList.add("text-cell");
 
-            var content = render("math-cell-type");
+            var content = render("mathjs-cell-type");
             
             extension_content.appendChild(content);
         }
@@ -24,7 +24,7 @@ var cell_types = {
             
             element.classList.add("text-cell");
 
-            var content = render("text-cell-type-editor");
+            var content = render("text-cell-type");
             
             extension_content.appendChild(content);
         },

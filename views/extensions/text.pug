@@ -1,7 +1,14 @@
-template(name='text-cell-type-editor')
-  .tct-editor
-    textarea
-    .text-right
-      button.livecalc-go-button(name='tct-go')
-        |  Go
-  .live-output
+template(name='text-cell-type')
+  .text-cell-type
+    .tct-editor
+      textarea
+      .text-right
+        button.livecalc-go-button(name='tct-go')
+          |  Go
+    .live-output
+    input.inline-block.livecalc-input(
+      type='hidden')
+    col-sm-6
+      p.cell-state.text-left
+    col-sm-6
+      p.users-info.text-right
