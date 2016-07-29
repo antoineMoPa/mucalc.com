@@ -301,7 +301,7 @@ function livecalc(root_el, settings){
             return;
         }
 
-        find_cell(index).input.focus();
+        find_cell(index).focus_element.focus();
         send_focus(index);
     }
 
@@ -340,6 +340,7 @@ function livecalc(root_el, settings){
         return {
             type: el.getAttribute("data-type"),
             element: el,
+            focus_element: subqsa(el, ".livecalc-focus-element")[0],
             input: subqsa(el, ".livecalc-input")[0],
             button: subqsa(el, ".livecalc-go-button")[0],
             output: subqsa(el,".livecalc-output")[0],
@@ -361,7 +362,7 @@ function livecalc(root_el, settings){
         for(i = 0; i < cells.children.length; i++){
             var cell = cells.children[i];
             cell.setAttribute("data-index", i);
-            subqsa(cell,".livecalc-input")[0]
+            subqsa(cell,".livecalc-focus-element")[0]
                 .setAttribute("tabindex", i + 1);
         }
         cell_count = i;
