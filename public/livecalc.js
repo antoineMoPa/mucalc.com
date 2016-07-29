@@ -500,6 +500,7 @@ function livecalc(root_el, settings){
         var cell_data        = find_cell(get_index());
         var element          = cell_data.element;
         var input            = cell_data.input;
+        var focus_element    = cell_data.focus_element;
         var button           = cell_data.button;
         var output           = cell_data.output;
         var text_part        = cell_data.text_part;
@@ -605,115 +606,121 @@ function livecalc(root_el, settings){
         
         var operation_keys = ["+","-","*","/"];
 
-        var last_value = input.value;
-
-        var live_edit_data = {
-            time_threshold: 350,
-            last_live_edit_send: time(),
-            has_waiting_timeout: false
-        };
-        
-        input.onkeydown = function(e){
-            var key_num = e.keyCode || e.which;
-            var has_live_edit = true;
+        {
+            // Manage live edition and saving
             
-            if(e.keyCode == 13 && !e.shiftKey){
-                // Enter key
-                e.preventDefault();
-                if(get_value() != ""){
-                    send_value(get_index());
-                    go();
+            var live_edit_data = {
+                time_threshold: 350,
+                last_live_edit_send: time(),
+                has_waiting_timeout: false
+            };
 
-                    // Edit will already be send
-                    has_live_edit = false;
-                }
-            } else if (e.keyCode == 38) {
-                // Up arrow
-                focus(get_index()-1);
-            } else if (e.keyCode == 40) {
-                // Down arrow
-                focus(get_index()+1);
-            } else if(e.code == "Backspace"){
-                // Delete cell
-                if(get_value() == ""){
-                    delete_cell(get_index());
+            var input = focus_element;
 
-                    // delete_cell fires a delete event
-                    // sending edit would be a problem
-                    has_live_edit = false;
+            var last_value = input.value;
+            
+            function time(){
+                return (new Date()).getTime();
+            }
+            
+            input.onkeydown = function(e){
+                var key_num = e.keyCode || e.which;
+                var has_live_edit = true;
+                
+                if(e.keyCode == 13 && !e.shiftKey){
+                    // Enter key
+                    e.preventDefault();
+                    if(get_value() != ""){
+                        send_value(get_index());
+                        go();
+                        
+                        // Edit will already be send
+                        has_live_edit = false;
+                    }
+                } else if (e.keyCode == 38) {
+                    // Up arrow
+                    focus(get_index()-1);
+                } else if (e.keyCode == 40) {
+                    // Down arrow
+                    focus(get_index()+1);
+                } else if(e.code == "Backspace"){
+                    // Delete cell
+                    if(get_value() == ""){
+                        delete_cell(get_index());
+                        
+                        // delete_cell fires a delete event
+                        // sending edit would be a problem
+                        has_live_edit = false;
+                    }
+                } else {
+                    // Detect if an operator
+                    // was inserted (+ - * /)
+                    // and wrap selected text
+                    for(var i in operation_keys){
+                        var op = operation_keys[i];
+                        if(e.key == op){
+                            operation_keydown(e, op);
+                        }
+                    }
                 }
-            } else {
-                // Detect if an operator
-                // was inserted (+ - * /)
-                // and wrap selected text
-                for(var i in operation_keys){
-                    var op = operation_keys[i];
-                    if(e.key == op){
-                        operation_keydown(e, op);
+                
+                // Live edits does not include
+                // cell deletion
+                if(has_live_edit){
+                    // Verify if value actually changed
+                    if(input.value != live_edit_data.last_value){
+                        send_live_throttled();
+                        // Inform user that
+                        // data is not on server yet
+                        cell_state_unsaved(get_index())
+                    }
+                }
+                
+                live_edit_data.last_value = input.value;
+            }
+
+            /* Send data, but not too often */
+            function send_live_throttled(){
+                var last_live_edit_send = live_edit_data.last_live_edit_send;
+                var time_threshold = live_edit_data.time_threshold;
+                var now = time();
+                
+                if(now - last_live_edit_send > time_threshold){
+                    // If the right amount of time has elapsed
+                    
+                    // Update last send time
+                    live_edit_data.last_live_edit_send = time();
+                    
+                    // Send
+                    send_live_edit(get_index());
+                    
+                    // This also needed a place to be
+                    // and the function already does the job
+                    // of throttling
+                    update_mathjax_input(get_index());
+                    
+                    live_edit_data.has_waiting_timeout = false;
+                } else {
+                    // Is there already a timeout waiting to happen?
+                    // If so, we'll quit here and let it handle the task.
+                    if(!live_edit_data.has_waiting_timeout){
+                        // Postpone time
+                        var postpone_time = now -
+                            last_live_edit_send +
+                            time_threshold;
+                        
+                        // Postpone with setTimeout
+                        setTimeout(
+                            send_live_throttled,
+                            postpone_time
+                        );
+                        
+                        // Hey, we set up a timeout,
+                        // don't add a new one.
+                        live_edit_data.has_waiting_timeout = true;
                     }
                 }
             }
-                        
-            // Live edits does not include
-            // cell deletion
-            if(has_live_edit){
-                // Verify if value actually changed
-                if(input.value != live_edit_data.last_value){
-                    send_live_throttled();
-                    // Inform user that
-                    // data is not on server yet
-                    cell_state_unsaved(get_index())
-                }
-            }
-
-            live_edit_data.last_value = input.value;
-        }
-
-        /* Send data, but not too often */
-        function send_live_throttled(){
-            var last_live_edit_send = live_edit_data.last_live_edit_send;
-            var time_threshold = live_edit_data.time_threshold;
-            var now = time();
-            
-            if(now - last_live_edit_send > time_threshold){
-                // If the right amount of time has elapsed
-
-                // Update last send time
-                live_edit_data.last_live_edit_send = time();
-                
-                // Send
-                send_live_edit(get_index());
-
-                // This also needed a place to be
-                // and the function already does the job
-                // of throttling
-                update_mathjax_input(get_index());
-                
-                live_edit_data.has_waiting_timeout = false;
-            } else {
-                // Is there already a timeout waiting to happen?
-                // If so, we'll quit here and let it handle the task.
-                if(!live_edit_data.has_waiting_timeout){
-                    // Postpone time
-                    var postpone_time = now -
-                        last_live_edit_send +
-                        time_threshold;
-
-                    // Postpone with setTimeout
-                    setTimeout(
-                        send_live_throttled,
-                        postpone_time
-                    );
-
-                    // Hey, we set up a timeout,
-                    // don't add a new one.
-                    live_edit_data.has_waiting_timeout = true;
-                }
-            }
-        }
-        
-        function time(){
-            return (new Date()).getTime();
         }
         
         // Run at load
@@ -954,7 +961,7 @@ function livecalc(root_el, settings){
     
     function on_live_edit(data){
         var cell_data = find_cell(data.number);
-        var input = cell_data.input;
+        var input = cell_data.focus_element;
 
         var content = JSON.parse(data.content);
         input.value = content.value;
