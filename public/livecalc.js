@@ -1457,7 +1457,7 @@ function livecalc(root_el, settings){
             if(el.tagName.toLowerCase() == "button"){
                 var cell = find_cell(current_focus);
                 if(cell != null){
-                    var input = cell.input;
+                    var input = cell.focus_element;
                     on_click(el, input,{
                         go: function(){
                             calculate_cell(current_focus);
