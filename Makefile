@@ -29,8 +29,15 @@ fira:
 	rm -rf public/fonts/fira-download public/fonts/fira-extract
 	rm -rf public/fonts/fira/technical\ reports/
 
-mathjax:
-	git clone git@github.com:mathjax/MathJax.git public/lib/mathjax
+katex:
+	mkdir -p public/lib/katex
+	mkdir KaTeX;\
+	cd KaTeX;\
+	wget https://github.com/Khan/KaTeX/releases/download/v0.6.0/katex.tar.gz;\
+	tar -zxvf katex.tar.gz;\
+	rm katex.tar.gz
+	mv KaTeX/katex/* public/lib/katex
+	rm -rf KaTeX
 
 screenshot:
 	wget -N https://cloud.githubusercontent.com/assets/2675724/16932125/736ffbac-4d12-11e6-9af7-3904af973d41.png -O public/images/screenshot.png

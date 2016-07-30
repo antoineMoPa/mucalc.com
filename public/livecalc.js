@@ -104,7 +104,7 @@ function livecalc(root_el, settings){
         var content = data.content;
         var method = data.method;
         edit_cell(number, content, method);
-        update_mathjax_input(data.number);
+        update_katex_input(data.number);
     };
 
     exports.on_cell_saved = function(data){
@@ -348,8 +348,8 @@ function livecalc(root_el, settings){
             users_info: subqsa(el,".users-info")[0],
             cell_state: subqsa(el,".cell-state")[0],
             text_part: subqsa(el,".text-part")[0],
-            mathjax_input: subqsa(el,".mathjax-input")[0],
-            mathjax_output: subqsa(el,".mathjax-output")[0],
+            katex_input: subqsa(el,".katex-input")[0],
+            katex_output: subqsa(el,".katex-output")[0],
             math_part: subqsa(el,".math-part")[0],
             plot: subqsa(el,".plot")[0]
         };
@@ -401,11 +401,17 @@ function livecalc(root_el, settings){
 
     function serialize(index){
         var cell_data = find_cell(index);
-        var input = cell_data.input;
+        var type_name = cell_data.type;
+        
+        var get_value = cell_types[type_name].get_value ||
+            function(){
+                var input = cell_data.input;
+                return input.value;
+            };
         
         var data = {
             type: cell_data.type,
-            value: input.value
+            value: get_value(cell_data.element)
         };
 
         return JSON.stringify(data);
@@ -498,6 +504,7 @@ function livecalc(root_el, settings){
         update_indices();
         
         var cell_data        = find_cell(get_index());
+        var type_name        = cell_data.type;
         var element          = cell_data.element;
         var input            = cell_data.input;
         var focus_element    = cell_data.focus_element;
@@ -572,7 +579,7 @@ function livecalc(root_el, settings){
         exports.get_index = get_index;
 
         function get_value(){
-            return input.value;
+            return focus_element.value;
         }
 
         function calculate(){
@@ -626,7 +633,8 @@ function livecalc(root_el, settings){
             input.onkeydown = function(e){
                 var key_num = e.keyCode || e.which;
                 var has_live_edit = true;
-                
+                var type = cell_data.type;
+
                 if(e.keyCode == 13 && !e.shiftKey){
                     // Enter key
                     e.preventDefault();
@@ -643,15 +651,6 @@ function livecalc(root_el, settings){
                 } else if (e.keyCode == 40) {
                     // Down arrow
                     focus(get_index()+1);
-                } else if(e.code == "Backspace"){
-                    // Delete cell
-                    if(get_value() == ""){
-                        delete_cell(get_index());
-                        
-                        // delete_cell fires a delete event
-                        // sending edit would be a problem
-                        has_live_edit = false;
-                    }
                 } else {
                     // Detect if an operator
                     // was inserted (+ - * /)
@@ -697,7 +696,7 @@ function livecalc(root_el, settings){
                     // This also needed a place to be
                     // and the function already does the job
                     // of throttling
-                    update_mathjax_input(get_index());
+                    update_katex_input(get_index());
                     
                     live_edit_data.has_waiting_timeout = false;
                 } else {
@@ -724,7 +723,7 @@ function livecalc(root_el, settings){
         }
         
         // Run at load
-        update_mathjax_input(get_index());
+        update_katex_input(get_index());
         
         /*
 
@@ -760,12 +759,16 @@ function livecalc(root_el, settings){
             }
         }
 
+        var on_save = cell_types[type_name].on_save || function(){};
+        
         function go(){
             calculate();
 
             var index = get_index();
 
-            update_mathjax_input(index);
+            update_katex_input(index);
+            
+            on_save(element);
             
             // If last cell, add new cell
             if(index == cell_count - 1){
@@ -850,14 +853,15 @@ function livecalc(root_el, settings){
 
     exports.new_cell = new_cell;
 
-    function update_mathjax_output(index, tex_content){
-        if(typeof MathJax == "undefined"){
+    function update_katex_output(index, tex_content){
+        if(typeof renderMathInElement == "undefined"){
             return;
         }
+        
         var cell_data = find_cell(index);
-        var mathjax_output   = cell_data.mathjax_output;
+        var katex_output   = cell_data.katex_output;
 
-        mathjax_output.innerHTML = "";
+        katex_output.innerHTML = "";
 
         if(content == ""){
             return;
@@ -867,23 +871,13 @@ function livecalc(root_el, settings){
         
         var tex = "$$ "+tex_content+" $$";
         
-        var div = MathJax.HTML.Element(
-            "div",
-            {},
-            tex
-        );
-        
-        mathjax_output.appendChild(div);
+        katex_output.innerText = tex;
 
-        hide(div);
-        
-        MathJax.Hub.Queue(["Typeset",function(){
-            show(div);
-        }]);
+        renderMathInElement(katex_output);
     }
     
-    function update_mathjax_input(index){
-        if(typeof MathJax == "undefined"){
+    function update_katex_input(index){
+        if(typeof renderMathInElement == "undefined"){
             return;
         }
 
@@ -894,44 +888,21 @@ function livecalc(root_el, settings){
         }
         
         var input           = cell_data.input;
-        var mathjax_input   = cell_data.mathjax_input;
+        var katex_input   = cell_data.katex_input;
 
-        {
-            // Reduce height change glitches
-            // Caused by removing element
-            mathjax_input.style.minHeight =
-                mathjax_input.clientHeight +
-                10 + "px";
-
-            setTimeout(function(){
-                mathjax_input.style.minHeight = 0;
-            },3000);
-        }
-        
-        mathjax_input.innerHTML = "";
-        
-        if(input.value == ""){
-            return;
-        }
-        
-        var content;
+        katex_input.innerHTML = "";
         
         try{
             content = math.parse(input.value);
         } catch (e){
             return;
         }
-        
+
         var tex = "$$"+content.toTex()+"$$";
-        
-        var div = MathJax.HTML.Element(
-            "div",
-            {},
-            tex
-        );
-        
-        mathjax_input.appendChild(div);
-        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+
+        katex_input.innerText = tex;
+
+        renderMathInElement(katex_input);
     }
 
     var last_send = (new Date()).getTime();
@@ -1048,7 +1019,7 @@ function livecalc(root_el, settings){
         }
 
         secondary_output.innerHTML = "";
-        update_mathjax_output(index, "");
+        update_katex_output(index, "");
         
         var tex_output = "";
         
@@ -1088,7 +1059,7 @@ function livecalc(root_el, settings){
                     console.error(e + "");
                 }
                 
-                update_mathjax_output(index, tex_output);
+                update_katex_output(index, tex_output);
             }
         
         } else {
@@ -1493,7 +1464,7 @@ function livecalc(root_el, settings){
                             
                             send_value(current_focus);
                             
-                            update_mathjax_input(current_focus);
+                            update_katex_input(current_focus);
                             
                             // If last cell, add new cell
                             if(current_focus == cell_count - 1){

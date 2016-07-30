@@ -26,11 +26,10 @@ var cell_types = {
 
             var dom_content = render("text-cell-type");
             extension_content.appendChild(dom_content);
-
+            
             var input = subqsa(element, ".livecalc-input")[0];
             var textarea = subqsa(element, "textarea")[0];
-            var live_output = subqsa(element, ".live-output")[0];
-            
+
             // Initialize content
             textarea.value = content.value;
 
@@ -39,11 +38,15 @@ var cell_types = {
             textarea.addEventListener("keyup", onchange);
 
             onchange();
-            
+
+            // Update data
             function onchange(){
                 input.value = textarea.value;
-                live_output.innerText = textarea.value;
             }
         },
+        get_value: function(element){
+            var textarea = subqsa(element, "textarea")[0];
+            return textarea.value;
+        }
     },
 }
