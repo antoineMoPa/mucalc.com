@@ -208,3 +208,18 @@ body.page-landing{
         display:none;
     }
 }
+
+.cta-or{
+    padding-left:20px;
+    padding-right:20px;
+    color:#fff;
+}
+
+.call-to-action{
+    display:inline-block;
+    button{
+        background:$header_color;
+        padding:20px;
+        font-size:20px;
+    }
+}
