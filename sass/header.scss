@@ -62,12 +62,12 @@ header button{
     height:auto;
     border-radius:3px;
     border:2px solid $body_bg;
+    margin-right:5px;
 }
 
 .new-sheet-button{
     color:#fff;
     display:inline-block;
-    margin-right:20px;
 }
 
 @media (max-width:1250px){
