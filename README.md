@@ -1,4 +1,4 @@
-Code Status: No major problem.
+Code Status: Encoding problem crashes everyting.
 
 Current milestone: https://github.com/antoineMoPa/livecalc.xyz/milestone/1
 
