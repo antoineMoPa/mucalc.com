@@ -377,10 +377,19 @@ function livecalc(root_el, settings){
         } else {
             // Update the field
             var content = JSON.parse(content);
-            
-            var field = find_cell(number).input;
+            var cell_data = find_cell(number);
+            var field = cell_data.input;
             
             field.value = content.value;
+
+            // Call updater function
+            var type_name = cell_data.type;
+            var cell_updater =
+                cell_types[type_name].on_update || function(){};
+            
+            var input = cell_data.focus_element;
+            
+            cell_updater(cell_data.element);
         }
 
         calculate_cell(number);
@@ -588,13 +597,13 @@ function livecalc(root_el, settings){
         function calculate(){
             calculate_cell(get_index());
         };
-
-        input.addEventListener("click",function(){
+        
+        focus_element.addEventListener("click",function(){
             send_focus(get_index());
         });
 
         /* lost focus */
-        input.addEventListener("blur",function(){
+        focus_element.addEventListener("blur",function(){
             send_focus(-1);
         });
 
@@ -850,7 +859,8 @@ function livecalc(root_el, settings){
     exports.new_cell = new_cell;
 
     function update_katex_output(index, tex_content){
-        if(typeof renderMathInElement == "undefined"){
+        if( typeof renderMathInElement == "undefined" ||
+            typeof katex == "undefined" ){
             return;
         }
         
@@ -873,7 +883,8 @@ function livecalc(root_el, settings){
     }
     
     function update_katex_input(index){
-        if(typeof renderMathInElement == "undefined"){
+        if( typeof renderMathInElement == "undefined" ||
+            typeof katex == "undefined" ){
             return;
         }
 
@@ -928,10 +939,17 @@ function livecalc(root_el, settings){
     
     function on_live_edit(data){
         var cell_data = find_cell(data.number);
+        var type_name = cell_data.type;
+
         var input = cell_data.focus_element;
 
         var content = JSON.parse(data.content);
         input.value = content.value;
+        
+        var cell_updater =
+            cell_types[type_name].on_update || function(){};
+        
+        cell_updater(cell_data.element);
     }
     
     function send_value(index, method){

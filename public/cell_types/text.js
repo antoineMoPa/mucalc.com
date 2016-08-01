@@ -29,7 +29,8 @@
         viewer.innerHTML = "";
         viewer.innerText = val;
 
-        if(typeof renderMathInElement == "undefined"){
+        if( typeof renderMathInElement == "undefined" ||
+            typeof katex == "undefined" ){
             return;
         }
         
@@ -41,6 +42,9 @@
         button_html: "text",
         on_save: function(element){
             switch_state(element);
+            update_preview(element);
+        },
+        on_update: function(element){
             update_preview(element);
         },
         on_create: function(element, content){
@@ -93,6 +97,9 @@
                 input.value = val;
                 update_preview(element);
             }
+
+            // Render any equation that was there initially
+            update_preview(element);
         },
         get_value: function(element){
             var textarea = subqsa(element, "textarea")[0];
