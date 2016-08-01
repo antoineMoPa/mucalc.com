@@ -58,11 +58,15 @@ header a{
 header button{
     margin:0;
     padding:10px 12px;
-    margin-top:6px;
+    margin-top:4px;
     height:auto;
     border-radius:3px;
     border:2px solid $body_bg;
     margin-right:5px;
+}
+
+.landing header button{
+    margin-top:6px;
 }
 
 .new-sheet-button{
