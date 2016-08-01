@@ -888,12 +888,56 @@ function livecalc(root_el, settings){
         }
         
         var content;
+
+        var tex_content = preprocess_katex(tex_content);
         
         var tex = "$$ "+tex_content+" $$";
         
         katex_output.innerText = tex;
-
+        
         renderMathInElement(katex_output);
+    }
+
+    function preprocess_katex(string){
+        // Replace non-ascii chars
+        var s = string.replace(/[^\x20-\x7f]/g,"")
+        
+        s = s.replace("\α", '\alpha');
+        s = s.replace("\β", '\beta');
+        s = s.replace("\Γ", '\Gamma');
+        s = s.replace("\γ", '\gamma');
+        s = s.replace("\Δ", '\Delta');
+        s = s.replace("\δ", '\delta');
+        s = s.replace("\ε", '\varepsilon');
+        s = s.replace("\ζ", '\zeta');
+        s = s.replace("\η", '\eta');
+        s = s.replace("\Θ", '\Theta');
+        s = s.replace("\θ", '\theta');
+        s = s.replace("\ι", '\iota');
+        s = s.replace("\κ", '\kappa');
+        s = s.replace("\Λ", '\Lambda');
+        s = s.replace("\λ", '\lambda');
+        s = s.replace("\μ", '\mu');
+        s = s.replace("\ν", '\nu');
+        s = s.replace("\Ξ", '\Xi');
+        s = s.replace("\ξ", '\xi');
+        s = s.replace("\Π", '\Pi');
+        s = s.replace("\π", '\pi');
+        s = s.replace("\ρ", '\rho');
+        s = s.replace("\Σ", '\Sigma');
+        s = s.replace("\σ", '\sigma');
+        s = s.replace("\ς", '\sigma');
+        s = s.replace("\τ", '\tau');
+        s = s.replace("\υ", '\upsilon');
+        s = s.replace("\Φ", '\phi');
+        s = s.replace("\φ", '\Phi');
+        s = s.replace("\χ", '\chi');
+        s = s.replace("\Ψ", '\Psi');
+        s = s.replace("\ψ", '\psi');
+        s = s.replace("\Ω", '\Omega');
+        s = s.replace("\ω", '\omega');
+        
+        return s;
     }
     
     function update_katex_input(index){
@@ -914,7 +958,8 @@ function livecalc(root_el, settings){
         katex_input.innerHTML = "";
         
         try{
-            content = math.parse(input.value);
+            var string = preprocess_katex(input.value);
+            content = math.parse(string);
         } catch (e){
             return;
         }

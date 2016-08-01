@@ -27,8 +27,9 @@
         // Update preview
         input.value = val;
         viewer.innerHTML = "";
-        viewer.innerText = val;
 
+        viewer.innerText = val;
+        
         if( typeof renderMathInElement == "undefined" ||
             typeof katex == "undefined" ){
             return;
