@@ -484,6 +484,7 @@ function livecalc(root_el, settings){
 
         // Call the extension's on_create method
         cell_types[type].on_create(cell, content);
+        cell.setAttribute("data-type", type);
         
         if(at_index == -1){
             // Append at end
@@ -515,8 +516,6 @@ function livecalc(root_el, settings){
         var cell_state       = cell_data.cell_state;
         var secondary_output = cell_data.secondary_output;
 
-        element.setAttribute("data-type", type);
-        
         if(animate == true){
             appear(cell);
         }
@@ -524,24 +523,28 @@ function livecalc(root_el, settings){
         var buttons = subqsa(cell, ".add-cell-buttons")[0]
         var add_cell_button = subqsa(buttons, ".mathjscell")[0];
 
-        // Create buttons for all cell types
-        for(i in cell_types){
-            var type_name = i;
-            var type = cell_types[i];
-            var text = type.button_html;
-            var type_button =
-                dom("<span class='button'>"+text+"</span>");
-            
-            type_button.onclick = function(){
-                var index = get_index();
-                insert_cell_at(index, true, type_name,function(){
-                    focus(index);
-                });
-            };
-            
-            buttons.appendChild(type_button);
-        }
-
+        // Add buttons for all cell types
+        // Wrapped in function to protect scope
+        (function(){
+            // Create buttons for all cell types
+            for(i in cell_types){
+                var type_name = i;
+                var type = cell_types[i];
+                var text = type.button_html;
+                var type_button =
+                    dom("<span class='button'>"+text+"</span>");
+                
+                type_button.onclick = function(){
+                    var index = get_index();
+                    insert_cell_at(index, true, type_name,function(){
+                        focus(index);
+                    });
+                };
+                
+                buttons.appendChild(type_button);
+            }
+        })();
+        
         // If this is one-cell sheet,
         // hide buttons that would add more cells
         if(one_cell){
@@ -645,12 +648,6 @@ function livecalc(root_el, settings){
                         // Edit will already be send
                         has_live_edit = false;
                     }
-                } else if (e.keyCode == 38) {
-                    // Up arrow
-                    focus(get_index()-1);
-                } else if (e.keyCode == 40) {
-                    // Down arrow
-                    focus(get_index()+1);
                 } else {
                     // Detect if an operator
                     // was inserted (+ - * /)
@@ -767,7 +764,6 @@ function livecalc(root_el, settings){
             var index = get_index();
 
             update_katex_input(index);
-            
             on_save(element);
             
             // If last cell, add new cell

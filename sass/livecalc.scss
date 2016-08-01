@@ -145,6 +145,7 @@ h1.sheet-title{
     margin-top:10px;
 }
 
+.livecalc  .action-button,
 .livecalc-go-button{
     height:32px;
     margin:0;
@@ -159,6 +160,11 @@ h1.sheet-title{
     &:hover{
         background:$color_2;
     }
+}
+
+.livecalc  .action-button{
+    background:lighten($color_3,10%);
+    border-bottom:2px solid darken($color_3,30%);
 }
 
 .livecalc .cell-state,

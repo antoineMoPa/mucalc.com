@@ -12,10 +12,29 @@
         font-size:16px;
         min-height:120px;
         padding:10px;
+        margin-bottom:20px;
         resize:vertical;
         width:90%;
         width:calc(100% - 20px); /* margin, padding */
         &.hidden{
+            display:none;
+        }
+    }
+    .tct-viewer{
+        margin:0;
+        font-size: 19px;
+        line-height: 12px;
+    }
+}
+
+.text-cell{
+    &[data-state='editing']{
+        button[name='tct-edit']{
+            display:none;
+        }
+    }
+    &[data-state='not-editing']{
+        .tct-editor{
             display:none;
         }
     }

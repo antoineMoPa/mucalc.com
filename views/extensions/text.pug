@@ -1,14 +1,20 @@
 template(name='text-cell-type')
-  .text-cell-type
-    .tct-editor
-      textarea.livecalc-focus-element
+  div
+    .text-cell-type
+      .tct-editor
+        h3 Editor
+        textarea.livecalc-focus-element
+        h3 Preview
+      p.tct-viewer
       .text-right
+        button.action-button(name='tct-edit')
+          |  Edit
         button.livecalc-go-button(name='tct-go')
           |  Go
-    col-sm-6
-      p.cell-state.text-left
-    col-sm-6
-      p.users-info.text-right
-    br
-    input.inline-block.livecalc-input(
-      type='hidden')
+      col-sm-6
+        p.cell-state.text-left
+      col-sm-6
+        p.users-info.text-right
+      br
+      input.inline-block.livecalc-input(
+        type='hidden')
