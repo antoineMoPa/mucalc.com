@@ -8,7 +8,7 @@ $color_7: #2e2c2f;
 
 $header_color: $color_2;
 
-$body_bg: #f3e8ee;
+$body_bg: #eeeeee;
 
 $error_color: #733;
 
@@ -231,37 +231,8 @@ p{
     margin-right: 15px;
 }
 
-.fullscreen{
-    background:lighten($body_bg, 10%);
-    width:100%;
-    height:100%;
-    position:fixed;
-    top:0;
-    left:0;
-    z-index:1000;
-    text-align:center;
-}
-
-.fullscreen-header{
-    background:#eee;
-    margin-bottom:5px;
-}
-
-.fullscreen-title{
-    margin-top:25px;
-    text-align:left;
-    margin-left:30px;
-}
-  
-.fullscreen .close-button{
-    margin-right:20px;
-    margin-top:20px;
-}
-
-.function-plot {
-    font-size: 10px;
-}
-
-.plot-interact{
-    margin-top: 30px;
+.footer{
+    position:relative;
+    background:$body_bg;
+    padding:30px;
 }

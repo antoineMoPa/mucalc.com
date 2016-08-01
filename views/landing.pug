@@ -1,16 +1,16 @@
 .landing.only-landing
   row
-    h1.text-center A better way to do math
+    h1.text-center Shareable math in your browser
     p.text-center
-      | mucalc.com is a collaborative calculator
+      | μCalc (mucalc) is a collaborative calculator
       br
       br
-      |  To use mucalc.com, try a 
+      |  To use it, try a 
       a(href='#example-list') demo sheet
       br
-      |  Up to 3 users can edit a sheet at the same time,
+      |  μCalc lets you plot functions & do basic calculations
       br
-      |  so share the sheet URL to your friends/classmates/colleagues!
+      |  share the sheet URL with your friends/classmates/colleagues!
       br
       br
       |  Have fun!
@@ -26,18 +26,21 @@
       include ./landing-examples.pug
     clearfix
   .features
-    .block-center
+    col-md-6.text-center
+      img(src='/images/logo-square.png' alt='mucalc, shareable math in your browser').features-image
+    col-md-6
       h3 Features
       p
         ul
+          li Completely open source
           li Play with numbers
           li Plots Functions
           li Store values in variables
           li Convert units
           li Chat with your teammates
-          li Completely open source
+    clearfix
   .text-block
-    h2 Use mucalc.com as a project logbook
+    h2 Use μCalc as a project logbook
     p
       | Do you have math intensive team projects? Keep track of your math in mucalc.com and let everyone access the important notes, solutions and results.
     .text-center
@@ -48,9 +51,9 @@
     clearfix
 
   .text-block
-    h2 Use mucalc.com in PBL (Project Based Learning)
+    h2 Use μCalc in PBL (Project Based Learning)
     p
-      |  mucalc.com was created with PBL in mind. In a class, set up a projector with mucalc.com and let students access and edit the sheet. Use mucalc.com in small groups to encourage the sharing of ideas. Everyone who has an idea can type it right away. Lock the sheet when the problem is solved or when the class is over so that everyone can access the solution at home while studying.
+      |  μCalc was created with PBL in mind. In a class, set up a projector with mucalc.com and let students access and edit the sheet. Use mucalc.com in small groups to encourage the sharing of ideas. Everyone who has an idea can type it right away. Lock the sheet when the problem is solved or when the class is over so that everyone can access the solution at home while studying.
     .text-center
       a(href='/new/')
         button
@@ -59,7 +62,7 @@
   .text-block
     h2 Keep track of your math while doing your homeworks
     p
-      | Use mucalc.com instead of your calculator and keep track of the problems you solve. If there is a small change in a problem, or if you made a mistake, change the line that needs to be changed and re-calculate. If teammates need help with a problem, send them the link to the sheet. Ask them for help when you are stuck!
+      | Use μCalc instead of your calculator (or along with it) and keep track of the problems you solve. If there is a small change in a problem, or if you made a mistake, change what needs to be changed and re-calculate. Erase less and save paper. If teammates need help with a problem, send them the link to the sheet. Ask them for help when you are stuck!
     .text-center
       a(href='/new/')
         button
@@ -92,6 +95,3 @@
     clearfix
     
 
-p.text-center
-  | Contribute code & issues on 
-  a(href='https://github.com/antoineMoPa/livecalc', target='_blank') github

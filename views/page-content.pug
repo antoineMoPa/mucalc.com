@@ -52,6 +52,10 @@
         p
           | Content not found
   br
+.footer
+  p.text-center
+    | Contribute code & issues on 
+    a(href='https://github.com/antoineMoPa/livecalc', target='_blank') github
   p.text-center
     |  Version 
     = version
@@ -66,3 +70,6 @@
       target='_blank')
       | AGPLv3
   br
+  if page == "landing"
+    .text-right.footer-hedgehog
+      img(src='/images/footer-hedgehog.png', alt='Hedgehog logo', title='f(x)=42x')

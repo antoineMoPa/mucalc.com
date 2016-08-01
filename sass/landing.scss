@@ -82,6 +82,13 @@ body.page-landing{
     color: $color_2;
 }
 
+@media all and (min-width:768px){
+    /* Ugly hack to center this vertically */
+    .features h3{
+        margin-top:70px;
+    }
+}
+
 .features{
     background:#eee;
     color:#333;
@@ -91,6 +98,17 @@ body.page-landing{
     margin-top:40px;
     padding:20px;
     border-bottom:5px solid $body_bg;
+    .features-image{
+        border-radius:50%;
+    }
+    h3{
+        font-size: 28px;
+    }
+    li{
+        line-height:30px;
+        font-size:21px;
+        font-weight:300;
+    }
 }
 
 .features h3{
@@ -171,5 +189,19 @@ body.page-landing{
 @media all and (max-width:768px){
     .landing h2{
         line-height:40px;
+    }
+}
+
+.footer-hedgehog{
+    position:absolute;
+    bottom:0;
+    right:0;
+    width:301px;
+    height:212px;
+}
+
+@media all and (max-width:768px){
+    .footer-hedgehog{
+        display:none;
     }
 }
