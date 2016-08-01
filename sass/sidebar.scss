@@ -1,6 +1,6 @@
 .sticky-sidebar{
     position:fixed;
-    background:#f2f2f2;
+    background:#eee;
     height:100%;
     top:0;
     right:0;
@@ -26,7 +26,7 @@
 }
 
 .sidebar-header{
-    background:$color_6;
+    background:$header_color;
     font-size:12px;
     padding:3px;
     text-align:left;
