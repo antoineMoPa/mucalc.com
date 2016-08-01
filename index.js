@@ -49,15 +49,6 @@ app.use(sass_middleware({
     prefix: "/css"
 }));
 
-// Use utf-8 for js files
-app.use(function(req, res, next){
-    console.log(req.path, /.*\.js/.test(req.path));
-    if (/.*\.js/.test(req.path)) {
-        res.charset = "utf-8";
-    }
-    next();
-});
-
 // Serve static files
 app.use(express.static('public'));
 

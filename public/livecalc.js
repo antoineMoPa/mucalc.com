@@ -899,43 +899,46 @@ function livecalc(root_el, settings){
     }
 
     function preprocess_katex(string){
-        // Replace non-ascii chars
-        var s = string.replace(/[^\x20-\x7f]/g,"")
+        var s = string;
         
-        s = s.replace("\α", '\alpha');
-        s = s.replace("\β", '\beta');
-        s = s.replace("\Γ", '\Gamma');
-        s = s.replace("\γ", '\gamma');
-        s = s.replace("\Δ", '\Delta');
-        s = s.replace("\δ", '\delta');
-        s = s.replace("\ε", '\varepsilon');
-        s = s.replace("\ζ", '\zeta');
-        s = s.replace("\η", '\eta');
-        s = s.replace("\Θ", '\Theta');
-        s = s.replace("\θ", '\theta');
-        s = s.replace("\ι", '\iota');
-        s = s.replace("\κ", '\kappa');
-        s = s.replace("\Λ", '\Lambda');
-        s = s.replace("\λ", '\lambda');
-        s = s.replace("\μ", '\mu');
-        s = s.replace("\ν", '\nu');
-        s = s.replace("\Ξ", '\Xi');
-        s = s.replace("\ξ", '\xi');
-        s = s.replace("\Π", '\Pi');
-        s = s.replace("\π", '\pi');
-        s = s.replace("\ρ", '\rho');
-        s = s.replace("\Σ", '\Sigma');
-        s = s.replace("\σ", '\sigma');
-        s = s.replace("\ς", '\sigma');
-        s = s.replace("\τ", '\tau');
-        s = s.replace("\υ", '\upsilon');
-        s = s.replace("\Φ", '\phi');
-        s = s.replace("\φ", '\Phi');
-        s = s.replace("\χ", '\chi');
-        s = s.replace("\Ψ", '\Psi');
-        s = s.replace("\ψ", '\psi');
-        s = s.replace("\Ω", '\Omega');
-        s = s.replace("\ω", '\omega');
+        // Replace greek letters chars
+        s = s.replace(/α/g, '\\alpha');
+        s = s.replace(/β/g, '\\beta');
+        s = s.replace(/Γ/g, '\\Gamma');
+        s = s.replace(/γ/g, '\\gamma');
+        s = s.replace(/Δ/g, '\\Delta');
+        s = s.replace(/δ/g, '\\delta');
+        s = s.replace(/ε/g, '\\varepsilon');
+        s = s.replace(/ζ/g, '\\zeta');
+        s = s.replace(/η/g, '\\eta');
+        s = s.replace(/Θ/g, '\\Theta');
+        s = s.replace(/θ/g, '\\theta');
+        s = s.replace(/ι/g, '\\iota');
+        s = s.replace(/κ/g, '\\kappa');
+        s = s.replace(/Λ/g, '\\Lambda');
+        s = s.replace(/λ/g, '\\lambda');
+        s = s.replace(/μ/g, '\\mu');
+        s = s.replace(/ν/g, '\\nu');
+        s = s.replace(/Ξ/g, '\\Xi');
+        s = s.replace(/ξ/g, '\\xi');
+        s = s.replace(/Π/g, '\\Pi');
+        s = s.replace(/π/g, '\\pi');
+        s = s.replace(/ρ/g, '\\rho');
+        s = s.replace(/Σ/g, '\\Sigma');
+        s = s.replace(/σ/g, '\\sigma');
+        s = s.replace(/ς/g, '\\sigma');
+        s = s.replace(/τ/g, '\\tau');
+        s = s.replace(/υ/g, '\\upsilon');
+        s = s.replace(/Φ/g, '\\phi');
+        s = s.replace(/φ/g, '\\Phi');
+        s = s.replace(/χ/g, '\\chi');
+        s = s.replace(/Ψ/g, '\\Psi');
+        s = s.replace(/ψ/g, '\\psi');
+        s = s.replace(/Ω/g, '\\Omega');
+        s = s.replace(/ω/g, '\\omega');
+        console.log(s);
+        // Replace other non-ascii characters
+        s = s.replace(/[^\x20-\x7f]/g,"")
         
         return s;
     }
