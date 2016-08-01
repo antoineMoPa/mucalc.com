@@ -4,6 +4,10 @@ nav
       li
         a.pricing-link(href='/')
           | Home
+    if(page == "landing")
+      li
+        a(href='/new')
+          | Create a new sheet
     //li
       a.pricing-link(href='/pricing', target='_blank')
         | Pricing
