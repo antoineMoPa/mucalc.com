@@ -3,7 +3,8 @@ header .links a{
 }
 
 header h1{
-    line-height:19px;
+    line-height:32px;
+    font-size:15px;
     font-family: 'Fira Sans';
     font-weight:300;
 }
@@ -16,22 +17,15 @@ header h1 a{
     color:#fff;
 }
 
-@media all and (max-width:475px){
-    .header-logo{
-        display:none;
-    }
-
+@media all and (max-width:545px){
     header h1{
+        display:none !important;
         font-size:15px;
         line-height: 6px;
         font-size:19px;
         text-align: center;
         margin-top: 17px;
         margin-left: 20px;
-    }
-
-    .header-logo{
-        display:none;
     }
     .new-sheet-button{
         display:none!important;
@@ -137,6 +131,7 @@ button.fb-login{
 }
 
 header .burger-icon{
+    margin-top: 4px;
     display:none;
     .page-sheet &{
         display:inline-block;
