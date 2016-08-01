@@ -39,6 +39,7 @@
     }
 
     cell_types["text"] = {
+        require_shift: true,
         button_html: "text",
         on_save: function(element){
             switch_state(element);
@@ -73,6 +74,7 @@
             viewer.onclick = 
                 edit_button.onclick = function(){
                     switch_state(element);
+                    textarea.focus();
                 };
             
             // Initialize content

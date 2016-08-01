@@ -320,7 +320,8 @@ function livecalc(root_el, settings){
     function cell_state_unsaved(index){
         var cell = find_cell(index);
         var cell_state = cell.cell_state;
-        cell_state.innerText = "Cell not saved. Press enter/go to save.";
+        cell_state.innerText =
+            "Cell not saved. Press Shift+Enter/go to save.";
     }
     
     function cell_state_saved(index){
@@ -645,9 +646,22 @@ function livecalc(root_el, settings){
             input.onkeydown = function(e){
                 var key_num = e.keyCode || e.which;
                 var has_live_edit = true;
-                var type = cell_data.type;
+                var type_data = cell_types[type];
 
-                if(e.keyCode == 13 && !e.shiftKey){
+                // Some cell types require Shift+Enter
+                // Other require Enter only
+                var require_shift =
+                    type_data.require_shift || false;
+
+                // Defauls: only Enter
+                var should_send = (e.keyCode == 13);
+
+                // require_shift: Enter + Shift
+                if(require_shift){
+                    should_send = (e.keyCode == 13 && e.shiftKey);
+                }
+                
+                if(should_send){
                     // Enter key
                     e.preventDefault();
                     if(get_value() != ""){
