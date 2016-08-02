@@ -103,6 +103,7 @@ body.page-landing{
     border-bottom:5px solid $body_bg;
     .features-image{
         border-radius:50%;
+        max-width:100%;
     }
     h3{
         font-size: 28px;
