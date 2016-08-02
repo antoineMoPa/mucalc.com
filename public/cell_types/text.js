@@ -45,9 +45,13 @@
         );
         
         viewer.innerText = val;
-        
-        // Render equations $$ 1+1 $$
-        renderMathInElement(viewer);
+
+        try{
+            // Render equations $$ 1+1 $$
+            renderMathInElement(viewer);
+        } catch (e){
+            // do nothing
+        }
     }
 
     cell_types["text"] = {
