@@ -1,5 +1,6 @@
 (function(){
-
+    var calc;
+    
     function switch_state(element, to_state){
         // Get state
         var state = element.getAttribute("data-state");
@@ -34,6 +35,16 @@
             typeof katex == "undefined" ){
             return;
         }
+
+        val = val.replace(
+                /\$\$((.|\n)*)\$\$/g,
+            function(val){
+                val.replace(/\n/g,"");
+                return preprocess_katex(val);
+            }
+        );
+        
+        viewer.innerText = val;
         
         // Render equations $$ 1+1 $$
         renderMathInElement(viewer);
@@ -49,7 +60,8 @@
         on_update: function(element){
             update_preview(element);
         },
-        on_create: function(element, content){
+        on_create: function(element, content, calc_param){
+            calc = calc_param;
             var extension_content = subqsa(
                 element,
                 ".extension-content"

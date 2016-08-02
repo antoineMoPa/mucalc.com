@@ -1,3 +1,47 @@
+function preprocess_katex(string){
+    var s = string;
+    
+    // Replace greek letters chars
+    s = s.replace(/α/g, ' \\alpha ');
+    s = s.replace(/β/g, ' \\beta ');
+    s = s.replace(/Γ/g, ' \\Gamma ');
+    s = s.replace(/γ/g, ' \\gamma ');
+    s = s.replace(/Δ/g, ' \\Delta ');
+    s = s.replace(/δ/g, ' \\delta ');
+    s = s.replace(/ε/g, ' \\varepsilon ');
+    s = s.replace(/ζ/g, ' \\zeta ');
+    s = s.replace(/η/g, ' \\eta ');
+    s = s.replace(/Θ/g, ' \\Theta ');
+    s = s.replace(/θ/g, ' \\theta ');
+    s = s.replace(/ι/g, ' \\iota ');
+    s = s.replace(/κ/g, ' \\kappa ');
+    s = s.replace(/Λ/g, ' \\Lambda ');
+    s = s.replace(/λ/g, ' \\lambda ');
+    s = s.replace(/μ/g, ' \\mu ');
+    s = s.replace(/ν/g, ' \\nu ');
+    s = s.replace(/Ξ/g, ' \\Xi ');
+    s = s.replace(/ξ/g, ' \\xi ');
+    s = s.replace(/Π/g, ' \\Pi ');
+    s = s.replace(/π/g, ' \\pi ');
+    s = s.replace(/ρ/g, ' \\rho ');
+    s = s.replace(/Σ/g, ' \\Sigma ');
+    s = s.replace(/σ/g, ' \\sigma ');
+    s = s.replace(/ς/g, ' \\sigma ');
+    s = s.replace(/τ/g, ' \\tau ');
+    s = s.replace(/υ/g, ' \\upsilon ');
+    s = s.replace(/Φ/g, ' \\phi ');
+    s = s.replace(/φ/g, ' \\Phi ');
+    s = s.replace(/χ/g, ' \\chi ');
+    s = s.replace(/Ψ/g, ' \\Psi ');
+    s = s.replace(/ψ/g, ' \\psi ');
+    s = s.replace(/Ω/g, ' \\Omega ');
+    s = s.replace(/ω/g, ' \\omega ');
+    
+    // Replace other non-ascii characters
+    s = s.replace(/[^\x20-\x7f]/g,"")
+    
+    return s;
+}
 
 function livecalc(root_el, settings){
     eeify_mathjs();
@@ -493,7 +537,7 @@ function livecalc(root_el, settings){
         cell = dom(load_template("livecalc-cell").content);
 
         // Call the extension's on_create method
-        cell_types[type].on_create(cell, content);
+        cell_types[type].on_create(cell, content, exports);
         cell.setAttribute("data-type", type);
         
         if(at_index == -1){
@@ -898,51 +942,6 @@ function livecalc(root_el, settings){
         renderMathInElement(katex_output);
     }
 
-    function preprocess_katex(string){
-        var s = string;
-        
-        // Replace greek letters chars
-        s = s.replace(/α/g, '\\alpha');
-        s = s.replace(/β/g, '\\beta');
-        s = s.replace(/Γ/g, '\\Gamma');
-        s = s.replace(/γ/g, '\\gamma');
-        s = s.replace(/Δ/g, '\\Delta');
-        s = s.replace(/δ/g, '\\delta');
-        s = s.replace(/ε/g, '\\varepsilon');
-        s = s.replace(/ζ/g, '\\zeta');
-        s = s.replace(/η/g, '\\eta');
-        s = s.replace(/Θ/g, '\\Theta');
-        s = s.replace(/θ/g, '\\theta');
-        s = s.replace(/ι/g, '\\iota');
-        s = s.replace(/κ/g, '\\kappa');
-        s = s.replace(/Λ/g, '\\Lambda');
-        s = s.replace(/λ/g, '\\lambda');
-        s = s.replace(/μ/g, '\\mu');
-        s = s.replace(/ν/g, '\\nu');
-        s = s.replace(/Ξ/g, '\\Xi');
-        s = s.replace(/ξ/g, '\\xi');
-        s = s.replace(/Π/g, '\\Pi');
-        s = s.replace(/π/g, '\\pi');
-        s = s.replace(/ρ/g, '\\rho');
-        s = s.replace(/Σ/g, '\\Sigma');
-        s = s.replace(/σ/g, '\\sigma');
-        s = s.replace(/ς/g, '\\sigma');
-        s = s.replace(/τ/g, '\\tau');
-        s = s.replace(/υ/g, '\\upsilon');
-        s = s.replace(/Φ/g, '\\phi');
-        s = s.replace(/φ/g, '\\Phi');
-        s = s.replace(/χ/g, '\\chi');
-        s = s.replace(/Ψ/g, '\\Psi');
-        s = s.replace(/ψ/g, '\\psi');
-        s = s.replace(/Ω/g, '\\Omega');
-        s = s.replace(/ω/g, '\\omega');
-        console.log(s);
-        // Replace other non-ascii characters
-        s = s.replace(/[^\x20-\x7f]/g,"")
-        
-        return s;
-    }
-    
     function update_katex_input(index){
         if( typeof renderMathInElement == "undefined" ||
             typeof katex == "undefined" ){
@@ -956,19 +955,20 @@ function livecalc(root_el, settings){
         }
         
         var input           = cell_data.input;
-        var katex_input   = cell_data.katex_input;
+        var katex_input     = cell_data.katex_input;
 
         katex_input.innerHTML = "";
         
         try{
-            var string = preprocess_katex(input.value);
-            content = math.parse(string);
+            content = math.parse(input.value);
         } catch (e){
             return;
         }
 
         var tex = "$$"+content.toTex()+"$$";
-
+        
+        tex = preprocess_katex(tex);
+        
         katex_input.innerText = tex;
 
         renderMathInElement(katex_input);
