@@ -2,7 +2,7 @@ var pug = require("pug");
 var fs = require("fs");
 
 module.exports = function(app){
-    var extension_folder = "./views/extensions/";
+    var extension_folder = "./views/cell_types/";
     
     var found_files = fs.readdirSync(extension_folder);
     var good_files = [];

@@ -588,14 +588,18 @@ function livecalc(root_el, settings){
                 var type_button =
                     dom("<span class='button'>"+text+"</span>");
                 
+                init_click(type_button, type_name);
+                
+                buttons.appendChild(type_button);
+            }
+            
+            function init_click(type_button, type_name){
                 type_button.onclick = function(){
                     var index = get_index();
                     insert_cell_at(index, true, type_name,function(){
                         focus(index);
                     });
                 };
-                
-                buttons.appendChild(type_button);
             }
         })();
         

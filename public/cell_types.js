@@ -7,7 +7,7 @@ var cell_types = {
                 ".extension-content"
             )[0];
             
-            element.classList.add("text-cell");
+            element.classList.add("mathjs-cell");
 
             var content = render("mathjs-cell-type");
             
