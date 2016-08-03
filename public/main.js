@@ -503,10 +503,8 @@ function modal_yesno(message, callback){
     var mobile_sidebar = qsa(".mobile-sidebar")[0];
     var state = "open";
 
-    if(is_mobile){
-        // Close by default
-        next_state();
-    }
+    // Close by default
+    next_state();
     
     burger.addEventListener("click",next_state);
 
