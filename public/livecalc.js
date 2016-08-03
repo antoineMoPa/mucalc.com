@@ -1178,6 +1178,7 @@ function livecalc(root_el, settings){
                 return "";
             },
             plot: plot,
+            pplot: pplot,
             zfractal: function(e,i,s){
                 var cell = currently_calculated_cell;
                 wait_for_click(cell, function(){
@@ -1367,11 +1368,9 @@ function livecalc(root_el, settings){
         return "";
     }
 
+    // Normal plot
+    // ex: plot("sin(x)")
     function plot(){
-        var plot_el = currently_calculated_cell.plot;
-        var fullscreen_button = render("plot-interact-button");
-        var div_width = plot_el.clientWidth;
-
         var functions_data = [];
 
         for(i in arguments){
@@ -1383,7 +1382,40 @@ function livecalc(root_el, settings){
             });
         }
 
+        plot_system(functions_data, {
+            title: expression
+        });
+    }
 
+    // Polar plot
+    // ex: pplot("sin(theta)")
+    function pplot(){
+        var functions_data = [];
+
+        for(i in arguments){
+            var expression = arguments[i];
+            functions_data.push({
+                sampler: 'builtIn', /* To use math.js */
+                graphType: 'polyline', /* To use math.js */
+                fnType: 'polar',
+                r: expression
+            });
+        }
+
+        plot_system(functions_data, {
+            title: expression
+        });
+    }
+
+    
+    function plot_system(functions_data, settings){
+        var plot_el = currently_calculated_cell.plot;
+        var fullscreen_button = render("plot-interact-button");
+        var div_width = plot_el.clientWidth;
+        var settings = {};
+
+        var title = settings.title || "Plot";
+        
         // For most screens: keep this width
         // To optimize vertical space used +
         // pragmatic aspect ratio
@@ -1405,7 +1437,7 @@ function livecalc(root_el, settings){
         plot_el.appendChild(fullscreen_button);
 
         fullscreen_button.onclick = function(){
-            fullscreen(expression, function(content){
+            fullscreen(title, function(content){
                 functionPlot({
                     target: content,
                     width: window.innerWidth,
@@ -1415,29 +1447,29 @@ function livecalc(root_el, settings){
                     grid: true
                 });
             });
-
-            /*
-              callback(content_dom_element)
-             */
-            function fullscreen(title_text, callback){
-                var fullscreen_el = render("fullscreen");
-                var close_button = subqsa(fullscreen_el, ".close-button")[0];
-                var content = subqsa(fullscreen_el, ".content")[0];
-                var title = subqsa(fullscreen_el, ".fullscreen-title")[0];
-
-                title.textContent = title_text;
-
-                close_button.onclick = function(){
-                    fullscreen_el.parentNode.removeChild(fullscreen_el);
-                };
-
-                document.body.appendChild(fullscreen_el);
-                callback(content);
-            }
         }
-
+        
         // We must return a value
         return "";
+    }
+
+    /*
+      callback(content_dom_element)
+    */
+    function fullscreen(title_text, callback){
+        var fullscreen_el = render("fullscreen");
+        var close_button = subqsa(fullscreen_el, ".close-button")[0];
+        var content = subqsa(fullscreen_el, ".content")[0];
+        var title = subqsa(fullscreen_el, ".fullscreen-title")[0];
+        
+        title.textContent = title_text;
+        
+        close_button.onclick = function(){
+            fullscreen_el.parentNode.removeChild(fullscreen_el);
+        };
+        
+        document.body.appendChild(fullscreen_el);
+        callback(content);
     }
 
     function zfractal(cell, expression, iterations, size){
