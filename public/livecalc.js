@@ -1391,20 +1391,49 @@ function livecalc(root_el, settings){
     // ex: pplot("sin(theta)")
     function pplot(){
         var functions_data = [];
+        var args = [];
 
-        for(i in arguments){
-            var expression = arguments[i];
-            functions_data.push({
-                sampler: 'builtIn', /* To use math.js */
-                graphType: 'polyline', /* To use math.js */
-                fnType: 'polar',
-                r: expression
+        // Copy arguments
+        for(var i = 0; i < arguments.length; i++){
+            args.push(arguments[i]);
+        }
+        
+        var plot_range = [-Math.PI,Math.PI];
+
+        // If 2 last args evaluate to a number, use them as
+        // range and remove from args
+        // (so that we don't plot them as 2 functions)
+        try{
+            var r1 = math.eval(args[args.length - 2]);
+            var r2 = math.eval(args[args.length - 1]);
+
+            // Ok we have a range
+            plot_range[0] = r1;
+            plot_range[1] = r2;
+
+            // Remove these elements
+            args.splice(args.length - 2, 2);
+        } catch (e){
+            console.log(e);
+            // do nothing
+            // keep default range
+        } finally {
+            for(i in args){
+                var expression = args[i];
+                
+                functions_data.push({
+                    sampler: 'builtIn', /* To use math.js */
+                    graphType: 'polyline', /* To use math.js */
+                    fnType: 'polar',
+                    range: plot_range,
+                    r: expression
+                });
+            }
+        
+            return plot_system(functions_data, {
+                title: expression
             });
         }
-
-        plot_system(functions_data, {
-            title: expression
-        });
     }
 
     

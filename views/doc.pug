@@ -62,6 +62,14 @@ col-md-6
     | Plot more than one function at once: 
     br
     code plot("e**x","sin(x)")
+  p
+    | Polar plots are also available
+    br
+    code pplot("1+sin(theta)")
+    br
+    | Default range is [-π, π], to override it:
+    br
+    code pplot("theta",0,10)
   h3 Fractals
   p
     | For 10 iterations
