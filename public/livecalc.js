@@ -1378,7 +1378,8 @@ function livecalc(root_el, settings){
             functions_data.push({
                 sampler: 'builtIn', /* To use math.js */
                 graphType: 'polyline', /* To use math.js */
-                fn: expression
+                fn: expression,
+                scope: scope
             });
         }
 
@@ -1404,8 +1405,8 @@ function livecalc(root_el, settings){
         // range and remove from args
         // (so that we don't plot them as 2 functions)
         try{
-            var r1 = math.eval(args[args.length - 2]);
-            var r2 = math.eval(args[args.length - 1]);
+            var r1 = math.eval(args[args.length - 2], scope);
+            var r2 = math.eval(args[args.length - 1], scope);
 
             // Ok we have a range
             plot_range[0] = r1;
@@ -1426,7 +1427,8 @@ function livecalc(root_el, settings){
                     graphType: 'polyline', /* To use math.js */
                     fnType: 'polar',
                     range: plot_range,
-                    r: expression
+                    r: expression,
+                    scope: scope
                 });
             }
         
