@@ -533,7 +533,7 @@ function livecalc(root_el, settings){
         cell_count++;
         
         var cell;
-        
+
         cell = dom(load_template("livecalc-cell").content);
 
         // Call the extension's on_create method
@@ -576,7 +576,7 @@ function livecalc(root_el, settings){
 
         var buttons = subqsa(cell, ".add-cell-buttons")[0]
         var add_cell_button = subqsa(buttons, ".mathjscell")[0];
-
+        
         // Add buttons for all cell types
         // Wrapped in function to protect scope
         (function(){
@@ -921,16 +921,17 @@ function livecalc(root_el, settings){
     exports.new_cell = new_cell;
 
     function update_katex_output(index, tex_content){
+        var cell_data = find_cell(index);
+        var katex_output   = cell_data.katex_output;
+        katex_output.innerHTML = "";
+
         if( typeof renderMathInElement == "undefined" ||
             typeof katex == "undefined" ){
+            // At least write the equation
+            katex_output.textContent = tex_content;
             return;
         }
         
-        var cell_data = find_cell(index);
-        var katex_output   = cell_data.katex_output;
-
-        katex_output.innerHTML = "";
-
         if(content == ""){
             return;
         }
@@ -947,21 +948,22 @@ function livecalc(root_el, settings){
     }
 
     function update_katex_input(index){
+        var cell_data = find_cell(index);
+        var input           = cell_data.input;
+        var katex_input     = cell_data.katex_input;
+        
+        katex_input.innerHTML = "";
+        
+
+        if(cell_data.type != "mathjs"){
+            // TODO: would this happen anyway?
+            return;
+        }
+
         if( typeof renderMathInElement == "undefined" ||
             typeof katex == "undefined" ){
             return;
         }
-
-        var cell_data = find_cell(index);
-        
-        if(cell_data.type != "mathjs"){
-            return;
-        }
-        
-        var input           = cell_data.input;
-        var katex_input     = cell_data.katex_input;
-
-        katex_input.innerHTML = "";
         
         try{
             content = math.parse(input.value);
@@ -1056,11 +1058,28 @@ function livecalc(root_el, settings){
         // Extract comment
         var comment_pos = value.indexOf("//");
 
+        var text = ee_parse(math_value);
+        var has_error = false;
+        var error = "";
+        
+        // Evaluate and display errors/result
+        try{
+            var result = math.eval(text, scope);
+            scope["ans"] = result;
+        } catch (exception){
+            error = exception.toString();
+            output.textContent = error;
+            has_error = true;
+        }
+
         if(comment_pos != -1){
             text_comment = value.substr(comment_pos+2,value.length);
             math_value = value.substr(0,comment_pos);
         }
-
+        
+        cell.classList.remove("has-error");
+        
+        // Manage text(comment) part and math part display
         if(text_comment != "" && math_value == ""){
             // Has comment but no math
             // Show only text part
@@ -1087,17 +1106,15 @@ function livecalc(root_el, settings){
             return;
         }
 
-        var text = ee_parse(math_value);
-
-        // Evaluate and display errors/result
-        try{
-            var result = math.eval(text, scope);
-            scope["ans"] = result;
-        } catch (exception){
-            output.textContent = exception;
+        // Manage level of detail
+        if(has_error){
+            cell.classList.add("has-error");
+        }
+        
+        if(has_error){
             return;
         }
-
+        
         secondary_output.innerHTML = "";
         update_katex_output(index, "");
         
@@ -1437,7 +1454,6 @@ function livecalc(root_el, settings){
             });
         }
     }
-
     
     function plot_system(functions_data, settings){
         var plot_el = currently_calculated_cell.plot;

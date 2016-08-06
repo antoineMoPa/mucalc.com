@@ -1,3 +1,12 @@
+.mathjs-cell-type{
+    &.less-detail .a-detail{
+        display:none;
+    }
+    &.has-error .a-detail.show-on-error{
+        display:block;
+    }
+}
+
 .text-cell-type{
     margin:10px;
     padding-bottom:5px;

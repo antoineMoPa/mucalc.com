@@ -167,14 +167,21 @@ h1.sheet-title{
     border-bottom:2px solid darken($color_3,30%);
 }
 
-.livecalc .cell-state,
-.livecalc .users-info{
+@mixin small-text{
     font-size:11px;
     margin:5px;
     margin-left:10px;
 }
 
-.livecalc .plot{
+
+.livecalc .cell-state,
+.livecalc .users-info,
+.livecalc .toggle-detail{
+    @include small-text;
+}
+
+.livecalc .toggle-detail{
+    cursor: pointer;
 }
 
 .livecalc .plot .livecalc-wait-click,

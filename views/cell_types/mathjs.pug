@@ -1,19 +1,20 @@
 template(name="mathjs-cell-type")
   .math-part
-    fieldset
-      div
-        input.inline-block.livecalc-input.livecalc-focus-element(
-          type='text', 
-          placeholder='Type math')
-        button.inline-block.livecalc-go-button
-          | Go
-    label Your input (Pretty print)
-    .katex-input
     col-md-6
-      label Result (Pretty print)
+      fieldset
+        div
+          input.inline-block.livecalc-input.livecalc-focus-element(
+            type='text', 
+            placeholder='1+1')
+          button.inline-block.livecalc-go-button
+            | Go
+      label.a-detail Your input (Pretty print)
+      .katex-input.a-detail
+    col-md-6
+      label.a-detail Result (Pretty print)
       .katex-output
-    col-md-6
-      label Result (Raw ouput)
+    col-md-6.a-detail.show-on-error
+      label.a-detail Result (Raw ouput)
       pre.livecalc-output
       pre.livecalc-secondary-output
     clearfix
