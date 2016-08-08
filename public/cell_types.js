@@ -20,7 +20,7 @@ var cell_types = {
 
             // Enable toggle detail button
             var toggle_button = subqsa(element, ".toggle-detail")[0];
-            console.log(subqsa(element, "*"));
+            
             toggle_button.addEventListener("click", switch_state);
 
             // Manage cell state (more / less details)
