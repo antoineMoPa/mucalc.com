@@ -5,6 +5,11 @@
     &.has-error .a-detail.show-on-error{
         display:block;
     }
+    textarea{
+        resize:none;
+        padding-top:2px;
+        min-height:28px;
+    }
 }
 
 .text-cell-type{

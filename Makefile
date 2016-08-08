@@ -1,4 +1,6 @@
 download:
+# autosize library for textareas
+	wget -N https://raw.githubusercontent.com/jackmoore/autosize/master/dist/autosize.min.js -P public/lib/
 # math.js
 	wget -N http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.2.1/math.min.js -P public/lib/
 # socket.io

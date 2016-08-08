@@ -1,5 +1,7 @@
-var cell_types = {
-    "mathjs":{
+var cell_types = cell_types || {};
+
+(function(){
+    cell_types["mathjs"] = {
         button_html: "+",
         on_create: function(element){
             var extension_content = subqsa(
@@ -16,8 +18,11 @@ var cell_types = {
             // Render content
             var content = render("mathjs-cell-type");
             extension_content.appendChild(content);
+            
+            var textarea = subqsa(element, "textarea")[0];
 
-
+            autosize(textarea);
+            
             // Enable toggle detail button
             var toggle_button = subqsa(element, ".toggle-detail")[0];
             
@@ -39,5 +44,5 @@ var cell_types = {
             }
 
         }
-    },
-}
+    };
+})();

@@ -703,7 +703,7 @@ function livecalc(root_el, settings){
                     type_data.require_shift || false;
 
                 // Defauls: only Enter
-                var should_send = (e.keyCode == 13);
+                var should_send = (e.keyCode == 13 && !e.shiftKey);
 
                 // require_shift: Enter + Shift
                 if(require_shift){

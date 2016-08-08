@@ -1,3 +1,5 @@
+var cell_types = cell_types || {};
+
 (function(){
     var calc;
     
