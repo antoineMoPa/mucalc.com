@@ -186,9 +186,10 @@ function livecalc(root_el, settings){
             var users_info = cell.users_info;
 
             if(Array.isArray(data[i]) && data[i].length > 0){
-                users_info.textContent = data[i].join(", ") + " editing this cell...";
+                users_info.textContent = data[i].join(", ") +
+                    " editing this cell";
             } else {
-                users_info.textContent = "";
+                users_info.textContent = "no one editing";
             }
         }
     };
@@ -1032,6 +1033,12 @@ function livecalc(root_el, settings){
         net_engine.edit_cell(index, value, method);
     }
 
+    function cell_error(cell, error){
+        var error = error.toString();
+        cell.output.textContent = error;
+        cell.element.classList.add("has-error");
+    }
+    
     function calculate_cell(index){
         var cell_data = find_cell(index);
 
@@ -1194,6 +1201,13 @@ function livecalc(root_el, settings){
                 });
                 return "";
             },
+            shader: function(expression, width, height){
+                var cell = currently_calculated_cell;
+                wait_for_click(cell, function(){
+                    shader(cell, expression, width, height)
+                });
+                return "";
+            },
             plot: plot,
             pplot: pplot,
             zfractal: function(e,i,s){
@@ -1217,21 +1231,45 @@ function livecalc(root_el, settings){
     }
 
     /*
-       Wait for user click before
-       calculating something potentially long
+      Wait for user click before
+      calculating something potentially long
     */
     function wait_for_click(cell, callback){
+        // Find out if the user ask to compute directly
+        var has_no_more_ask =
+            cell.plot
+            .getAttribute("data-no-more-ask") || false;
+
+        if(has_no_more_ask){
+            // Yes, just compute
+            go();
+            return;
+        }
+
+        // render button & text
         render("livecalc-wait-click", cell.plot);
-
+        
         var button = subqsa(cell.plot,"button")[0];
-        button.onclick = go;
+        button.addEventListener("click", go);
 
+        // Activate "no more ask button"
+        var no_more_ask = subqsa(cell.plot, "a.no-more-ask")[0];
+        
+        no_more_ask.addEventListener("click", function(){
+            cell.plot.setAttribute("data-no-more-ask",true);
+            go();
+        });
+        
         function go(){
-            button.innerHTML = "Computing...";
+            if(button){
+                // Button may not exist
+                button.innerHTML = "Computing...";
+            }
             setTimeout(callback,100);
         }
     }
 
+    
     /*
       Cellular automata
      */
@@ -1385,6 +1423,98 @@ function livecalc(root_el, settings){
         return "";
     }
 
+    /*
+      Shader
+    */
+    function shader(cell, expression, width, height){
+        var number = parseInt(number);
+        var width = width || 40;
+        var height = height || width;
+
+        var plot_el = cell.plot;
+        
+        plot_el.innerHTML = "";
+
+        var can = dom("<canvas></canvas>");
+        var ctx = can.getContext("2d");
+
+        plot_el.appendChild(can);
+
+        can.width = width;
+        can.height = height;
+        
+        var imgdata = ctx.createImageData(width, height);
+        
+        function set_one_pixel(i,j,val){
+            var index = 4 * (j * width + i);
+            // Set value
+            imgdata.data[index + 0] = val;
+            imgdata.data[index + 1] = val;
+            imgdata.data[index + 2] = val;
+            imgdata.data[index + 3] = 255;
+        }
+
+        try{
+            var exp = math.compile(expression);
+        } catch (exception){
+            cell_error(cell, e);
+            return;
+        }
+
+        var zerox = width / 2;
+        var zeroy = height / 2;
+
+        /*
+          
+          The canvas (x,y):
+          
+             i ->
+          j
+          |
+          v
+                 zerox
+          |-----------------|
+          |-1,1          1,1|
+          |                 |
+          |       0,0       | zeroy
+          |                 |
+          |                 |
+          |-1,-1         1,1|
+          |-----------------|
+          
+         */
+        
+        // Parse screen and follow the rule to create new line
+        for(var i = 0; i < width; i++){
+            for(var j = 0; j < height; j++){
+                scope.x = (i - zerox)/zerox;
+                scope.y = (j - zeroy)/zerox;
+
+                try{
+                    var val = exp.eval(scope);
+                } catch (e){
+                    cell_error(cell, e);
+                    return;
+                }
+                
+                // bring -1 to 0
+                val = val + 1;
+
+                // Bring 2 to 1
+                val = val / 2;
+                
+                var floored_val = Math.floor(val*255);
+                
+                set_one_pixel(i, j, floored_val);
+            }
+        }
+        
+        ctx.putImageData(imgdata,0,0);
+        
+        // We must return a value
+        return "";
+    }
+    
     // Normal plot
     // ex: plot("sin(x)")
     function plot(){
