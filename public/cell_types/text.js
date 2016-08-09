@@ -68,6 +68,7 @@ var cell_types = cell_types || {};
         },
         on_create: function(element, content, calc_param){
             calc = calc_param;
+
             var extension_content = subqsa(
                 element,
                 ".extension-content"

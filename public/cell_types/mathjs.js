@@ -3,7 +3,7 @@ var cell_types = cell_types || {};
 (function(){
     cell_types["mathjs"] = {
         button_html: "+",
-        on_create: function(element){
+        on_create: function(element, content){
             var extension_content = subqsa(
                 element,
                 ".extension-content"
@@ -16,10 +16,12 @@ var cell_types = cell_types || {};
             element.classList.add("less-detail");
                         
             // Render content
-            var content = render("mathjs-cell-type");
-            extension_content.appendChild(content);
+            var ext_content = render("mathjs-cell-type");
+            extension_content.appendChild(ext_content);
             
             var textarea = subqsa(element, "textarea")[0];
+            
+            textarea.value = content.value;
 
             autosize(textarea);
             
@@ -43,6 +45,10 @@ var cell_types = cell_types || {};
                 }
             }
 
+        },
+        get_value: function(element){
+            var textarea = subqsa(element, "textarea")[0];
+            return textarea.value;
         }
     };
 })();

@@ -463,10 +463,12 @@ function livecalc(root_el, settings){
                 var input = cell_data.input;
                 return input.value;
             };
-        
+
+        var value = get_value(cell_data.element);
+
         var data = {
             type: cell_data.type,
-            value: get_value(cell_data.element)
+            value: value
         };
 
         return JSON.stringify(data);
@@ -1029,7 +1031,7 @@ function livecalc(root_el, settings){
         var method = method || "append";
         
         var value = serialize(index);
-        
+
         net_engine.edit_cell(index, value, method);
     }
 
@@ -1178,6 +1180,9 @@ function livecalc(root_el, settings){
       Add some useful stuff to math.js
     */
     function eeify_mathjs(){
+        // Make rawargs true
+        plot.rawArgs = true;
+        
         // Verify if we already did this
         if(math.LC_TWEAKED){
             return;
@@ -1275,7 +1280,7 @@ function livecalc(root_el, settings){
      */
     function rule(plot_el, number, size){
         var number = parseInt(number);
-
+        
         plot_el.innerHTML = "";
 
         if(number < 0 || number > 255){
@@ -1517,15 +1522,26 @@ function livecalc(root_el, settings){
     
     // Normal plot
     // ex: plot("sin(x)")
-    function plot(){
+    function plot(args, math, scope){
         var functions_data = [];
 
-        for(i in arguments){
-            var expression = arguments[i];
+        for(var i in args){
+            var expression = args[i];
+            var fn;
+            var valueType = expression.valueType || "";
+            
+            if(valueType == "string"){
+                // String was given
+                fn = expression.value;
+            } else {
+                // rawArg was given
+                fn = expression.toString();
+            }
+            
             functions_data.push({
                 sampler: 'builtIn', /* To use math.js */
                 graphType: 'polyline', /* To use math.js */
-                fn: expression,
+                fn: fn,
                 scope: scope
             });
         }
