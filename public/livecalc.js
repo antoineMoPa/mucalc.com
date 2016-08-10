@@ -1154,7 +1154,21 @@ function livecalc(root_el, settings){
             return null;
         }
 
+        function zfractal_func(args, math, scope){
+            var cell = currently_calculated_cell;
+            wait_for_click(cell, function(){
+                zfractal(
+                    cell,
+                    parse_arg(args[0]), // Expression
+                    eval_arg(args[1], math, scope), // Iterations
+                    eval_arg(args[2], math, scope)  // size
+                );
+            });
+            return "";
+        }
+        
         shader_func.rawArgs = true;
+        zfractal_func.rawArgs = true;
         
         var custom_functions = {
             /* Parallel resistors */
@@ -1177,18 +1191,12 @@ function livecalc(root_el, settings){
             shader: shader_func,
             plot: plot,
             pplot: pplot,
-            zfractal: function(e,i,s){
-                var cell = currently_calculated_cell;
-                wait_for_click(cell, function(){
-                    zfractal(cell, e, i, s);
-                });
-                return "";
-            },
+            zfractal: zfractal_func,
             "π": math.pi
         };
 
         custom_functions.zfractal.toTex = function(node, options){
-            var exp = node.args[0].toString();
+            var exp =  parse_arg(args[0]);
             exp = exp.replace(/"/g,"");
             exp = ee_parse(exp);
             return "z \\rightarrow " + exp;
@@ -1422,6 +1430,10 @@ function livecalc(root_el, settings){
      */
     function eval_arg(arg, math, scope){
         var expression;
+
+        if(arg == undefined){
+            return; // return undefined
+        }
         
         if(arg.valueType == "string"){
             expression = arg.value;
