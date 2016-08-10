@@ -1190,14 +1190,18 @@ function livecalc(root_el, settings){
 
         function shader_func(args, math, scope){
             var cell = currently_calculated_cell;
+
+            // Wait for user to agree then render
             wait_for_click(cell, function(){
-                shader( cell,
-                        parse_arg(args[0]),
-                        eval_arg(args[1], math, scope),
-                        eval_arg(args[2], math, scope)
-                      );
-                });
-            return "";
+                shader(
+                    cell,
+                    parse_arg(args[0]),
+                    eval_arg(args[1], math, scope),
+                    eval_arg(args[2], math, scope)
+                );
+            });
+            
+            return null;
         }
 
         shader_func.rawArgs = true;
