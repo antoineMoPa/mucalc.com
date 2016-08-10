@@ -1143,9 +1143,24 @@ function livecalc(root_el, settings){
 
             // Wait for user to agree then render
             wait_for_click(cell, function(){
+                var exp;
+
+                if( args[0].items != undefined &&
+                    args[0].items.length == 3 ){
+                    // this is an array rgb
+                    exp = [
+                        parse_arg(args[0].items[0]),
+                        parse_arg(args[0].items[1]),
+                        parse_arg(args[0].items[2])
+                    ];
+                } else {
+                    // this is only an expression
+                    exp = parse_arg(args[0]);
+                }
+
                 shader(
                     cell,
-                    parse_arg(args[0]),
+                    exp,
                     eval_arg(args[1], math, scope),
                     eval_arg(args[2], math, scope)
                 );
@@ -1452,7 +1467,8 @@ function livecalc(root_el, settings){
         var number = parseInt(number);
         var width = width;
         var height = height || width;
-
+        var has_colors = Array.isArray(expression);
+                
         width = parseInt(width) || 40;
         height = parseInt(height) || 40;
         
@@ -1469,18 +1485,37 @@ function livecalc(root_el, settings){
         can.height = height;
         
         var imgdata = ctx.createImageData(width, height);
-        
+
+        // Draw one actual canvas pixel
         function set_one_pixel(i,j,val){
-            var index = 4 * (j * width + i);
+            var index = 4 * (j * can.width + i);
+
+            var r,g,b;
+
+            // Is this color or gray?
+            if(val.length == 3){
+                r = val[0];
+                g = val[1];
+                b = val[2];
+            } else {
+                r = g = b = val[0];
+            }
+            
             // Set value
-            imgdata.data[index + 0] = val;
-            imgdata.data[index + 1] = val;
-            imgdata.data[index + 2] = val;
+            imgdata.data[index + 0] = r;
+            imgdata.data[index + 1] = g;
+            imgdata.data[index + 2] = b;
             imgdata.data[index + 3] = 255;
         }
-
+        
         try{
-            var exp = math.compile(expression);
+            if(has_colors){
+                var exp = expression.map(function(e){
+                    return math.compile(e);
+                });
+            } else {
+                var exp = math.compile(expression);
+            }
         } catch (exception){
             cell_error(cell, exception);
             return;
@@ -1516,21 +1551,31 @@ function livecalc(root_el, settings){
                 scope.y = (zeroy - j)/zerox;
 
                 try{
-                    var val = exp.eval(scope);
+                    if(has_colors){
+                        // Evaluate each (r,g,b) colors' expression
+                        var val = exp.map(function(color_exp){
+                            return color_exp.eval(scope);
+                        });
+                    } else {
+                        var val = [exp.eval(scope)];
+                    }
                 } catch (e){
                     cell_error(cell, e);
                     return;
                 }
-                
-                // bring -1 to 0
-                val = val + 1;
 
-                // Bring 2 to 1
-                val = val / 2;
-                
-                var floored_val = Math.floor(val*255);
-                
-                set_one_pixel(i, j, floored_val);
+                // Tweak the numbers
+                var val = val.map(function(el){
+                    // bring -1 to 0
+                    el = el + 1;
+                    
+                    // Bring 2 to 1
+                    el = el / 2;
+                    
+                    return Math.floor(el*255)
+                });
+
+                set_one_pixel(i, j, val);
             }
         }
         
