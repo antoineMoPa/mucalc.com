@@ -20,9 +20,14 @@ var cell_types = cell_types || {};
             extension_content.appendChild(ext_content);
             
             var textarea = subqsa(element, "textarea")[0];
-            
+
+            // Set initial content
             textarea.value = content.value;
 
+            // Adjust number of rows
+            textarea.rows = content.value.split("\n").length;
+
+            // Enable auto resizer (external lib.)
             autosize(textarea);
             
             // Enable toggle detail button
