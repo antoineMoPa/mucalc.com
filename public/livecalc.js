@@ -1513,7 +1513,7 @@ function livecalc(root_el, settings){
         for(var i = 0; i < width; i++){
             for(var j = 0; j < height; j++){
                 scope.x = (i - zerox)/zerox;
-                scope.y = (j - zeroy)/zerox;
+                scope.y = (zeroy - j)/zerox;
 
                 try{
                     var val = exp.eval(scope);
