@@ -1196,7 +1196,7 @@ function livecalc(root_el, settings){
         };
 
         custom_functions.zfractal.toTex = function(node, options){
-            var exp =  parse_arg(args[0]);
+            var exp =  parse_arg(node.args[0]);
             exp = exp.replace(/"/g,"");
             exp = ee_parse(exp);
             return "z \\rightarrow " + exp;
