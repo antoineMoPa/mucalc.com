@@ -1187,6 +1187,20 @@ function livecalc(root_el, settings){
         if(math.LC_TWEAKED){
             return;
         }
+
+        function shader_func(args, math, scope){
+            var cell = currently_calculated_cell;
+            wait_for_click(cell, function(){
+                shader( cell,
+                        parse_arg(args[0]),
+                        eval_arg(args[1], math, scope),
+                        eval_arg(args[2], math, scope)
+                      );
+                });
+            return "";
+        }
+
+        shader_func.rawArgs = true;
         
         var custom_functions = {
             /* Parallel resistors */
@@ -1206,13 +1220,7 @@ function livecalc(root_el, settings){
                 });
                 return "";
             },
-            shader: function(expression, width, height){
-                var cell = currently_calculated_cell;
-                wait_for_click(cell, function(){
-                    shader(cell, expression, width, height)
-                });
-                return "";
-            },
+            shader: shader_func,
             plot: plot,
             pplot: pplot,
             zfractal: function(e,i,s){
@@ -1429,13 +1437,59 @@ function livecalc(root_el, settings){
     }
 
     /*
+      Tool to be able to parse both plot(sin(x)) and plot("sin(x)")
+      
+      (works with rawArgs={true or false})
+      
+      @param arg an argument
+      @return expression, a string
+      
+     */
+    function parse_arg(arg){
+        var expression;
+        if(arg.valueType == "string"){
+            expression = arg.value;
+        } else {
+            expression = arg.toString();
+        }
+        return expression;
+    }
+
+    /*
+      Tool to be able to evaluate func(variable) and func("variable") and func(40)
+      
+      (works with rawArgs={true or false})
+      
+      @param arg an argument
+      @param math a math.js instance
+      @param scope the scope
+      @return a value
+      
+     */
+    function eval_arg(arg, math, scope){
+        var expression;
+        
+        if(arg.valueType == "string"){
+            expression = arg.value;
+        } else {
+            expression = arg.toString();
+        }
+
+        return math.eval(expression, scope);
+    }
+
+    
+    /*
       Shader
     */
     function shader(cell, expression, width, height){
         var number = parseInt(number);
-        var width = width || 40;
+        var width = width;
         var height = height || width;
 
+        width = parseInt(width) || 40;
+        height = parseInt(height) || 40;
+        
         var plot_el = cell.plot;
         
         plot_el.innerHTML = "";
@@ -1462,7 +1516,7 @@ function livecalc(root_el, settings){
         try{
             var exp = math.compile(expression);
         } catch (exception){
-            cell_error(cell, e);
+            cell_error(cell, exception);
             return;
         }
 
