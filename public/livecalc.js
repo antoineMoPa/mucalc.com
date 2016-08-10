@@ -393,10 +393,8 @@ function livecalc(root_el, settings){
             secondary_output: subqsa(el,".livecalc-secondary-output")[0],
             users_info: subqsa(el,".users-info")[0],
             cell_state: subqsa(el,".cell-state")[0],
-            text_part: subqsa(el,".text-part")[0],
             katex_input: subqsa(el,".katex-input")[0],
             katex_output: subqsa(el,".katex-output")[0],
-            math_part: subqsa(el,".math-part")[0],
             plot: subqsa(el,".plot")[0]
         };
     }
@@ -568,8 +566,6 @@ function livecalc(root_el, settings){
         var focus_element    = cell_data.focus_element;
         var button           = cell_data.button;
         var output           = cell_data.output;
-        var text_part        = cell_data.text_part;
-        var math_part        = cell_data.math_part;
         var cell_state       = cell_data.cell_state;
         var secondary_output = cell_data.secondary_output;
 
@@ -615,23 +611,6 @@ function livecalc(root_el, settings){
         
         input.setAttribute("value", content.value);
 
-        /* Make sure inputs are shown on mouse click */
-        text_part.addEventListener("click",function(){
-            if(hidden(math_part)){
-                // Show math part for edition
-                show(math_part);
-                appear(math_part,"from top");
-                input.focus();
-            } else {
-                // Hide
-                hide(math_part);
-            }
-        });
-        
-        // Hide these at beginning
-        if(text_part != undefined){
-            hide(text_part);
-        }
         if(secondary_output != undefined){
             hide(secondary_output);
         }
@@ -954,10 +933,15 @@ function livecalc(root_el, settings){
         var cell_data = find_cell(index);
         var input           = cell_data.input;
         var katex_input     = cell_data.katex_input;
+
+        if(katex_input == undefined){
+            // No katex input? bye
+            // example: text cells
+            return;
+        }
         
         katex_input.innerHTML = "";
         
-
         if(cell_data.type != "mathjs"){
             // TODO: would this happen anyway?
             return;
@@ -1050,21 +1034,19 @@ function livecalc(root_el, settings){
         
         currently_calculated_cell = cell_data;
         var cell = cell_data.element;
-        var text_part = cell_data.text_part;
-        var math_part = cell_data.math_part;
         var plot_el = cell_data.plot;
         var input = cell_data.input;
         var output = cell_data.output;
         var secondary_output = cell_data.secondary_output;
         var value = input.value;
         var math_value = value;
-        var text_comment = "";
 
+        // Remove comments
+        math_value = math_value.replace(/\/\/(.*)($|\n)/g, "");
+        
         plot_el.innerHTML = "";
-        show(math_part);
         hide(secondary_output);
 
-        // Extract comment
         var comment_pos = value.indexOf("//");
 
         var text = ee_parse(math_value);
@@ -1081,40 +1063,8 @@ function livecalc(root_el, settings){
             has_error = true;
         }
 
-        if(comment_pos != -1){
-            text_comment = value.substr(comment_pos+2,value.length);
-            math_value = value.substr(0,comment_pos);
-        }
-        
         cell.classList.remove("has-error");
         
-        // Manage text(comment) part and math part display
-        if(text_comment != "" && math_value == ""){
-            // Has comment but no math
-            // Show only text part
-            text_part.textContent = text_comment;
-            show(text_part);
-            hide(math_part);
-            return;
-        } else if (math_value != "" && text_comment == ""){
-            // Has math but no comment
-            // Show only math part
-            text_part.textContent = "";
-            hide(text_part);
-            show(math_part);
-        } else if (math_value != "" && text_comment != ""){
-            // Has math and comment
-            // Show math (includes comment anyway)
-            show(math_part);
-            hide(text_part);
-        } else {
-            // No value, no comment
-            // Show only math
-            show(math_part);
-            hide(text_part);
-            return;
-        }
-
         // Manage level of detail
         if(has_error){
             cell.classList.add("has-error");
@@ -1968,7 +1918,6 @@ function init_doc(calc){
             var cell = calc.new_cell(code, true, true);
             cell.calculate();
             var dom_data = calc.find_cell(cell.get_index());
-            show(dom_data.math_part);
         };
     }
 }
