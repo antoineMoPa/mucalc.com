@@ -68,3 +68,43 @@ var add = math.typed('add', {
 });
 
 math.import({'add': add});
+
+// * function
+var multiply = math.typed('multiply', {
+    'number, Image': function (a, b) {
+        // Create image
+        var im = new Image();
+
+        var ctx_new = im.getContext()
+
+        // get canvas elements
+        var can_new = im.getCanvas();
+        var can_b = b.getCanvas();
+        var ctx_b = b.getContext();
+        
+        // Establish dimensions
+        can_new.height = can_b.height;
+        can_new.width = can_b.width;
+
+        // Inspiration:
+        // http://albertogasparin.it/articles/2011/05/html5-multiply-filter-canvas/ 
+        var img_data = ctx_b.getImageData(0, 0, can_b.width, can_b.height);
+        var data = img_data.data;
+        
+        // Loop over each pixel and change the color.
+        for (var i = 0; i < data.length; i++) {
+            if(i % 4 == 3){
+                // Skip alpha
+                continue;
+            } else {
+                data[i] = parseInt(a * data[i]);
+            }
+        }
+        
+        ctx_new.putImageData(img_data, 0, 0);
+        
+        return im;
+    }
+});
+
+math.import({'multiply': multiply});
