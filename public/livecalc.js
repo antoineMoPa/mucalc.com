@@ -1107,6 +1107,11 @@ function livecalc(root_el, settings){
                 output.textContent = result;
                 tex_output = result;
             }
+
+            // If there is an image, render it
+            if (result.isImage){
+                result.appendTo(plot_el);
+            }
             
             if(tex_output != ""){
                 try{
@@ -1128,6 +1133,9 @@ function livecalc(root_el, settings){
 
     /*
       Add some useful stuff to math.js
+      
+      Name history: this app was once named eecalc
+      (for electrical engineering calculator)
     */
     function eeify_mathjs(){
         // Make rawargs true
@@ -1140,6 +1148,8 @@ function livecalc(root_el, settings){
 
         function shader_func(args, math, scope){
             var cell = currently_calculated_cell;
+
+            var canvas = new Image();
 
             // Wait for user to agree then render
             wait_for_click(cell, function(){
@@ -1162,24 +1172,30 @@ function livecalc(root_el, settings){
                     cell,
                     exp,
                     eval_arg(args[1], math, scope),
-                    eval_arg(args[2], math, scope)
+                    eval_arg(args[2], math, scope),
+                    canvas
                 );
             });
             
-            return null;
+            return canvas;
         }
 
         function zfractal_func(args, math, scope){
             var cell = currently_calculated_cell;
+            
+            var canvas = new Image();
+            
             wait_for_click(cell, function(){
                 zfractal(
                     cell,
                     parse_arg(args[0]), // Expression
                     eval_arg(args[1], math, scope), // Iterations
-                    eval_arg(args[2], math, scope)  // size
+                    eval_arg(args[2], math, scope),  // size
+                    canvas
                 );
             });
-            return "";
+            
+            return canvas;
         }
         
         shader_func.rawArgs = true;
@@ -1216,7 +1232,8 @@ function livecalc(root_el, settings){
             exp = ee_parse(exp);
             return "z \\rightarrow " + exp;
         };
-        
+
+        // Import what we just created
         math.import(custom_functions);
     }
 
@@ -1251,11 +1268,12 @@ function livecalc(root_el, settings){
         });
         
         function go(){
-            if(button){
-                // Button may not exist
-                button.innerHTML = "Computing...";
-            }
-            setTimeout(callback,100);
+            // Remove wait-click box
+            var el = subqsa(cell.plot, ".livecalc-wait-click")[0];
+            el.parentNode.removeChild(el);
+
+            // Call the function
+            callback();
         }
     }
 
@@ -1463,7 +1481,7 @@ function livecalc(root_el, settings){
     /*
       Shader
     */
-    function shader(cell, expression, width, height){
+    function shader(cell, expression, width, height, canvas){
         var number = parseInt(number);
         var width = width;
         var height = height || width;
@@ -1474,12 +1492,10 @@ function livecalc(root_el, settings){
         
         var plot_el = cell.plot;
         
-        plot_el.innerHTML = "";
-
-        var can = dom("<canvas></canvas>");
+        can = canvas.getCanvas();
         var ctx = can.getContext("2d");
 
-        plot_el.appendChild(can);
+        canvas.appendTo(plot_el);
 
         can.width = width;
         can.height = height;
@@ -1730,7 +1746,7 @@ function livecalc(root_el, settings){
         callback(content);
     }
 
-    function zfractal(cell, expression, iterations, size){
+    function zfractal(cell, expression, iterations, size, canvas){
         var plot_el = cell.plot;
         var output = cell.output;
         var iterations = iterations || 10;
@@ -1742,8 +1758,6 @@ function livecalc(root_el, settings){
             return;
         }
         
-        plot_el.innerHTML = "";
-
         var div_width = plot_el.clientWidth;
         var pixel_ratio = 1;
 
@@ -1751,12 +1765,12 @@ function livecalc(root_el, settings){
 
         var width = size;
         var height = size;
-
-        var can = dom("<canvas></canvas>");
+        
+        var can = canvas.getCanvas();
         var ctx = can.getContext("2d");
 
-        plot_el.appendChild(can);
-
+        canvas.appendTo(plot_el);
+        
         // Make it square
         can.width = width * pixel_ratio;
         can.height = height * pixel_ratio;
