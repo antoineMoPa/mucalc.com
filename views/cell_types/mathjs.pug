@@ -1,16 +1,15 @@
 template(name="mathjs-cell-type")
   .math-part
-    col-md-6
-      fieldset
-        div
-          textarea.inline-block.livecalc-input.livecalc-focus-element(
-            rows='1',
-            type='text', 
-            placeholder='1+1')
-          button.inline-block.livecalc-go-button
-            | Go
-      label.a-detail Your input (Pretty print)
-      .katex-input.a-detail
+    fieldset
+      div
+        textarea.inline-block.livecalc-input.livecalc-focus-element(
+          rows='1',
+          type='text', 
+          placeholder='1+1')
+        button.inline-block.livecalc-go-button
+          | Go
+    label.a-detail Your input (Pretty print)
+    .katex-input.a-detail
     col-md-6
       label.a-detail Result (Pretty print)
       .katex-output

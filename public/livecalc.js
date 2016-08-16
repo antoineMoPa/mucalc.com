@@ -1,6 +1,10 @@
 function preprocess_katex(string){
     var s = string;
     
+    if(typeof s != "string"){
+        return;
+    }
+    
     // Replace greek letters chars
     s = s.replace(/α/g, ' \\alpha ');
     s = s.replace(/β/g, ' \\beta ');
@@ -939,6 +943,11 @@ function livecalc(root_el, settings){
             // example: text cells
             return;
         }
+
+        if(cell_data.element.classList.contains("less-detail") != -1){
+            // Avoid computing everyting if no details are shown
+            return;
+        }
         
         katex_input.innerHTML = "";
         
@@ -1112,6 +1121,17 @@ function livecalc(root_el, settings){
             // If there is an image, render it
             if (result.isImage){
                 result.appendTo(plot_el);
+            }
+
+            // If this is a result set for a multiline input
+            // Render all images
+            if(result.isResultSet){
+                for(var i = 0; i < result.entries.length; i++){
+                    var curr_entry = result.entries[i];
+                    if(curr_entry.isImage){
+                        curr_entry.appendTo(plot_el);
+                    }
+                }
             }
             
             if(tex_output != ""){
@@ -1434,8 +1454,8 @@ function livecalc(root_el, settings){
         var height = height || width;
         var has_colors = Array.isArray(expression);
                 
-        width = parseInt(width) || 40;
-        height = parseInt(height) || 40;
+        width = parseInt(width) || 200;
+        height = parseInt(height) || 200;
         
         can = canvas.getCanvas();
         var ctx = can.getContext("2d");

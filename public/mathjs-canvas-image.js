@@ -4,7 +4,6 @@ function Image(){
         
     // Hide by default until an height is assigned
     this.canvas.height = 0;
-    this.already_appended = false;
     
     return this;
 }
@@ -16,11 +15,6 @@ Image.prototype.toString = function(){
 };
 
 Image.prototype.appendTo = function(el){
-    if(this.already_appended){
-        // Don't append 2 times
-        return;
-    }
-    this.already_appended = true;
     el.appendChild(this.canvas);
 };
 
