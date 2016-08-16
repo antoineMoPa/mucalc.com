@@ -1058,6 +1058,7 @@ function livecalc(root_el, settings){
             var result = math.eval(text, scope);
             scope["ans"] = result;
         } catch (exception){
+            console.error(exception);
             error = exception.toString();
             output.textContent = error;
             has_error = true;
@@ -1148,52 +1149,43 @@ function livecalc(root_el, settings){
 
         function shader_func(args, math, scope){
             var cell = currently_calculated_cell;
-
+            
             var canvas = new Image();
 
-            // Wait for user to agree then render
-            wait_for_click(cell, function(){
-                var exp;
+            var exp;
+            
+            if( args[0].items != undefined &&
+                args[0].items.length == 3 ){
+                // this is an array rgb
+                exp = [
+                    parse_arg(args[0].items[0]),
+                    parse_arg(args[0].items[1]),
+                    parse_arg(args[0].items[2])
+                ];
+            } else {
+                // this is only an expression
+                exp = parse_arg(args[0]);
+            }
 
-                if( args[0].items != undefined &&
-                    args[0].items.length == 3 ){
-                    // this is an array rgb
-                    exp = [
-                        parse_arg(args[0].items[0]),
-                        parse_arg(args[0].items[1]),
-                        parse_arg(args[0].items[2])
-                    ];
-                } else {
-                    // this is only an expression
-                    exp = parse_arg(args[0]);
-                }
-
-                shader(
-                    cell,
-                    exp,
-                    eval_arg(args[1], math, scope),
-                    eval_arg(args[2], math, scope),
-                    canvas
-                );
-            });
+            shader(
+                exp,
+                eval_arg(args[1], math, scope),
+                eval_arg(args[2], math, scope),
+                canvas
+            );
             
             return canvas;
         }
 
         function zfractal_func(args, math, scope){
-            var cell = currently_calculated_cell;
-            
             var canvas = new Image();
             
-            wait_for_click(cell, function(){
-                zfractal(
-                    cell,
-                    parse_arg(args[0]), // Expression
-                    eval_arg(args[1], math, scope), // Iterations
-                    eval_arg(args[2], math, scope),  // size
-                    canvas
-                );
-            });
+            zfractal(
+                parse_arg(args[0]), // Expression
+                eval_arg(args[1], math, scope), // Iterations
+                eval_arg(args[2], math, scope),  // size
+                canvas
+            );
             
             return canvas;
         }
@@ -1214,10 +1206,12 @@ function livecalc(root_el, settings){
             },
             rule: function(number, size){
                 var cell = currently_calculated_cell;
-                wait_for_click(cell, function(){
-                    rule(cell.plot, number, size)
-                });
-                return "";
+                
+                var canvas = new Image();
+                
+                rule(number, size, canvas)
+                
+                return canvas;
             },
             shader: shader_func,
             plot: plot,
@@ -1236,61 +1230,16 @@ function livecalc(root_el, settings){
         // Import what we just created
         math.import(custom_functions);
     }
-
-    /*
-      Wait for user click before
-      calculating something potentially long
-    */
-    function wait_for_click(cell, callback){
-        // Find out if the user ask to compute directly
-        var has_no_more_ask =
-            cell.plot
-            .getAttribute("data-no-more-ask") || false;
-
-        if(has_no_more_ask){
-            // Yes, just compute
-            go();
-            return;
-        }
-
-        // render button & text
-        render("livecalc-wait-click", cell.plot);
-        
-        var button = subqsa(cell.plot,"button")[0];
-        button.addEventListener("click", go);
-
-        // Activate "no more ask button"
-        var no_more_ask = subqsa(cell.plot, "a.no-more-ask")[0];
-        
-        no_more_ask.addEventListener("click", function(){
-            cell.plot.setAttribute("data-no-more-ask",true);
-            go();
-        });
-        
-        function go(){
-            // Remove wait-click box
-            var el = subqsa(cell.plot, ".livecalc-wait-click")[0];
-            el.parentNode.removeChild(el);
-
-            // Call the function
-            callback();
-        }
-    }
-
     
     /*
       Cellular automata
      */
-    function rule(plot_el, number, size){
+    function rule(number, size, canvas){
         var number = parseInt(number);
         
-        plot_el.innerHTML = "";
-
         if(number < 0 || number > 255){
             throw "Number should be between 0 and 255";
         }
-
-        var div_width = plot_el.clientWidth;
 
         var grid_size = size || 100;
         
@@ -1305,12 +1254,10 @@ function livecalc(root_el, settings){
         
         var width = grid_size;
         var height = grid_size;
-
-        var can = dom("<canvas></canvas>");
-        var ctx = can.getContext("2d");
-
-        plot_el.appendChild(can);
-
+        
+        var can = canvas.getCanvas();
+        var ctx = canvas.getContext();
+        
         can.width = width * pixel_size;
         can.height = height * pixel_size;
 
@@ -1481,7 +1428,7 @@ function livecalc(root_el, settings){
     /*
       Shader
     */
-    function shader(cell, expression, width, height, canvas){
+    function shader(expression, width, height, canvas){
         var number = parseInt(number);
         var width = width;
         var height = height || width;
@@ -1490,13 +1437,9 @@ function livecalc(root_el, settings){
         width = parseInt(width) || 40;
         height = parseInt(height) || 40;
         
-        var plot_el = cell.plot;
-        
         can = canvas.getCanvas();
         var ctx = can.getContext("2d");
-
-        canvas.appendTo(plot_el);
-
+        
         can.width = width;
         can.height = height;
         
@@ -1524,17 +1467,12 @@ function livecalc(root_el, settings){
             imgdata.data[index + 3] = 255;
         }
         
-        try{
-            if(has_colors){
-                var exp = expression.map(function(e){
-                    return math.compile(e);
-                });
-            } else {
-                var exp = math.compile(expression);
-            }
-        } catch (exception){
-            cell_error(cell, exception);
-            return;
+        if(has_colors){
+            var exp = expression.map(function(e){
+                return math.compile(e);
+            });
+        } else {
+            var exp = math.compile(expression);
         }
 
         var zerox = width / 2;
@@ -1566,18 +1504,13 @@ function livecalc(root_el, settings){
                 scope.x = (i - zerox)/zerox;
                 scope.y = (zeroy - j)/zerox;
 
-                try{
-                    if(has_colors){
-                        // Evaluate each (r,g,b) colors' expression
-                        var val = exp.map(function(color_exp){
-                            return color_exp.eval(scope);
-                        });
-                    } else {
-                        var val = [exp.eval(scope)];
-                    }
-                } catch (e){
-                    cell_error(cell, e);
-                    return;
+                if(has_colors){
+                    // Evaluate each (r,g,b) colors' expression
+                    var val = exp.map(function(color_exp){
+                        return color_exp.eval(scope);
+                    });
+                } else {
+                    var val = [exp.eval(scope)];
                 }
 
                 // Tweak the numbers
@@ -1746,35 +1679,25 @@ function livecalc(root_el, settings){
         callback(content);
     }
 
-    function zfractal(cell, expression, iterations, size, canvas){
-        var plot_el = cell.plot;
-        var output = cell.output;
+    function zfractal(expression, iterations, size, canvas){
         var iterations = iterations || 10;
 
-        try{
-            var exp = math.compile(expression);
-        } catch (exception){
-            output.textContent = exception;
-            return;
-        }
-        
-        var div_width = plot_el.clientWidth;
         var pixel_ratio = 1;
 
-        var size = size || 30;
+        var size = size || 200;
 
         var width = size;
         var height = size;
         
         var can = canvas.getCanvas();
-        var ctx = can.getContext("2d");
-
-        canvas.appendTo(plot_el);
+        var ctx = canvas.getContext();
         
         // Make it square
         can.width = width * pixel_ratio;
         can.height = height * pixel_ratio;
 
+        exp = math.compile(expression);
+        
         var data = ctx.createImageData(width, height);
 
         for(var i = 0; i < width; i++){
@@ -1789,13 +1712,7 @@ function livecalc(root_el, settings){
                 var val = 255;
 
                 for(var k = 0; k < iterations; k++){
-                    try{
-                        scope.z = exp.eval(scope);
-                    } catch (exception){
-                        output.textContent = exception;
-                        return;
-                    }
-        
+                    scope.z = exp.eval(scope);
                     if(len(scope.z) > 2.0){
                         val = parseInt(((k/iterations) * 255));
                         break;
