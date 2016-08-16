@@ -1209,9 +1209,14 @@ function livecalc(root_el, settings){
             
             return canvas;
         }
+
+        function tex(args, math, scope){
+            return args[0].toTex();
+        }
         
         shader_func.rawArgs = true;
         zfractal_func.rawArgs = true;
+        tex.rawArgs = true;
         
         var custom_functions = {
             /* Parallel resistors */
@@ -1237,6 +1242,7 @@ function livecalc(root_el, settings){
             plot: plot,
             pplot: pplot,
             zfractal: zfractal_func,
+            tex: tex,
             "π": math.pi
         };
 
