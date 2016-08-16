@@ -293,3 +293,78 @@ var rotate = math.typed('rotate', {
 });
 
 math.import({'rotate': rotate});
+
+// Image convolution by matrix
+var convolve = math.typed('convolve', {
+    'Image, Matrix': function (a, b) {
+        // Create image
+        var im = new Image();
+
+        var ctx_new = im.getContext()
+
+        var b = b.toArray();
+        
+        // get canvas elements
+        var can_new = im.getCanvas();
+        var can_a = a.getCanvas();
+        var ctx_a = a.getContext();
+        
+        // Establish dimensions
+        var h = can_new.height = can_a.height;
+        var w = can_new.width = can_a.width;
+
+        // Inspiration:
+        // http://albertogasparin.it/articles/2011/05/html5-multiply-filter-canvas/ 
+        var img_new_data = ctx_new.getImageData(0, 0, w, h);
+        var ndata = img_new_data.data;
+        var img_data = ctx_a.getImageData(0, 0, w, h);
+        var data = img_data.data;
+
+        // Matrix width
+        var subw = b[0].length;
+        // Half
+        var subw2 = parseInt(subw/2);
+        // Matrix height
+        var subh = b.length;
+        // Half
+        var subh2 = parseInt(subh/2); 
+        
+        for (var i = 0; i < w; i++) {
+            for (var j = 0; j < h; j++) {
+                var index = i * 4 + j * 4 * w;
+
+                // Initialize colors
+                var red = 0;
+                var green = 0;
+                var blue = 0;
+                var alpha = 1;
+                
+                for(var k = 0; k < subw; k++){
+                    for(var l = 0; l < subh; l++){
+                        var fac = b[l][k];
+                        
+                        var sub_index =
+                            ((i - subw2 + k) % w) * 4 +
+                            ((j - subh2 + l) % h) * 4 * w;
+                        
+                        red   += fac * data[sub_index + 0];
+                        green += fac * data[sub_index + 1];
+                        blue  += fac * data[sub_index + 2];
+                    }
+                }
+
+                // Round & set image data
+                ndata[index + 0] = parseInt(red);
+                ndata[index + 1] = parseInt(green);
+                ndata[index + 2] = parseInt(blue);
+                ndata[index + 3] = 255;
+            }
+        }
+        
+        ctx_new.putImageData(img_new_data, 0, 0);
+        
+        return im;
+    }
+});
+
+math.import({'convolve': convolve});

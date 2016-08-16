@@ -38,6 +38,8 @@ katex:
 	wget https://github.com/Khan/KaTeX/releases/download/v0.6.0/katex.tar.gz;\
 	tar -zxvf katex.tar.gz;\
 	rm katex.tar.gz
+	rm -rf public/lib/katex/contrib
+	rm -rf public/lib/katex/fonts
 	mv KaTeX/katex/* public/lib/katex
 	rm -rf KaTeX
 

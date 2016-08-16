@@ -944,7 +944,7 @@ function livecalc(root_el, settings){
             return;
         }
 
-        if(cell_data.element.classList.contains("less-detail") != -1){
+        if(cell_data.element.classList.contains("less-detail")){
             // Avoid computing everyting if no details are shown
             return;
         }
