@@ -662,7 +662,10 @@ function livecalc(root_el, settings){
 
         {
             // Manage live edition and saving
-            
+	    function time(){
+		return (new Date()).getTime();
+            }
+	    
             var live_edit_data = {
                 time_threshold: 350,
                 last_live_edit_send: time(),
@@ -672,11 +675,7 @@ function livecalc(root_el, settings){
             var input = focus_element;
 
             var last_value = input.value;
-            
-            function time(){
-                return (new Date()).getTime();
-            }
-            
+                        
             input.onkeydown = function(e){
                 var key_num = e.keyCode || e.which;
                 var has_live_edit = true;
