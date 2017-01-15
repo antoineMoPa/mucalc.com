@@ -1,4 +1,4 @@
-$cell_color:#f8f8f8;
+$cell_color:#fff;
 
 .page-sheet .main-page{
     margin-left: 0;
@@ -16,8 +16,7 @@ h1.sheet-title{
     margin:0px;
     line-height:30px;
     cursor: pointer;
-    background: #f0f0f0;
-    background: linear-gradient(#f0f0f0,#ececec);
+    background: #fff;
 }
 
 .livecalc-cell{
@@ -79,7 +78,7 @@ h1.sheet-title{
 }
 
 .cell-and-button-wrapper{
-    background:#e5e5e5;
+    background:#f0f0f0;
 }
 
 .livecalc-cell .math-part{
@@ -108,7 +107,6 @@ h1.sheet-title{
     background:#fff;
     font-family:monospace;
     overflow-x:hidden;
-    padding:5px;
     color: #000;
 }
 
@@ -225,7 +223,7 @@ h1.sheet-title{
 .livecalc-header{
     text-align:left;
     font-size:14px;
-    color:darken($color_3, 20%);
+    color:darken($color_3, 30%);
 }
 
 .livecalc-header .sheet-state{
