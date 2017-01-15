@@ -11,7 +11,7 @@ $cell_color:#f8f8f8;
 }
 
 h1.sheet-title{
-    padding-top:0;
+    padding:10px;
     padding-left:20px;
     margin:0px;
     line-height:30px;
@@ -62,7 +62,7 @@ h1.sheet-title{
 }
 
 .livecalc-cell .text-part{
-    background:#f5f5f5;
+    background:#fff;
     color:#000;
     padding:10px;
     padding-left:20px;
@@ -101,12 +101,15 @@ h1.sheet-title{
     width: calc(100% - 150px);
     margin-left:10px;
     font-size:20px;
+    line-height:40px;
     margin-bottom:5px;
     color:#444;
     border:none;
     background:#fff;
     font-family:monospace;
     overflow-x:hidden;
+    padding:5px;
+    color: #000;
 }
 
 .livecalc-input,
@@ -145,7 +148,7 @@ h1.sheet-title{
     margin-top:10px;
 }
 
-.livecalc  .action-button,
+.livecalc .action-button,
 .livecalc-go-button{
     height:32px;
     margin:0;
@@ -154,15 +157,21 @@ h1.sheet-title{
     border-radius:0;
     border:none;
     padding:5px;
-    background:lighten($color_2,10%);
-    color:#eee;
-    border-bottom:2px solid darken($color_2,30%);
+    background:lighten($color_2,70%);
+    color:#333;
+    border-bottom:2px solid lighten($color_2,40%);
     &:hover{
-        background:$color_2;
+        background:lighten($color_2,60%);
     }
 }
 
-.livecalc  .action-button{
+.livecalc-go-button{
+    line-height:50px;
+    padding:0;
+    height:50px;
+}
+  
+.livecalc .action-button{
     background:lighten($color_3,10%);
     border-bottom:2px solid darken($color_3,30%);
 }
