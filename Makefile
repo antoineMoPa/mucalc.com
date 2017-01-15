@@ -3,8 +3,6 @@ download:
 	wget -N https://raw.githubusercontent.com/jackmoore/autosize/master/dist/autosize.min.js -P public/lib/
 # math.js
 	wget -N http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.2.1/math.min.js -P public/lib/
-# socket.io
-	wget -N https://raw.githubusercontent.com/socketio/socket.io-client/master/socket.io.js -P public/lib/
 # function-plot.js
 	wget -N https://raw.githubusercontent.com/maurizzzio/function-plot/master/dist/function-plot.js -P public/lib/
 # d3.js
