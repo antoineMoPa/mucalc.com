@@ -91,3 +91,5 @@ public/images/*
 dump.rdb
 
 secrets.json
+
+views/analytics.html
