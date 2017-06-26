@@ -1,14 +1,14 @@
 Code Status: Encoding problem crashes everyting.
 
-Current milestone: https://github.com/antoineMoPa/livecalc.xyz/milestone/1
+Current milestone: https://github.com/antoineMoPa/mucalc.com/milestone/1
 
-# livecalc.xyz
+# mucalc.com
 
-livecalc.xyz is a multi-user math web app. The math is parsed & computed in the browser by [math.js](http://mathjs.org/).
+mucalc.com is a multi-user math web app. The math is parsed & computed in the browser by [math.js](http://mathjs.org/).
 
-[Live demo](https://www.livecalc.xyz/new)
+[Live demo](https://www.mucalc.com/new)
 
-[![Live demo](https://livecalc.xyz/icon-96x96.png) ](https://www.livecalc.xyz/new)
+[![Live demo](https://mucalc.com/icon-96x96.png) ](https://www.mucalc.com/new)
 
 
 # Example
@@ -56,8 +56,8 @@ You can submit issues. You can also clone and code then send a pull request.
 
 Work is currently going on for 0.1.0 release.
 
-[Priorities for 0.1.0](https://github.com/antoineMoPa/livecalc.xyz/milestone/1) - This milestone focuses on general usability, UI, UX, etc.
+[Priorities for 0.1.0](https://github.com/antoineMoPa/mucalc.com/milestone/1) - This milestone focuses on general usability, UI, UX, etc.
 
 Then we'll add some more math goodness:
 
-[Priorities for 0.2.0](https://github.com/antoineMoPa/livecalc.xyz/milestone/2) - This milestone focuses on math tools & adding backends for more power
+[Priorities for 0.2.0](https://github.com/antoineMoPa/mucalc.com/milestone/2) - This milestone focuses on math tools & adding backends for more power
